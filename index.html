@@ -4,8 +4,45 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./styles/landingPage.css" />
+    <link rel="stylesheet" href="styles/index.css" />
+    <script defer src="scripts/index.js"></script>
     <title>Boonze</title>
   </head>
-  <body></body>
+  <body>
+    <nav class="landing-nav">
+      <div class="logo-container">
+        <img
+          src="./images/word_logo.png"
+          alt="boonze logo"
+          width="195"
+          height="75px"
+        />
+      </div>
+      <div class="nav-links-container">
+        <a href="/about">About</a>
+        <a href="/features">Features</a>
+        <a href="/signup">Registration</a>
+      </div>
+    </nav>
+    <div class="connect-motto">Connect with your mountaineer community</div>
+    <div class="login-signup-btn-container">
+      <button class="login-signup-btn" id="signup-btn">Signup</button>
+      <button class="login-signup-btn" id="login-btn">Login</button>
+    </div>
+    <script>
+      document.getElementById("signup-btn").addEventListener("click", () => {
+        window.location.replace("/signup");
+      });
+      document.getElementById("login-btn").addEventListener("click", () => {
+        window.location.href = "/login";
+      });
+    </script>
+    <!-- <img
+      src="./images/mountains.png"
+      width="757px"
+      height="400px"
+      alt="grey mountains"
+      class="mountains-img"
+    /> -->
+  </body>
 </html>

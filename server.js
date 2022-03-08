@@ -72,6 +72,11 @@ app.get("/styles/signup.css", function (req, res) {
     root: "./",
   });
 });
+app.get("/styles/index.css", function (req, res) {
+  res.sendFile("/styles/index.css", {
+    root: "./",
+  });
+});
 
 app.get("/signup", function (req, res) {
   res.sendFile("/pages/landing/signup.html", {
@@ -89,6 +94,11 @@ app.get("/view-feedbacks", function (req, res) {
     .then(function (profiles) {
       res.status(200).json(feedbacks);
     });
+});
+app.get("/images/word_logo.png", (req, res) => {
+  res.sendFile("/images/word_logo.png", {
+    root: "./",
+  });
 });
 
 app.get("/", (req, res) => {
