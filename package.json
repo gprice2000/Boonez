@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/JacobMazzarese/Boonez#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.2",
     "express": "^4.17.3",
     "mongodb": "^4.4.1"

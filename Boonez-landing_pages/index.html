@@ -5,6 +5,105 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles/landingPage.css" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap");
+
+      @keyframes link-hov {
+        0% {
+          font-size: 1.25rem;
+        }
+        25% {
+          font-size: 1.3rem;
+        }
+        50% {
+          font-size: 1.35rem;
+        }
+        75% {
+          font-size: 1.4rem;
+        }
+        100% {
+          font-size: 1.4rem;
+        }
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        font-family: "Open Sans", sans-serif;
+      }
+      body {
+        background-color: #343a40;
+        display: grid;
+        grid-gap: 10px;
+      }
+      .landing-nav {
+        grid-row-start: 1;
+        grid-row-end: 3;
+        grid-column-start: 1;
+        grid-column-end: 12;
+        padding: 25px;
+        display: flex;
+        flex-direction: row;
+      }
+      .nav-links-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin-top: 30px;
+        margin-left: 30%;
+      }
+      .nav-links-container a {
+        color: white;
+        font-size: 1.2rem;
+        text-decoration: none;
+        margin-right: 30px;
+        margin-left: 30px;
+      }
+      .nav-links-container a:hover {
+        animation-name: link-hov;
+        animation-duration: 100ms;
+        animation-timing-function: ease-in-out;
+        font-size: 1.4rem;
+      }
+
+      .connect-motto {
+        grid-column-start: 3;
+        grid-column-end: 4;
+        width: 2rem;
+        text-align: justify;
+        color: white;
+      }
+      .mountains-img {
+        grid-row-start: 12;
+        grid-column-start: 2;
+        grid-column-start: 4;
+      }
+      .login-signup-btns:hover {
+        cursor: pointer;
+      }
+      .login-signup-btn-container {
+        display: flex;
+        width: 650px;
+        /* border: 2px solid white; */
+        align-items: center;
+        grid-column-start: 5;
+        grid-row-start: 50;
+      }
+      .login-signup-btn {
+        color: #ffcc00;
+        background-color: #25292e;
+        border-radius: 10px;
+        border: none;
+        font-size: 1.5rem;
+        padding: 15px;
+        width: 150px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .login-signup-btn:hover {
+        cursor: pointer;
+      }
+    </style>
+
     <script defer src="scripts/index.js"></script>
     <title>Boonze</title>
   </head>
@@ -19,9 +118,9 @@
         />
       </div>
       <div class="nav-links-container">
-        <a href="./pages/landing/about.html">About</a>
-        <a href="./pages/landing/features.html">Features</a>
-        <a href="./pages/landing/signup.html">Registration</a>
+        <a href="/about">About</a>
+        <a href="/features">Features</a>
+        <a href="/signup">Registration</a>
       </div>
     </nav>
     <div class="connect-motto">Connect with your mountaineer community</div>
@@ -31,12 +130,11 @@
     </div>
     <script>
       document.getElementById("signup-btn").addEventListener("click", () => {
-      window.location.replace("/pages/landing/signup.html");
-    });
-    document.getElementById("login-btn").addEventListener("click", () => {
-    window.location.href = "/pages/landing/login.html";
-    });
-
+        window.location.replace("/signup");
+      });
+      document.getElementById("login-btn").addEventListener("click", () => {
+        window.location.href = "/login";
+      });
     </script>
     <!-- <img
       src="./images/mountains.png"
