@@ -28,6 +28,7 @@ app.post("/signup", function (req, res) {
           }
           req.body.password = hash;
           dbc.db("Boonez").collection("profiles").insertOne(req.body);
+          res.redirect("/login");
         });
       }
     });
@@ -54,6 +55,8 @@ app.post("/login", function (req, res) {
               console.log("Password doesn't match!");
             } else {
               console.log("Password matches!");
+
+              res.redirect("/dashboard");
             }
           }
         );
@@ -103,6 +106,11 @@ app.get("/images/word_logo.png", (req, res) => {
 
 app.get("/", (req, res) => {
   res.sendFile("index.html", {
+    root: "./",
+  });
+});
+app.get("/dashboard", (req, res) => {
+  res.sendFile("/pages/main-app/dashboard.html", {
     root: "./",
   });
 });
