@@ -41,25 +41,27 @@ app.post("/login", function (req, res) {
       .db("Boonez")
       .collection("profiles")
       .findOne({ username: req.body.username }, function (err, result) {
-        if (err) {
+        if (!result) {
           console.log("Unable to locate account");
-          throw err;
-        }
-        bcrypt.compare(
-          req.body.password,
-          result.password,
-          function (error, isMatch) {
-            if (error) {
-              throw error;
-            } else if (!isMatch) {
-              console.log("Password doesn't match!");
-            } else {
-              console.log("Password matches!");
+          res.send("<script>alert('Incorrect username or password');</script>");
+          // res.redirect("back");
+        } else {
+          bcrypt.compare(
+            req.body.password,
+            result.password,
+            function (error, isMatch) {
+              if (error) {
+                throw error;
+              } else if (!isMatch) {
+                console.log("Password doesn't match!");
+              } else {
+                console.log("Password matches!");
 
-              res.redirect("/dashboard");
+                res.redirect("/dashboard");
+              }
             }
-          }
-        );
+          );
+        }
       });
   });
 });
