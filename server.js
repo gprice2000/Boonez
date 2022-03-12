@@ -136,5 +136,10 @@ app.get("/dashboard", (req, res) => {
     root: "./",
   });
 });
+app.get("/styles/dashboard.css", (req, res) => {
+  res.sendFile("/styles/dashboard.css", {
+    root: "./",
+  });
+});
 
 app.listen(3000);
