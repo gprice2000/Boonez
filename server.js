@@ -17,49 +17,71 @@ app.use(
 
 app.post("/signup", function (req, res) {
   db.then(function (dbc) {
-    let pass = req.body.password;
-    bcrypt.genSalt(10, function (saltError, salt) {
-      if (saltError) {
-        throw saltError;
-      } else {
-        bcrypt.hash(pass, salt, function (hashError, hash) {
-          if (hashError) {
-            throw hashError;
-          }
-          req.body.password = hash;
-          dbc.db("Boonez").collection("profiles").insertOne(req.body);
-          res.redirect("/login");
-        });
-      }
-    });
+    dbc
+      .db("Boonez")
+      .collection("profiles")
+      .findOne({ username: req.body.username }, function (err, result) {
+        if (result) {
+          res.send("username already in use");
+        } else {
+          dbc
+            .db("Boonez")
+            .collection("profiles")
+            .findOne({ email: req.body.email }, function (err, result) {
+              if (result) {
+                res.send("email already in use");
+              } else {
+                let pass = req.body.password;
+                bcrypt.genSalt(10, function (saltError, salt) {
+                  if (saltError) {
+                    throw saltError;
+                  } else {
+                    bcrypt.hash(pass, salt, function (hashError, hash) {
+                      if (hashError) {
+                        throw hashError;
+                      }
+                      req.body.password = hash;
+                      dbc
+                        .db("Boonez")
+                        .collection("profiles")
+                        .insertOne(req.body);
+                      res.redirect("/login");
+                    });
+                  }
+                });
+              }
+            });
+        }
+      });
   });
 });
-
 app.post("/login", function (req, res) {
   db.then(function (dbc) {
     dbc
       .db("Boonez")
       .collection("profiles")
       .findOne({ username: req.body.username }, function (err, result) {
-        if (err) {
+        if (!result) {
           console.log("Unable to locate account");
-          throw err;
-        }
-        bcrypt.compare(
-          req.body.password,
-          result.password,
-          function (error, isMatch) {
-            if (error) {
-              throw error;
-            } else if (!isMatch) {
-              console.log("Password doesn't match!");
-            } else {
-              console.log("Password matches!");
+          res.send("Cannot find username");
+          // res.redirect("back");
+        } else {
+          bcrypt.compare(
+            req.body.password,
+            result.password,
+            function (error, isMatch) {
+              if (error) {
+                throw error;
+              } else if (!isMatch) {
+                console.log("Password doesn't match!");
+              } else {
+                console.log("Password matches!");
 
-              res.redirect("/dashboard");
+                res.redirect("/dashboard");
+              }
             }
-          }
-        );
+          );
+        }
       });
   });
 });
