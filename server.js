@@ -63,23 +63,7 @@ app.post("/login", function (req, res) {
       .findOne({ username: req.body.username }, function (err, result) {
         if (!result) {
           console.log("Unable to locate account");
-<<<<<<< HEAD
-          throw err;
-        }
-        bcrypt.compare(
-          req.body.password,
-          result.password,
-          function (error, isMatch) {
-            if (error) {
-              throw error;
-            } else if (!isMatch) {
-              console.log("Password doesn't match!");
-              res.send("password incorrect");
-            } else {
-              console.log("Password matches!");
-=======
           res.send("Cannot find username");
-          // res.redirect("back");
         } else {
           bcrypt.compare(
             req.body.password,
@@ -91,7 +75,6 @@ app.post("/login", function (req, res) {
                 console.log("Password doesn't match!");
               } else {
                 console.log("Password matches!");
->>>>>>> 30f3cd637750269f0943cac01fad222e72cb3a6c
 
                 res.redirect("/dashboard");
               }
