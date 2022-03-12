@@ -53,6 +53,7 @@ app.post("/login", function (req, res) {
               throw error;
             } else if (!isMatch) {
               console.log("Password doesn't match!");
+              res.send("password incorrect");
             } else {
               console.log("Password matches!");
 
