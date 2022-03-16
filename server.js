@@ -146,7 +146,7 @@ app.get("/styles/dashboard.css", (req, res) => {
   });
 });
 app.get("/styles/messages.css", (req, res) => {
-  res.sendFile(__dirname + "/styles/dashboard.css");
+  res.sendFile(__dirname + "/styles/messages.css");
 });
 
 app.get("/messages", (req, res) => {
