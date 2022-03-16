@@ -1,11 +1,15 @@
 const express = require("express");
+const app = express();
+const http = require("http");
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 const mongodb = require("mongodb");
 const bcrypt = require("bcryptjs");
 const bodyParser = require("body-parser");
 const path = require("path");
 const { getSystemErrorMap } = require("util");
 
-const app = express();
 const db = mongodb.MongoClient.connect(
   "mongodb+srv://mazzaresejv:B00nze2022@cluster0.awpng.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 );
@@ -141,5 +145,13 @@ app.get("/styles/dashboard.css", (req, res) => {
     root: "./",
   });
 });
+app.get("/styles/messages.css", (req, res) => {
+  res.sendFile(__dirname + "/styles/dashboard.css");
+});
 
-app.listen(3000);
+app.get("/messages", (req, res) => {
+  res.sendFile(__dirname + "/pages/main-app/messages.html");
+});
+server.listen(3000, () => {
+  console.log("listening on *:3000");
+});
