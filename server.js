@@ -13,6 +13,9 @@ const sessions = require("express-session");
 const { getSystemErrorMap } = require("util");
 const favicon = require("serve-favicon");
 
+let session = { userid: "" };
+//load favicon
+app.use(favicon(__dirname + "/favicon.ico"));
 //connect to database
 const db = mongodb.MongoClient.connect(
   "mongodb+srv://mazzaresejv:B00nze2022@cluster0.awpng.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
@@ -38,7 +41,6 @@ app.use(cookieParser());
 // let session = { userid: null };
 
 //serving favicon
-app.use(favicon(__dirname + "/favicon.ico"));
 let date_ob = new Date(); //used for keeping track of messages
 
 // app.use(bodyParser.urlencoded({ extended: false }));
@@ -46,8 +48,8 @@ let date_ob = new Date(); //used for keeping track of messages
 //   express.static(path.join(__dirname + "/New_capstone/Boonez-landing_pages"))
 // );
 let messageRecipient;
-async function socketIOConnection() {
-  let userId = await session.userid;
+function socketIOConnection() {
+  let userId = session.userid;
   io.on("connection", (socket) => {
     //maybe send all messages in database when connected
     socket.on("chat message", (msg) => {
@@ -193,11 +195,6 @@ app.get("/view-feedbacks", function (req, res) {
 app.get("/images/word_logo.png", (req, res) => {
   res.sendFile("/images/word_logo.png", {
     root: "./",
-  });
-});
-app.get("/favicon.ico", (req, res) => {
-  res.sendFile("favicon.ico", {
-    root: __dirname,
   });
 });
 
