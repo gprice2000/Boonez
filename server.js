@@ -10,10 +10,38 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const { getSystemErrorMap } = require("util");
 
+//connect to database
 const db = mongodb.MongoClient.connect(
   "mongodb+srv://mazzaresejv:B00nze2022@cluster0.awpng.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 );
 
+let date_ob = new Date(); //used for keeping track of messages
+
+//socket.io implementation
+io.on("connection", (socket) => {
+  //maybe send all messages in database when connected
+  socket.on("chat message", (msg) => {
+    //display message in client and send message to database
+
+    //TODO we need a way to keep track of the current logged-in user. Perhaps a query string?
+    io.emit("chat message", msg);
+    db.then((dbc) => {
+      dbc
+        .db("Boonez")
+        .collection("messages")
+        .insertOne({
+          userFrom: "gp",
+          userTo: "gp2",
+          messageContent: msg,
+          timeSent: `${date_ob.getHours()}:${date_ob.getMinutes()}`,
+          date: `${
+            date_ob.getMonth() + 1
+          }-${date_ob.getDate()}-${date_ob.getFullYear()}`,
+        });
+    });
+    // console.log("message: " + msg);
+  });
+});
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
   express.static(path.join(__dirname + "/New_capstone/Boonez-landing_pages"))
