@@ -34,35 +34,10 @@ app.use(express.static(__dirname));
 
 //set up cookie parser
 app.use(cookieParser());
-var session;
+let session;
 
 let date_ob = new Date(); //used for keeping track of messages
 
-//socket.io implementation
-io.on("connection", (socket) => {
-  //maybe send all messages in database when connected
-  socket.on("chat message", (msg) => {
-    //display message in client and send message to database
-
-    //TODO we need a way to keep track of the current logged-in user. Perhaps a query string?
-    io.emit("chat message", msg);
-    db.then((dbc) => {
-      dbc
-        .db("Boonez")
-        .collection("messages")
-        .insertOne({
-          userFrom: "gp",
-          userTo: "gp2",
-          messageContent: msg,
-          timeSent: `${date_ob.getHours()}:${date_ob.getMinutes()}`,
-          date: `${
-            date_ob.getMonth() + 1
-          }-${date_ob.getDate()}-${date_ob.getFullYear()}`,
-        });
-    });
-    // console.log("message: " + msg);
-  });
-});
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
   express.static(path.join(__dirname + "/New_capstone/Boonez-landing_pages"))
@@ -129,9 +104,10 @@ app.post("/login", function (req, res) {
                 res.send("Password incorrect");
               } else {
                 console.log("Password matches!");
+
                 session = req.session;
                 session.userid = req.body.username;
-                console.log(req.session);
+                console.log(session);
                 res.redirect("/dashboard");
               }
             }
@@ -141,6 +117,32 @@ app.post("/login", function (req, res) {
   });
 });
 
+//socket.io implementation
+io.on("connection", (socket) => {
+  let userId = session.userid;
+  //maybe send all messages in database when connected
+  socket.on("chat message", (msg) => {
+    //display message in client and send message to database
+
+    //TODO we need a way to keep track of the current logged-in user. Perhaps a query string?
+    io.emit("chat message", msg);
+    db.then((dbc) => {
+      dbc
+        .db("Boonez")
+        .collection("messages")
+        .insertOne({
+          userFrom: userId,
+          userTo: "gp2",
+          messageContent: msg,
+          timeSent: `${date_ob.getHours()}:${date_ob.getMinutes()}`,
+          date: `${
+            date_ob.getMonth() + 1
+          }-${date_ob.getDate()}-${date_ob.getFullYear()}`,
+        });
+    });
+    // console.log("message: " + msg);
+  });
+});
 //TODO: add a logout page
 app.get("/logout", (req, res) => {
   req.session.destroy();
