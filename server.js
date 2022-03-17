@@ -11,6 +11,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const sessions = require("express-session");
 const { getSystemErrorMap } = require("util");
+const favicon = require("serve-favicon");
 
 //connect to database
 const db = mongodb.MongoClient.connect(
@@ -34,15 +35,46 @@ app.use(express.static(__dirname));
 
 //set up cookie parser
 app.use(cookieParser());
-let session;
+// let session = { userid: null };
 
+//serving favicon
+app.use(favicon(__dirname + "/favicon.ico"));
 let date_ob = new Date(); //used for keeping track of messages
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(
-  express.static(path.join(__dirname + "/New_capstone/Boonez-landing_pages"))
-);
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(
+//   express.static(path.join(__dirname + "/New_capstone/Boonez-landing_pages"))
+// );
+let messageRecipient;
+async function socketIOConnection() {
+  let userId = await session.userid;
+  io.on("connection", (socket) => {
+    //maybe send all messages in database when connected
+    socket.on("chat message", (msg) => {
+      //display message in client and send message to database
 
+      //TODO need to keep track of message recipient
+      //TODO need to encrypt messages using bcrypt
+      io.emit("chat message", msg);
+      console.log(`${userId} sent a message: ${msg}`);
+      db.then((dbc) => {
+        dbc
+          .db("Boonez")
+          .collection("messages")
+          .insertOne({
+            userFrom: userId,
+            userTo: "gp2",
+            messageContent: msg,
+            timeSent: `${date_ob.getHours()}:${date_ob.getMinutes()}`,
+            date: `${
+              date_ob.getMonth() + 1
+            }-${date_ob.getDate()}-${date_ob.getFullYear()}`,
+          });
+      });
+      // console.log("message: " + msg);
+    });
+  });
+}
 app.post("/signup", function (req, res) {
   db.then(function (dbc) {
     dbc
@@ -118,31 +150,7 @@ app.post("/login", function (req, res) {
 });
 
 //socket.io implementation
-io.on("connection", (socket) => {
-  let userId = session.userid;
-  //maybe send all messages in database when connected
-  socket.on("chat message", (msg) => {
-    //display message in client and send message to database
 
-    //TODO we need a way to keep track of the current logged-in user. Perhaps a query string?
-    io.emit("chat message", msg);
-    db.then((dbc) => {
-      dbc
-        .db("Boonez")
-        .collection("messages")
-        .insertOne({
-          userFrom: userId,
-          userTo: "gp2",
-          messageContent: msg,
-          timeSent: `${date_ob.getHours()}:${date_ob.getMinutes()}`,
-          date: `${
-            date_ob.getMonth() + 1
-          }-${date_ob.getDate()}-${date_ob.getFullYear()}`,
-        });
-    });
-    // console.log("message: " + msg);
-  });
-});
 //TODO: add a logout page
 app.get("/logout", (req, res) => {
   req.session.destroy();
@@ -187,6 +195,11 @@ app.get("/images/word_logo.png", (req, res) => {
     root: "./",
   });
 });
+app.get("/favicon.ico", (req, res) => {
+  res.sendFile("favicon.ico", {
+    root: __dirname,
+  });
+});
 
 app.get("/", (req, res) => {
   session = req.session;
@@ -211,6 +224,7 @@ app.get("/styles/messages.css", (req, res) => {
 
 app.get("/messages", (req, res) => {
   res.sendFile(__dirname + "/pages/main-app/messages.html");
+  socketIOConnection();
 });
 server.listen(3000, () => {
   console.log("listening on *:3000");
