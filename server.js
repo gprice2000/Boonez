@@ -8,12 +8,33 @@ const mongodb = require("mongodb");
 const bcrypt = require("bcryptjs");
 const bodyParser = require("body-parser");
 const path = require("path");
+const cookieParser = require("cookie-parser");
+const sessions = require("express-session");
 const { getSystemErrorMap } = require("util");
 
 //connect to database
 const db = mongodb.MongoClient.connect(
   "mongodb+srv://mazzaresejv:B00nze2022@cluster0.awpng.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 );
+
+//set one day time for cookies to expire
+const oneDay = 1000 * 60 * 60 * 24;
+//setting up express-sessions
+app.use(
+  sessions({
+    secret: "skeyfhrgfgrfrty96tqfh828",
+    saveUninitialized: true,
+    cookie: { maxAge: oneDay },
+    resave: false,
+  })
+);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname));
+
+//set up cookie parser
+app.use(cookieParser());
+var session;
 
 let date_ob = new Date(); //used for keeping track of messages
 
@@ -108,7 +129,9 @@ app.post("/login", function (req, res) {
                 res.send("Password incorrect");
               } else {
                 console.log("Password matches!");
-
+                session = req.session;
+                session.userid = req.body.username;
+                console.log(req.session);
                 res.redirect("/dashboard");
               }
             }
@@ -118,6 +141,11 @@ app.post("/login", function (req, res) {
   });
 });
 
+//TODO: add a logout page
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.redirect("/");
+});
 app.get("/styles/landingPage.css", function (req, res) {
   res.sendFile("/styles/landingPage.css", {
     root: "./",
@@ -159,8 +187,10 @@ app.get("/images/word_logo.png", (req, res) => {
 });
 
 app.get("/", (req, res) => {
+  session = req.session;
+
   res.sendFile("index.html", {
-    root: "./",
+    root: __dirname,
   });
 });
 app.get("/dashboard", (req, res) => {
