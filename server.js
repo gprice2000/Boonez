@@ -103,6 +103,9 @@ app.post("/signup", function (req, res) {
                         throw hashError;
                       }
                       req.body.password = hash;
+                      let input = req.body;
+                      input.friendsList = [];
+                      console.log(input);
                       dbc
                         .db("Boonez")
                         .collection("profiles")
@@ -223,6 +226,13 @@ app.get("/messages", (req, res) => {
   res.sendFile(__dirname + "/pages/main-app/messages.html");
   socketIOConnection();
 });
+app.get("/messagesOverview", (req, res) => {
+  res.sendFile(__dirname + "/pages/main-app/messagesOverview.html");
+});
+
+//used to render friends list
+app.post("/messagesOverview", (req, res) => {});
+
 server.listen(3000, () => {
   console.log("listening on *:3000");
 });
