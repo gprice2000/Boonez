@@ -22,6 +22,7 @@
     "cookie-parser": "^1.4.6",
     "express": "^4.17.3",
     "express-session": "^1.17.2",
+    "fullcalendar": "^5.10.2",
     "mongodb": "^4.4.1",
     "serve-favicon": "^2.5.0",
     "socket.io": "^4.4.1"
