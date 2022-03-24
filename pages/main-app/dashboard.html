@@ -4,41 +4,32 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href='/node_modules/fullcalendar/main.css' rel='stylesheet' />
-    <script src='/node_modules/fullcalendar/main.js'></script>
-    <script defer src='/Boonez-master/scripts/calendar.js'></script>
+    <link rel="stylesheet" href="/node_modules/fullcalendar/main.css" />
+    <link rel="stylesheet" href="../../styles/dashboard.css" />
+    <script src="/node_modules/fullcalendar/main.js"></script>
+    <script defer src="/Boonez-master/scripts/calendar.js"></script>
     <title>Boonez Dashboard</title>
   </head>
   <body>
-      <nav class="landing-nav">
-        <div class="logo-container">
-          <img
-            src="./images/word_logo.png"
-            alt="boonze logo"
-            width="195"
-            height="75px"
-          />
-        </div>
-        <div class="nav-links-container">
-          <a href="/about">About</a>
-          <a href="/features">Features</a>
-          <a href="/signup">Registration</a>
-        </div>
-      </nav>
-      <div class="profile-pic">
-        <img src="./images/blank-profile-pic.png"
-          alt="profile pic"
-          width="200"
-          height="80px"
-        />
-      </div>
-      <div class="about-me">
-          <label for="aboutme">About me:</label><br>
-          <input type="text" id="aboutme" name="aboutme"><br>
-      </div> 
-      <div id="calendar">
-      <!-- 
-        <form id="calendar-form">
+    <div class="profile-pic">
+      <img
+        src="./images/blank-profile-pic.png"
+        alt="profile pic"
+        width="200"
+        height="80px"
+      />
+    </div>
+    <div class="about-me">
+      e-c<label for="aboutme">About me:</label><br />
+      <input type="text" id="aboutme" name="aboutme" /><br />
+    </div>
+    <div id="calendar"></div>
+    <div id="message-container">
+      <a href="./messagesOverview">Messages</a>
+      <hr />
+    </div>
+
+    <!-- <form id="calendar-form">
           <label for="addEvent">Add Event:</label><br>
           <label for="calendartitle">Event Title:</label><br>
           <input type="text" id="calendartitle" name="calendartitle"><br>
@@ -48,7 +39,6 @@
           <input type="text" id="endtime" name="endtime"><br>
           <button class="add-event-btn" id="add-event-btn">Add Event</button>
         </form>
-      </div>
-      -->
+      </div> -->
   </body>
 </html>
