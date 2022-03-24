@@ -197,7 +197,7 @@ app.get("/calendar", function (req, res) {
         .collection("UserCalendars")
         .findOne(query)
         .then((doc) => {
-          res.json(doc.eventArray);
+          // res.json(doc.eventArray); //causes a crash
         });
     } catch (err) {
       console.log(err);
