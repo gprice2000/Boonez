@@ -197,7 +197,7 @@ app.get("/calendar", function (req, res) {
         .collection("UserCalendars")
         .findOne(query)
         .then((doc) => {
-          res.json(doc.eventArray);
+          // res.json(doc.eventArray); //causes a crash
         });
     } catch (err) {
       console.log(err);
@@ -207,29 +207,29 @@ app.get("/calendar", function (req, res) {
 
 app.get("/styles/landingPage.css", function (req, res) {
   res.sendFile("/styles/landingPage.css", {
-    root: "./",
+    root: __dirname,
   });
 });
 
 app.get("/styles/signup.css", function (req, res) {
   res.sendFile("/styles/signup.css", {
-    root: "./",
+    root: __dirname,
   });
 });
 app.get("/styles/index.css", function (req, res) {
   res.sendFile("/styles/index.css", {
-    root: "./",
+    root: __dirname,
   });
 });
 
 app.get("/signup", function (req, res) {
   res.sendFile("/pages/landing/signup.html", {
-    root: "./",
+    root: __dirname,
   });
 });
 app.get("/login", function (req, res) {
   res.sendFile("/pages/landing/login.html", {
-    root: "./",
+    root: __dirname,
   });
 });
 /*
@@ -243,7 +243,7 @@ app.get("/view-feedbacks", function (req, res) {
 */
 app.get("/images/word_logo.png", (req, res) => {
   res.sendFile("/images/word_logo.png", {
-    root: "./",
+    root: __dirname,
   });
 });
 
@@ -257,18 +257,18 @@ app.get("/", (req, res) => {
 
 app.get("/images/blank-profile-pic.png", (req, res) => {
   res.sendFile("/images/blank-profile-pic.png", {
-    root: "./",
+    root: __dirname,
   });
 });
 
 app.get("/dashboard", (req, res) => {
   res.sendFile("/pages/main-app/dashboard.html", {
-    root: "./",
+    root: __dirname,
   });
 });
 app.get("/styles/dashboard.css", (req, res) => {
   res.sendFile("/styles/dashboard.css", {
-    root: "./",
+    root: __dirname,
   });
 });
 app.get("/styles/messages.css", (req, res) => {
@@ -289,27 +289,27 @@ app.post("/messagesOverview", (req, res) => {});
 /*routing to fullcalendar main.css */
 app.get("/node_modules/fullcalendar/main.css", function (req, res) {
   res.sendFile("/node_modules/fullcalendar/main.css", {
-    root: "../",
+    root: __dirname,
   });
 });
 
 /*routing to fullcalendar main.js */
 app.get("/node_modules/fullcalendar/main.js", function (req, res) {
   res.sendFile("/node_modules/fullcalendar/main.js", {
-    root: "../",
+    root: __dirname,
   });
 });
 
 /*routing to calendar.js*/
-app.get("/Boonez-master/scripts/calendar.js", function (req, res) {
-  res.sendFile("/Boonez-master/scripts/calendar.js", {
-    root: "../",
+app.get("/scripts/calendar.js", function (req, res) {
+  res.sendFile("/scripts/calendar.js", {
+    root: __dirname,
   });
 });
 
 app.get("/", (req, res) => {
   res.sendFile("index.html", {
-    root: "./",
+    root: __dirname,
   });
 });
 
