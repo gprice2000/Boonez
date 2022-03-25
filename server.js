@@ -12,6 +12,8 @@ const cookieParser = require("cookie-parser");
 const sessions = require("express-session");
 const { getSystemErrorMap } = require("util");
 const favicon = require("serve-favicon");
+const querystring = require("querystring");
+const url = require("url");
 
 let session = { userid: "" };
 //load favicon
@@ -49,9 +51,9 @@ let date_ob = new Date(); //used for keeping track of messages
 // app.use(
 //   express.static(path.join(__dirname + "/New_capstone/Boonez-landing_pages"))
 // );
-let messageRecipient;
-function socketIOConnection() {
+function socketIOConnection(recipient) {
   let userId = session.userid;
+
   io.on("connection", (socket) => {
     //maybe send all messages in database when connected
     socket.on("chat message", (msg) => {
@@ -67,7 +69,7 @@ function socketIOConnection() {
           .collection("messages")
           .insertOne({
             userFrom: userId,
-            userTo: "gp2",
+            userTo: recipient,
             messageContent: msg,
             timeSent: `${date_ob.getHours()}:${date_ob.getMinutes()}`,
             date: `${
@@ -139,10 +141,10 @@ app.post("/login", function (req, res) {
               if (error) {
                 throw error;
               } else if (!isMatch) {
-                console.log("Password doesn't match!");
+                // console.log("Password doesn't match!");
                 res.send("Password incorrect");
               } else {
-                console.log("Password matches!");
+                // console.log("Password matches!");
 
                 session = req.session;
                 session.userid = req.body.username;
@@ -277,7 +279,9 @@ app.get("/styles/messages.css", (req, res) => {
 
 app.get("/messages", (req, res) => {
   res.sendFile(__dirname + "/pages/main-app/messages.html");
-  socketIOConnection();
+  //parse query string and send recipient name
+  let recipient = url.parse(req.url, true).query.user;
+  socketIOConnection(recipient);
 });
 /*routing to fullcalendar main.css */
 app.get("/node_modules/fullcalendar/main.css", function (req, res) {
