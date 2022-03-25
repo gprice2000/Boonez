@@ -38,7 +38,7 @@ body {
   color: #25292e;
 }
 
-#messages {
+/* #messages {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -51,4 +51,4 @@ body {
 }
 button:hover {
   cursor: pointer;
-}
+} */

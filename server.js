@@ -14,8 +14,10 @@ const { getSystemErrorMap } = require("util");
 const favicon = require("serve-favicon");
 const querystring = require("querystring");
 const url = require("url");
+const res = require("express/lib/response");
 
 let session = { userid: "" };
+
 //load favicon
 app.use(favicon(__dirname + "/favicon.ico"));
 //connect to database
@@ -42,17 +44,14 @@ app.use(express.static(__dirname));
 
 //set up cookie parser
 app.use(cookieParser());
-// let session = { userid: null };
 
-//serving favicon
-let date_ob = new Date(); //used for keeping track of messages
+//used for keeping track of messages
+let date_ob = new Date();
 
-// app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(
-//   express.static(path.join(__dirname + "/New_capstone/Boonez-landing_pages"))
-// );
 function socketIOConnection(recipient) {
   let userId = session.userid;
+  //used for bcrypt hashing
+  const saltRounds = 10;
 
   io.on("connection", (socket) => {
     //maybe send all messages in database when connected
@@ -61,22 +60,31 @@ function socketIOConnection(recipient) {
 
       //TODO need to keep track of message recipient
       //TODO need to encrypt messages using bcrypt
+
+      //TODO fix bug that emits message twice per send
+
       io.emit("chat message", msg);
+
       console.log(`${userId} sent a message: ${msg}`);
-      db.then((dbc) => {
-        dbc
-          .db("Boonez")
-          .collection("messages")
-          .insertOne({
-            userFrom: userId,
-            userTo: recipient,
-            messageContent: msg,
-            timeSent: `${date_ob.getHours()}:${date_ob.getMinutes()}`,
-            date: `${
-              date_ob.getMonth() + 1
-            }-${date_ob.getDate()}-${date_ob.getFullYear()}`,
+      bcrypt.hash(msg, saltRounds, (err, hash) => {
+        if (!err) {
+          db.then((dbc) => {
+            dbc
+              .db("Boonez")
+              .collection("messages")
+              .insertOne({
+                userFrom: userId,
+                userTo: recipient,
+                messageContent: hash,
+                timeSent: `${date_ob.getHours()}:${date_ob.getMinutes()}`,
+                date: `${
+                  date_ob.getMonth() + 1
+                }-${date_ob.getDate()}-${date_ob.getFullYear()}`,
+              });
           });
+        } else res.send("Error sending message");
       });
+
       // console.log("message: " + msg);
     });
   });

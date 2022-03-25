@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../../styles/messages.css" />
   </head>
   <body>
+    <ul id="messages"></ul>
     <form id="form" action="">
       <input id="input" autocomplete="off" />
       <button>Send</button>
@@ -16,6 +17,7 @@
     <script>
       var socket = io();
 
+      var messages = document.getElementById("messages");
       var form = document.getElementById("form");
       var input = document.getElementById("input");
 
