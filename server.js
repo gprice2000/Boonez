@@ -106,7 +106,7 @@ app.post("/signup", function (req, res) {
                       }
                       req.body.password = hash;
                       let input = req.body;
-                      input.friendsList = [];
+                      input.friends = [];
                       console.log(input);
                       dbc
                         .db("Boonez")
@@ -146,7 +146,7 @@ app.post("/login", function (req, res) {
 
                 session = req.session;
                 session.userid = req.body.username;
-                console.log(session);
+                // console.log(session);
                 res.redirect("/dashboard");
               }
             }
@@ -279,13 +279,6 @@ app.get("/messages", (req, res) => {
   res.sendFile(__dirname + "/pages/main-app/messages.html");
   socketIOConnection();
 });
-app.get("/messagesOverview", (req, res) => {
-  res.sendFile(__dirname + "/pages/main-app/messagesOverview.html");
-});
-
-//used to render friends list
-app.post("/messagesOverview", (req, res) => {});
-
 /*routing to fullcalendar main.css */
 app.get("/node_modules/fullcalendar/main.css", function (req, res) {
   res.sendFile("/node_modules/fullcalendar/main.css", {
@@ -313,6 +306,39 @@ app.get("/", (req, res) => {
   });
 });
 
+//Message overview page
+app.get("/scripts/messagesOverview.js", (req, res) => {
+  res.sendFile("/scripts/messagesOverview.js", {
+    root: __dirname,
+  });
+});
+app.get("/styles/messagesOverview.css", (req, res) => {
+  res.sendFile("/styles/messagesOverview.css", {
+    root: __dirname,
+  });
+});
+app.get("/messagesOverviewPage", (req, res) => {
+  res.sendFile(__dirname + "/pages/main-app/messagesOverview.html");
+});
+app.get("/scripts/messagesOverview.js", (req, res) => {
+  res.sendFile(__dirname + "/scripts/messagesOverview.js");
+});
+app.get("/messagesOverview", (req, res) => {
+  db.then((dbc) => {
+    dbc
+      .db("Boonez")
+      .collection("profiles")
+      .findOne({ username: session.userid }, (err, result) => {
+        if (result) {
+          res.json(result);
+        } else {
+          // console.log(session);
+          res.send(500, "something went wrong");
+        }
+      });
+  });
+});
+
 server.listen(3000, () => {
-  console.log("listening on *:3000");
+  console.log("listening on http://localhost:3000");
 });
