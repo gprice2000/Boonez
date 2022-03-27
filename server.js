@@ -63,6 +63,8 @@ function socketIOConnection(recipient) {
 
       //TODO fix bug that emits message twice per send
 
+      let hoursString = date_ob.getHours();
+
       io.emit("chat message", msg);
 
       console.log(`${userId} sent a message: ${msg}`);
@@ -75,11 +77,19 @@ function socketIOConnection(recipient) {
               .insertOne({
                 userFrom: userId,
                 userTo: recipient,
+                read: false,
                 messageContent: hash,
-                timeSent: `${date_ob.getHours()}:${date_ob.getMinutes()}`,
-                date: `${
+                timeSent: Number(
+                  `${date_ob.getHours()}${date_ob.getMinutes()}`
+                ),
+                daySent: Number(
+                  `${
+                    date_ob.getMonth() + 1
+                  }${date_ob.getDate()}${date_ob.getFullYear()}`
+                ),
+                timeDateString: ` ${
                   date_ob.getMonth() + 1
-                }-${date_ob.getDate()}-${date_ob.getFullYear()}`,
+                }-${date_ob.getDate()}-${date_ob.getFullYear()} at ${date_ob.getHours()}:${date_ob.getMinutes()}`,
               });
           });
         } else res.send("Error sending message");
@@ -288,8 +298,14 @@ app.get("/styles/messages.css", (req, res) => {
 app.get("/messages", (req, res) => {
   res.sendFile(__dirname + "/pages/main-app/messages.html");
   //parse query string and send recipient name
-  let recipient = url.parse(req.url, true).query.user;
+  let recipient = url.parse(req.url, true).query.userTo;
   socketIOConnection(recipient);
+});
+
+app.get("/scripts/messages.js", (req, res) => {
+  req.sendFile("/scripts/messages.js", {
+    root: __dirname,
+  });
 });
 /*routing to fullcalendar main.css */
 app.get("/node_modules/fullcalendar/main.css", function (req, res) {
