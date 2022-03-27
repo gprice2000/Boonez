@@ -37,18 +37,37 @@ body {
   outline: none;
   color: #25292e;
 }
+#messages {
+  overflow: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+#messages div {
+  width: 15%;
+  height: fit-content;
+  margin-top: 1rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  padding: 10px;
+  border-radius: 20px;
+}
+#messages div p {
+  height: fit-content;
+  width: 100%;
+  word-break: break-all;
+  white-space: normal;
+  font-size: 1.2em;
+}
 
-/* #messages {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+.userFrom {
+  background-color: #ddb619;
+  color: white;
 }
-#messages > li {
-  padding: 0.5rem 1rem;
-}
-#messages > li:nth-child(odd) {
-  background: #efefef;
+.userTo {
+  background-color: #5b5e61;
+  color: white;
 }
 button:hover {
   cursor: pointer;
-} */
+}
