@@ -3,6 +3,8 @@ const url = new URL("/messagesOverview", root).href;
 
 //fetch friends from server and render them onto page
 
+//for testing
+
 async function getFriends() {
   return await fetch(url)
     .then((res) => {

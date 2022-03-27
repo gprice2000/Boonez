@@ -1,7 +1,6 @@
 //TODO render previous messages, sorted by date and time
 //Do it with sample data first
-const root = "http://localhost:3000/messages"; // Or whatever your backend URL is
-
+const root = window.location.href;
 //TODO Pass recipient and sender in query string
 
 // const url = new URL("/messagesOverview", root).href;
@@ -16,60 +15,65 @@ function parseQuery(queryString) {
   }
   return query;
 }
-let sampleMessages = [
-  {
-    _id: "623fefbf6ad665f4ac91e4ae",
-    userFrom: "gp",
-    userTo: "gp2",
-    read: false,
-    messageContent: "hola",
-    timeSent: 59,
-    daySent: 3232022,
-    timeDateString: " 3-23-2022 at 0:59",
-  },
-  {
-    _id: "623fefbf6ad665f4ac91e4ae",
-    userFrom: "gp2",
-    userTo: "gp",
-    read: false,
-    messageContent: "bitch",
-    timeSent: 109,
-    daySent: 3272022,
-    timeDateString: " 3-27-2022 at 1:49",
-  },
-  {
-    _id: "623fefbf6ad665f4ac91e4ae",
-    userFrom: "gp",
-    userTo: "gp2",
-    read: false,
-    messageContent: "hey",
-    timeSent: 59,
-    daySent: 3272022,
-    timeDateString: " 3-27-2022 at 0:59",
-  },
-  {
-    _id: "623fefbf6ad665f4ac91e4ae",
-    userFrom: "gp2",
-    userTo: "gp",
-    read: false,
-    messageContent:
-      "AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH",
-    timeSent: 49,
-    daySent: 3272021,
-    timeDateString: " 3-27-2022 at 0:49",
-  },
-  {
-    _id: "623fefbf6ad665f4ac91e4ae",
-    userFrom: "gp",
-    userTo: "gp2",
-    read: false,
-    messageContent: "bon jour",
-    timeSent: 55,
-    daySent: 3232022,
-    timeDateString: " 3-23-2022 at 0:55",
-  },
-];
+// let sampleMessages = [
+//   {
+//     _id: "623fefbf6ad665f4ac91e4ae",
+//     userFrom: "gp",
+//     userTo: "gp2",
+//     read: false,
+//     messageContent: "hola",
+//     timeSent: 59,
+//     daySent: 3232022,
+//     timeDateString: " 3-23-2022 at 0:59",
+//   },
+//   {
+//     _id: "623fefbf6ad665f4ac91e4ae",
+//     userFrom: "gp2",
+//     userTo: "gp",
+//     read: false,
+//     messageContent: "bitch",
+//     timeSent: 109,
+//     daySent: 3272022,
+//     timeDateString: " 3-27-2022 at 1:49",
+//   },
+//   {
+//     _id: "623fefbf6ad665f4ac91e4ae",
+//     userFrom: "gp",
+//     userTo: "gp2",
+//     read: false,
+//     messageContent: "hey",
+//     timeSent: 59,
+//     daySent: 3272022,
+//     timeDateString: " 3-27-2022 at 0:59",
+//   },
+//   {
+//     _id: "623fefbf6ad665f4ac91e4ae",
+//     userFrom: "gp2",
+//     userTo: "gp",
+//     read: false,
+//     messageContent:
+//       "AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH",
+//     timeSent: 49,
+//     daySent: 3272021,
+//     timeDateString: " 3-27-2022 at 0:49",
+//   },
+//   {
+//     _id: "623fefbf6ad665f4ac91e4ae",
+//     userFrom: "gp",
+//     userTo: "gp2",
+//     read: false,
+//     messageContent: "bon jour",
+//     timeSent: 55,
+//     daySent: 3232022,
+//     timeDateString: " 3-23-2022 at 0:55",
+//   },
+// ];
+let newUrl = root.split("?");
+newUrl = newUrl[0] + "/getMessages?" + newUrl[1];
+
 let messageCont = document.getElementById("messages");
+
+const url = new URL(newUrl);
 async function getMessages() {
   await fetch(url)
     .then((res) => res.json())
@@ -87,7 +91,6 @@ function renderMessages(messageArr) {
 
   const query = parseQuery(window.location.href);
   const userFrom = query.userFrom;
-  console.log(query);
   const userTo = query.userTo;
   //create a new div for each message that's appended in a container on document
   for (message of messageArr) {
@@ -98,4 +101,4 @@ function renderMessages(messageArr) {
   }
 }
 
-renderMessages(sampleMessages);
+getMessages();

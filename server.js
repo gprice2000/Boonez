@@ -15,6 +15,7 @@ const favicon = require("serve-favicon");
 const querystring = require("querystring");
 const url = require("url");
 const res = require("express/lib/response");
+const CryptoJS = require("crypto-js");
 
 let session = { userid: "" };
 
@@ -67,32 +68,28 @@ function socketIOConnection(recipient) {
 
       io.emit("chat message", msg);
 
-      console.log(`${userId} sent a message: ${msg}`);
-      bcrypt.hash(msg, saltRounds, (err, hash) => {
-        if (!err) {
-          db.then((dbc) => {
-            dbc
-              .db("Boonez")
-              .collection("messages")
-              .insertOne({
-                userFrom: userId,
-                userTo: recipient,
-                read: false,
-                messageContent: hash,
-                timeSent: Number(
-                  `${date_ob.getHours()}${date_ob.getMinutes()}`
-                ),
-                daySent: Number(
-                  `${
-                    date_ob.getMonth() + 1
-                  }${date_ob.getDate()}${date_ob.getFullYear()}`
-                ),
-                timeDateString: ` ${
-                  date_ob.getMonth() + 1
-                }-${date_ob.getDate()}-${date_ob.getFullYear()} at ${date_ob.getHours()}:${date_ob.getMinutes()}`,
-              });
+      let encryptedMsg = CryptoJS.AES.encrypt(msg, "secret key 123").toString();
+
+      db.then((dbc) => {
+        dbc
+          .db("Boonez")
+          .collection("messages")
+          .insertOne({
+            userFrom: userId,
+            userTo: recipient,
+            read: false,
+            messageContent: encryptedMsg,
+            timeSent: Number(`${date_ob.getHours()}${date_ob.getMinutes()}`),
+            daySent: Number(
+              `${
+                date_ob.getMonth() + 1
+              }${date_ob.getDate()}${date_ob.getFullYear()}`
+            ),
+            timeDateString: `${date_ob.toLocaleDateString()} at ${date_ob.toLocaleTimeString()}`,
+            //` ${
+            // date_ob.getMonth() + 1
+            // }-${date_ob.getDate()}-${date_ob.getFullYear()} at ${date_ob.getHours()}:${date_ob.getMinutes()}`,
           });
-        } else res.send("Error sending message");
       });
 
       // console.log("message: " + msg);
@@ -301,6 +298,43 @@ app.get("/messages", (req, res) => {
   let recipient = url.parse(req.url, true).query.userTo;
   socketIOConnection(recipient);
 });
+app.get("/messages/getMessages", (req, res) => {
+  //parse query string and send recipient name
+  let recipient = url.parse(req.url, true).query.userTo;
+  let user = url.parse(req.url, true).query.userFrom;
+  db.then((dbc) => {
+    dbc
+      .db("Boonez")
+      .collection("messages")
+      .find({
+        $or: [
+          { userFrom: user, userTo: recipient },
+          { userFrom: recipient, userTo: user },
+          // userFrom: user,
+          // userTo: recipient,
+        ],
+      })
+      .toArray((err, result) => {
+        if (result) {
+          // console.log(result);
+          for (item of result) {
+            var bytes = CryptoJS.AES.decrypt(
+              item.messageContent,
+              "secret key 123"
+            );
+            var originalText = bytes.toString(CryptoJS.enc.Utf8);
+            item.messageContent = originalText;
+          }
+          res.json(result);
+        } else {
+          // console.log(session);
+          res.send(500, "something went wrong");
+        }
+      });
+  });
+});
+// let recipient = url.parse(req.url, true).query.userTo;
+// let sender = url.parse(req.url, true).query.userFrom;
 
 app.get("/scripts/messages.js", (req, res) => {
   req.sendFile("/scripts/messages.js", {
@@ -361,7 +395,7 @@ app.get("/messagesOverview", (req, res) => {
           res.json(result);
         } else {
           // console.log(session);
-          res.send(500, "something went wrong");
+          res.status(500).send("something went wrong");
         }
       });
   });
