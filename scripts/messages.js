@@ -104,13 +104,12 @@ function renderMessages(messageArr) {
   }
 }
 
-async function getFriends() {
+function getFriends() {
   let friendUrl = root.split("?");
   friendUrl = friendUrl[0] + "/getFriends?" + friendUrl[1];
-  const friendsListUrl = new url(friendUrl);
-
-  await fetch(friendsListUrl)
-    .then((res) => res.json)
+  const friendsListUrl = new URL(friendUrl);
+  fetch(friendsListUrl)
+    .then((res) => res.json())
     .then((data) => {
       renderFriends(data);
     });
@@ -124,13 +123,23 @@ function renderFriends(friendsList) {
   let friendsCont = document.getElementById("friends");
   for (friend of friendsList) {
     let item = document.createElement("div");
+    // item.innerHTML =
+    //   `<img src=${"../images/blank-profile-pic.png"} alt=${
+    //     friend.username
+    //   }'s profile picture></img>` +
+    //   `<a href=${`/messages?userTo=${friend.username}&userFrom=${"test"}`}>${
+    //     friend.fname
+    //   } ${friend.lname}</a>`;
     item.innerHTML =
-      `<img src=${"../images/blank-profile-pic.png"} alt=${
+      `<img class=${"profile-pic"} src=${"../../images/blank-profile-pic.png"} alt=${
         friend.username
       }'s profile picture></img>` +
-      `<a href=${`/messages?userTo=${friend.username}&userFrom=${"test"}`}>${
-        friend.fname
-      } ${friend.lname}</a>`;
+      `<p class='friend-name'>${friend.fname} ${friend.lname}</p>`;
+    item.addEventListener("click", () => {
+      window.location.href = `/messages?userTo=${
+        friend.username
+      }&userFrom=${"test"}`;
+    });
 
     item.className = "friend-item";
     item.id = `${friend.username}`;
@@ -138,29 +147,29 @@ function renderFriends(friendsList) {
   }
 }
 
-let sampleFriends = [
-  {
-    fname: "gabe",
-    lname: "price",
-    username: "gp",
-    password: "$2a$10$tsTLIu.2U5O3z1oYwRbJVu60e6GJ2.llKMSUeSb3DMF.qEuzkqCje",
-    email: "gp@gmail.com",
-  },
-  {
-    fname: "Jacob",
-    lname: "Mazzarese",
-    username: "jvmazz",
-    password: "$2a$10$tsTLIu.2U5O3z1oYwRbJVu60e6GJ2.llKMSUeSb3DMF.qEuzkqCje",
-    email: "gp@gmail.com",
-  },
-  {
-    fname: "Joe",
-    lname: "Mama",
-    username: "yourmom",
-    password: "$2a$10$tsTLIu.2U5O3z1oYwRbJVu60e6GJ2.llKMSUeSb3DMF.qEuzkqCje",
-    email: "gp@gmail.com",
-  },
-];
+// let sampleFriends = [
+//   {
+//     fname: "gabe",
+//     lname: "price",
+//     username: "gp",
+//     password: "$2a$10$tsTLIu.2U5O3z1oYwRbJVu60e6GJ2.llKMSUeSb3DMF.qEuzkqCje",
+//     email: "gp@gmail.com",
+//   },
+//   {
+//     fname: "Jacob",
+//     lname: "Mazzarese",
+//     username: "jvmazz",
+//     password: "$2a$10$tsTLIu.2U5O3z1oYwRbJVu60e6GJ2.llKMSUeSb3DMF.qEuzkqCje",
+//     email: "gp@gmail.com",
+//   },
+//   {
+//     fname: "Joe",
+//     lname: "Mama",
+//     username: "yourmom",
+//     password: "$2a$10$tsTLIu.2U5O3z1oYwRbJVu60e6GJ2.llKMSUeSb3DMF.qEuzkqCje",
+//     email: "gp@gmail.com",
+//   },
+// ];
 
 // document.querySelectorAll(".friend-item").addEventListener("click", () => {
 //   let newUrl = root.split("?");
@@ -229,6 +238,6 @@ form.addEventListener("submit", (e) => {
 //   // messages.appendChild(item);
 //   // window.scrollTo(0, document.body.scrollHeight);
 // });
-renderFriends(sampleFriends);
-// getMessages();
-// getFriends()
+// renderFriends(sampleFriends);
+getMessages();
+getFriends();

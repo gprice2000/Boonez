@@ -29,14 +29,30 @@ body {
   flex-direction: column;
 }
 #friends {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 25%;
   height: 100%;
+  overflow: auto;
   background-color: rgb(230, 230, 230);
 }
 .friend-item {
-  width: 50%;
-  height: 1.2rem;
+  width: 80%;
+  height: fit-content;
+  display: flex;
+  padding: 0.5em;
+  margin: 5px;
+  border-radius: 1em;
   background-color: white;
+}
+.friend-item:hover {
+  cursor: pointer;
+}
+.friend-name {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-left: 1em;
 }
 #form {
   /* grid-area: input; */
@@ -120,4 +136,10 @@ body {
 }
 button:hover {
   cursor: pointer;
+}
+.profile-pic {
+  align-self: center;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
 }

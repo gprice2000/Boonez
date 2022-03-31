@@ -341,8 +341,8 @@ app.get("/messages/getMessages", (req, res) => {
   //parse query string and send recipient name
   recipient = url.parse(req.url, true).query.userTo;
   let user = url.parse(req.url, true).query.userFrom;
-  console.log(user);
-  console.log(recipient);
+  // console.log(user);
+  // console.log(recipient);
   db.then((dbc) => {
     dbc
       .db("Boonez")
@@ -441,7 +441,53 @@ app.get("/messagesOverview", (req, res) => {
       });
   });
 });
+app.get("/messages/getFriends", async (req, res) => {
+  let curUser = url.parse(req.url, true).query.userFrom;
+  // console.log(curUser);
+  //find friends list
+  //get all friend objects of current users friends
+  db.then((dbc) => {
+    dbc
+      .db("Boonez")
+      .collection("profiles")
+      .find({ friends: { $in: [curUser] } })
+      .toArray((err, result) => {
+        if (result) {
+          // res.setHeader("Content-Type", "application/json");
+          // getFriendObjects(result.friends, res);
+          res.json(result);
+        } else {
+          // console.log(session);
+          res.status(500).send("something went wrong");
+        }
+      });
+  });
+  // friends.then(console.log(friends));
 
+  // if (friendArr.length == friends.length) res.json(friendArr);
+});
+async function getFriendObjects(friends) {
+  let friendArr = [];
+
+  //  iterate through friends and add their corresponding objects
+  for (friend of friends) {
+    await db.then((dbc) => {
+      dbc
+        .db("Boonez")
+        .collection("profiles")
+        .findOne({ username: friend }, (err, result) => {
+          if (result) {
+            console.log(result);
+            // friendArr.push(result);
+          } else {
+            // console.log(session);
+            res.status(500).send("something went wrong");
+          }
+        });
+    });
+  }
+  if (friendArr.length == friends.length) console.log(friendArr);
+}
 server.listen(3000, () => {
   console.log("listening on http://localhost:3000");
 });
