@@ -9,33 +9,20 @@
     <script defer src="../../scripts/messages.js"></script>
   </head>
   <body>
-    <div id="messages" />
-    <form id="form" action="">
-      <input id="input" autocomplete="off" />
-      <button>Send</button>
-    </form>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-      var socket = io();
+    <div id="friends"></div>
+    <div id="message-cont">
+      <!-- <div id="messages" /> -->
+      <div id="messages">
+        <!-- <div>hey</div>
+        <div>hello</div>
+        <div>hey</div> -->
+      </div>
+      <form id="form" action="/messages" method="post">
+        <input id="input" name="messageBox" autocomplete="off" />
+        <button>Send</button>
+      </form>
+    </div>
 
-      var messages = document.getElementById("messages");
-      var form = document.getElementById("form");
-      var input = document.getElementById("input");
-
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        if (input.value) {
-          socket.emit("chat message", input.value);
-          input.value = "";
-        }
-      });
-
-      socket.on("chat message", (msg) => {
-        var item = document.createElement("li");
-        item.textContent = msg;
-        messages.appendChild(item);
-        window.scrollTo(0, document.body.scrollHeight);
-      });
-    </script>
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
   </body>
 </html>

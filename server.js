@@ -49,53 +49,57 @@ app.use(cookieParser());
 //used for keeping track of messages
 let date_ob = new Date();
 
-function socketIOConnection(recipient) {
-  let userId = session.userid;
-  //used for bcrypt hashing
-  const saltRounds = 10;
+// function socketIOConnection(recipient) {
+//   let userId = session.userid;
+//   //used for bcrypt hashing
+//   const saltRounds = 10;
 
-  io.on("connection", (socket) => {
-    //maybe send all messages in database when connected
-    socket.on("chat message", (msg) => {
-      //display message in client and send message to database
+//   io.on("connection", (socket) => {
+//     //maybe send all messages in database when connected
+//     let previousMessage = ""; // make sure same messages arent rendering multiple times
+//     socket.on("chat message", (msg) => {
+//       //display message in client and send message to database
 
-      //TODO need to keep track of message recipient
-      //TODO need to encrypt messages using bcrypt
+//       //TODO need to keep track of message recipient
+//       //TODO need to encrypt messages using bcrypt
 
-      //TODO fix bug that emits message twice per send
+//       //TODO fix bug that emits message twice per send
 
-      let hoursString = date_ob.getHours();
+//       let hoursString = date_ob.getHours();
 
-      io.emit("chat message", msg);
+//       // io.to(socketId).emit("chat message", msg);
+//       // socket.broadcast.emit("chat message", msg);
 
-      let encryptedMsg = CryptoJS.AES.encrypt(msg, "secret key 123").toString();
+//       let encryptedMsg = CryptoJS.AES.encrypt(msg, "secret key 123").toString();
 
-      db.then((dbc) => {
-        dbc
-          .db("Boonez")
-          .collection("messages")
-          .insertOne({
-            userFrom: userId,
-            userTo: recipient,
-            read: false,
-            messageContent: encryptedMsg,
-            timeSent: Number(`${date_ob.getHours()}${date_ob.getMinutes()}`),
-            daySent: Number(
-              `${
-                date_ob.getMonth() + 1
-              }${date_ob.getDate()}${date_ob.getFullYear()}`
-            ),
-            timeDateString: `${date_ob.toLocaleDateString()} at ${date_ob.toLocaleTimeString()}`,
-            //` ${
-            // date_ob.getMonth() + 1
-            // }-${date_ob.getDate()}-${date_ob.getFullYear()} at ${date_ob.getHours()}:${date_ob.getMinutes()}`,
-          });
-      });
+//       var ts = Math.round(date_ob.getTime() / 1000);
+//       db.then((dbc) => {
+//         dbc
+//           .db("Boonez")
+//           .collection("messages")
+//           .insertOne({
+//             userFrom: userId,
+//             userTo: recipient,
+//             read: false,
+//             messageContent: encryptedMsg,
+//             unixTime: ts,
+//             timeSent: Number(`${date_ob.getHours()}${date_ob.getMinutes()}`),
+//             daySent: Number(
+//               `${
+//                 date_ob.getMonth() + 1
+//               }${date_ob.getDate()}${date_ob.getFullYear()}`
+//             ),
+//             timeDateString: `${date_ob.toLocaleDateString()} at ${date_ob.toLocaleTimeString()}`,
+//             //` ${
+//             // date_ob.getMonth() + 1
+//             // }-${date_ob.getDate()}-${date_ob.getFullYear()} at ${date_ob.getHours()}:${date_ob.getMinutes()}`,
+//           });
+//       });
 
-      // console.log("message: " + msg);
-    });
-  });
-}
+//       // console.log("message: " + msg);
+//     });
+//   });
+// }
 app.post("/signup", function (req, res) {
   db.then(function (dbc) {
     dbc
@@ -164,7 +168,7 @@ app.post("/login", function (req, res) {
                 session = req.session;
                 session.userid = req.body.username;
                 // console.log(session);
-                res.redirect("/dashboard");
+                res.redirect(`/dashboard/?user=${session.userid}`);
               }
             }
           );
@@ -295,13 +299,50 @@ app.get("/styles/messages.css", (req, res) => {
 app.get("/messages", (req, res) => {
   res.sendFile(__dirname + "/pages/main-app/messages.html");
   //parse query string and send recipient name
-  let recipient = url.parse(req.url, true).query.userTo;
-  socketIOConnection(recipient);
+  // let recipient = url.parse(req.url, true).query.userTo;
+  // socketIOConnection(recipient);
+});
+/*
+ * Possible solution:
+ *
+ */
+app.post("/messages", (req, res) => {
+  recipient = url.parse(req.url, true).query.userTo;
+  let user = url.parse(req.url, true).query.userFrom;
+  let msg = req.body.messageBox;
+  console.log(msg);
+  let encryptedMsg = CryptoJS.AES.encrypt(msg, "secret key 123").toString();
+
+  var ts = Math.round(date_ob.getTime() / 1000);
+  db.then((dbc) => {
+    dbc
+      .db("Boonez")
+      .collection("messages")
+      .insertOne({
+        userFrom: user,
+        userTo: recipient,
+        read: false,
+        messageContent: encryptedMsg,
+        unixTime: ts,
+        timeSent: Number(`${date_ob.getHours()}${date_ob.getMinutes()}`),
+        daySent: Number(
+          `${
+            date_ob.getMonth() + 1
+          }${date_ob.getDate()}${date_ob.getFullYear()}`
+        ),
+        timeDateString: `${date_ob.toLocaleDateString()} at ${date_ob.toLocaleTimeString()}`,
+        //` ${
+        // date_ob.getMonth() + 1
+        // }-${date_ob.getDate()}-${date_ob.getFullYear()} at ${date_ob.getHours()}:${date_ob.getMinutes()}`,
+      });
+  });
 });
 app.get("/messages/getMessages", (req, res) => {
   //parse query string and send recipient name
-  let recipient = url.parse(req.url, true).query.userTo;
+  recipient = url.parse(req.url, true).query.userTo;
   let user = url.parse(req.url, true).query.userFrom;
+  console.log(user);
+  console.log(recipient);
   db.then((dbc) => {
     dbc
       .db("Boonez")

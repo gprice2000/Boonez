@@ -1,19 +1,57 @@
 @import url("https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap");
+html,
+body {
+  height: 100%;
+  width: 100%;
+  /* display: flex; */
+}
 body {
   margin: 0;
-  padding-bottom: 3rem;
+  /* padding-bottom: 3rem; */
   font-family: "Open Sans", sans-serif;
+  display: flex;
+  flex-direction: row;
+  /* display: grid;
+  grid:
+    friends mbox mbox mbox
+    friends mbox mbox mbox
+    friends mbox mbox mbox
+    friends input input input; */
+  /* grid-auto-columns: auto; */
+  /* display: flex; */
 }
-
+#message-cont {
+  display: flex;
+  /* width: 75%; */
+  width: 100%;
+  height: 100%;
+  /* align-items: flex-end; */
+  flex-direction: column;
+}
+#friends {
+  width: 25%;
+  height: 100%;
+  background-color: rgb(230, 230, 230);
+}
+.friend-item {
+  width: 50%;
+  height: 1.2rem;
+  background-color: white;
+}
 #form {
+  /* grid-area: input; */
   background: rgba(0, 0, 0, 0.15);
   padding: 0.25rem;
-  position: fixed;
+  /* position: fixed; */
   bottom: 0;
+  /* margin-left: 20%; */
+  /* grid-row-start: 3; */
   left: 0;
   right: 0;
   display: flex;
-  height: 4rem;
+  height: 8%;
+  /* align-self: flex-end; */
+  width: 100%;
   box-sizing: border-box;
   backdrop-filter: blur(10px);
 }
@@ -38,13 +76,21 @@ body {
   color: #25292e;
 }
 #messages {
+  /* background-color: #ffcc00; */
   overflow: auto;
+  /* height: fit-content; */
+  /* height: 1080px; */
+  /* grid-row-start: 1; */
+  /* grid-row-end: 3; */
+  /* background-color: yellow; */
+  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
 }
 #messages div {
-  width: 15%;
+  /* width: 15%; */
+  width: 20%;
   height: fit-content;
   margin-top: 1rem;
   margin-left: 0.5rem;
