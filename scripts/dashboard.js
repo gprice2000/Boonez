@@ -1,16 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
-    let proPic = document.getElementById("profile-pic");
 	fetch('http://localhost:3000/userDashboard')
 	.then(response => response.json())
 	.then(data => {
 		console.log('Success:'+ data.profilePic);
 		let proPic = document.getElementById("profile-pic")
 		proPic.src = data.profilePic;
+		friendList(data);
 	})
 	.catch((error) => {
 		console.error("Error:" + error);
 	});
 });
+
+function friendList(data) {
+	let node = document.createElement('li');
+	node.appendChild(document.createTextNode('Jacob'));
+	document.querySelector('#friendsList').appendChild(node);
+}
 
 function setProf() {
     let picLink = document.getElementById("PicLink");
