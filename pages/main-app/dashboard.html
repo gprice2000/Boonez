@@ -4,88 +4,91 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel='stylesheet' href='../../node_modules/fullcalendar/main.css' />
-    <link rel='stylesheet' href='../../styles/calendar.css' />>
-    <link rel='stylesheet' href='../../styles/dashboard.css'/>
+    <link rel="stylesheet" href="../../node_modules/fullcalendar/main.css" />
+    <link rel="stylesheet" href="../../styles/calendar.css" />
+    >
+    <link rel="stylesheet" href="../../styles/dashboard.css" />
 
-    <script src='../../node_modules/fullcalendar/main.js'></script>
-    <script defer src='../../scripts/dashboard.js'></script>
-    <script src='../../scripts/calendar.js'></script>
+    <script src="../../node_modules/fullcalendar/main.js"></script>
+    <script defer src="../../scripts/dashboard.js"></script>
+    <script src="../../scripts/calendar.js"></script>
     <title>Boonez Dashboard</title>
   </head>
   <body>
-      <div class="logo-container">
-          <img
-            src="./images/word_logo.png"
-            alt="boonze logo"
-            width="195"
-            height="75px"
-          />
-      </div>
-      <div class="profile-pic">
-        <img src="./images/blank-profile-pic.png"
-          id="profile-pic"
-          alt="profile pic"
-          width="200"
-          height="80px"
-          onclick="setProf()"
-        />
-      </div>
-      <div id="picModal" class="modal">
-        <div class="modal-content">
-          <div class="modal-header">
-            <span id="closePic">&times;</span>
-            <h2>Event</h2>
-          </div>
-          <div class="modal-body">
-            <form action="/profilePicture" method="POST">
-              <label for="PicLink">Image Link:</label>
-              <input type="text" id="PicLink" name="PicLink"/>
+    <div class="logo-container">
+      <img
+        src="./images/word_logo.png"
+        alt="boonze logo"
+        width="195"
+        height="75px"
+      />
+    </div>
+    <div class="profile-pic">
+      <img
+        src="./images/blank-profile-pic.png"
+        id="profile-pic"
+        alt="profile pic"
+        width="200"
+        height="80px"
+        onclick="setProf()"
+      />
+    </div>
+    <div id="picModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span id="closePic">&times;</span>
+          <h2>Event</h2>
+        </div>
+        <div class="modal-body">
+          <form action="/profilePicture" method="POST">
+            <label for="PicLink">Image Link:</label>
+            <input type="text" id="PicLink" name="PicLink" />
+            <br />
+            <div class="modal-footer">
               <br />
-              <div class="modal-footer">
-              <br />
-              <input id="PicSub" type="submit" value="Submit Image"> 
+              <input id="PicSub" type="submit" value="Submit Image" />
             </div>
-            </form>
-          </div>
+          </form>
         </div>
       </div>
+    </div>
 
-      <div class="about-me">
-          <label for="aboutme">About me:</label><br>
-          <input type="text" id="aboutme" name="aboutme"><br>
-      </div> 
+    <div class="about-me">
+      <label for="aboutme">About me:</label><br />
+      <input type="text" id="aboutme" name="aboutme" /><br />
+    </div>
 
-      <div id="calendar">
-        <button id="CalBtn">Private</button>
-      </div>
+    <div id="calendar">
+      <button id="CalBtn">Private</button>
+    </div>
 
-      <div id="myModal" class="modal">
-        <div class="modal-content">
-          <div class="modal-header">
-            <span class="close">&times;</span>
-            <h2>Event</h2>
-          </div>
-          <div class="modal-body">
-            <form id="eventData">
-              <label for="Title">Title:</label>
-              <input type="text" id="Title" value=""/>
-              <br />
-              <label for="eventStart">Event Start:</label>
-              <input type="date" id="EventStart" value=""/>
-              <br />
-              <label for="eventEnd">Event End:</label>
-              <input type="date" id="EventEnd" value=""/>
-              <br />
-              <div class="modal-footer">
-                <h3>Modal Footer</h3>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close">&times;</span>
+          <h2>Event</h2>
+        </div>
+        <div class="modal-body">
+          <form id="eventData">
+            <label for="Title">Title:</label>
+            <input type="text" id="Title" value="" />
+            <br />
+            <label for="eventStart">Event Start:</label>
+            <input type="date" id="EventStart" value="" />
+            <br />
+            <label for="eventEnd">Event End:</label>
+            <input type="date" id="EventEnd" value="" />
+            <br />
+            <div class="modal-footer">
+              <h3>Modal Footer</h3>
               <br />
               <button id="calSub">Save Event</button>
               <button id="calDel">Delete Event</button>
-              </div>
-            </form>
-          </div>
+            </div>
+          </form>
         </div>
       </div>
-    </body>
+    </div>
+    <a href="../messagesOverviewPage">messages overview</a>
+  </body>
 </html>
