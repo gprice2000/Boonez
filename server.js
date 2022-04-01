@@ -56,87 +56,47 @@ function socketIOConnection(from, to) {
 
   io.once("connection", (socket) => {
     chatters.push({ username: from, usersocket: socket.id });
-    console.log(chatters);
     io.emit("userConnected", socket.id); // let user = url.parse(req.url, true).query.userFrom;
 
     //remove user from array of current users when disconnected
     socket.on("disconnect", () => {
       chatters = chatters.filter((x) => x.usersocket != socket.id);
-      console.log(chatters);
     });
 
-    //maybe send all messages in database when connected
-    // if (!chattersArr.find((item) => item.user == from))
-    //   chattersArr.push({ user: from, userSocket: socket.id });
-    // else {
-    //   chattersArr = chattersArr.filter((item) => item.user == from);
-    //   chattersArr.push({ user: from, userSocket: socket.id });
-    // }
-
-    // chatter = { user: from, userSocket: socket.id };
-    // console.log(chatter);
-    // io.socketsJoin("room1");
-    // console.log("Your user: ", socket.id);
     socket.on("private message", (msgData) => {
-      // console.log(`Message: ${msg} sent to ${recipientUsername}`);
-
-      // console.log(chatter.user == recipientUsername);
-      // let recipientId = chattersArr.find(
-      //   (item) => item.user == recipientUsername
-      // );
-      console.log(msgData);
-
       let recipient = chatters.find((x) => x.username == msgData.recipient);
       let recipientSocket = recipient ? recipient.usersocket : 0;
-      console.log(recipientSocket);
+
       //send message only to the right sender and reciever
       io.to(recipientSocket).emit("private message", msgData);
       io.to(msgData.usersocket).emit("private message", msgData);
-      // let recipientId =
-      // chatter.user == recipientUsername ? chatter.userSocket : 0;
-      // console.log(recipientId);
-      // let otherId =  chattersArr.find((item)=> item.user == recipient).userSocket;
 
-      // if (recipientId != 0) socket.to(recipientId).emit("private message", msg);
+      let encryptedMsg = CryptoJS.AES.encrypt(
+        msgData.msg,
+        "secret key 123"
+      ).toString();
+
+      var ts = Math.round(date_ob.getTime() / 1000);
+      db.then((dbc) => {
+        dbc
+          .db("Boonez")
+          .collection("messages")
+          .insertOne({
+            userFrom: msgData.user,
+            userTo: msgData.recipient,
+            read: false,
+            messageContent: encryptedMsg,
+            unixTime: ts,
+            timeSent: Number(`${date_ob.getHours()}${date_ob.getMinutes()}`),
+            daySent: Number(
+              `${
+                date_ob.getMonth() + 1
+              }${date_ob.getDate()}${date_ob.getFullYear()}`
+            ),
+            timeDateString: `${date_ob.toLocaleDateString()} at ${date_ob.toLocaleTimeString()}`,
+          });
+      });
     });
-    //display message in client and send message to database
-
-    //TODO need to keep track of message recipient
-    //TODO need to encrypt messages using bcrypt
-
-    //TODO fix bug that emits message twice per send
-
-    // let hoursString = date_ob.getHours();
-
-    // socket.broadcast.emit("chat message", msg);
-
-    // let encryptedMsg = CryptoJS.AES.encrypt(msg, "secret key 123").toString();
-
-    // var ts = Math.round(date_ob.getTime() / 1000);
-    // db.then((dbc) => {
-    //   dbc
-    //     .db("Boonez")
-    //     .collection("messages")
-    //     .insertOne({
-    //       userFrom: userId,
-    //       userTo: recipient,
-    //       read: false,
-    //       messageContent: encryptedMsg,
-    //       unixTime: ts,
-    //       timeSent: Number(`${date_ob.getHours()}${date_ob.getMinutes()}`),
-    //       daySent: Number(
-    //         `${
-    //           date_ob.getMonth() + 1
-    //         }${date_ob.getDate()}${date_ob.getFullYear()}`
-    //       ),
-    //       timeDateString: `${date_ob.toLocaleDateString()} at ${date_ob.toLocaleTimeString()}`,
-    //       //` ${
-    //       // date_ob.getMonth() + 1
-    //       // }-${date_ob.getDate()}-${date_ob.getFullYear()} at ${date_ob.getHours()}:${date_ob.getMinutes()}`,
-    //     });
-    // });
-
-    // console.log("message: " + msg);
   });
 }
 app.post("/signup", function (req, res) {
@@ -199,14 +159,10 @@ app.post("/login", function (req, res) {
               if (error) {
                 throw error;
               } else if (!isMatch) {
-                // console.log("Password doesn't match!");
                 res.send("Password incorrect");
               } else {
-                // console.log("Password matches!");
-
                 session = req.session;
                 session.userid = req.body.username;
-                // console.log(session);
                 res.redirect(`/dashboard/?user=${session.userid}`);
               }
             }
@@ -342,47 +298,12 @@ app.get("/messages", (req, res) => {
   let recipient = url.parse(req.url, true).query.userTo;
   socketIOConnection(from, recipient);
 });
-/*
- * Possible solution:
- *
- */
-// app.post("/messages", (req, res) => {
-//   recipient = url.parse(req.url, true).query.userTo;
-//   let user = url.parse(req.url, true).query.userFrom;
-//   let msg = req.body.messageBox;
-//   console.log(msg);
-//   let encryptedMsg = CryptoJS.AES.encrypt(msg, "secret key 123").toString();
 
-//   var ts = Math.round(date_ob.getTime() / 1000);
-//   db.then((dbc) => {
-//     dbc
-//       .db("Boonez")
-//       .collection("messages")
-//       .insertOne({
-//         userFrom: user,
-//         userTo: recipient,
-//         read: false,
-//         messageContent: encryptedMsg,
-//         unixTime: ts,
-//         timeSent: Number(`${date_ob.getHours()}${date_ob.getMinutes()}`),
-//         daySent: Number(
-//           `${
-//             date_ob.getMonth() + 1
-//           }${date_ob.getDate()}${date_ob.getFullYear()}`
-//         ),
-//         timeDateString: `${date_ob.toLocaleDateString()} at ${date_ob.toLocaleTimeString()}`,
-//         //` ${
-//         // date_ob.getMonth() + 1
-//         // }-${date_ob.getDate()}-${date_ob.getFullYear()} at ${date_ob.getHours()}:${date_ob.getMinutes()}`,
-//       });
-//   });
-// });
 app.get("/messages/getMessages", (req, res) => {
   //parse query string and send recipient name
   recipient = url.parse(req.url, true).query.userTo;
   let user = url.parse(req.url, true).query.userFrom;
-  // console.log(user);
-  // console.log(recipient);
+
   db.then((dbc) => {
     dbc
       .db("Boonez")
@@ -391,13 +312,10 @@ app.get("/messages/getMessages", (req, res) => {
         $or: [
           { userFrom: user, userTo: recipient },
           { userFrom: recipient, userTo: user },
-          // userFrom: user,
-          // userTo: recipient,
         ],
       })
       .toArray((err, result) => {
         if (result) {
-          // console.log(result);
           for (item of result) {
             var bytes = CryptoJS.AES.decrypt(
               item.messageContent,
@@ -414,9 +332,6 @@ app.get("/messages/getMessages", (req, res) => {
       });
   });
 });
-// let recipient = url.parse(req.url, true).query.userTo;
-// let sender = url.parse(req.url, true).query.userFrom;
-
 app.get("/scripts/messages.js", (req, res) => {
   req.sendFile("/scripts/messages.js", {
     root: __dirname,
