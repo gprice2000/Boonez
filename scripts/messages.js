@@ -1,9 +1,33 @@
-//TODO render previous messages, sorted by date and time
-//Do it with sample data first
-const root = window.location.href;
-//TODO Pass recipient and sender in query string
+var socket = io();
 
-// const url = new URL("/messagesOverview", root).href;
+// socket.on("connect", () => {
+// console.log();
+socket.on("private message", function (msg, from, to) {
+  console.log(msg);
+  let message = [];
+  let date_ob = new Date();
+  const query = parseQuery(window.location.href);
+  const userFrom = from;
+  const userTo = to;
+  var ts = Math.round(date_ob.getTime() / 1000);
+  message[0] = {
+    userFrom: userFrom,
+    userTo: userTo,
+    read: false,
+    messageContent: msg,
+    unixTime: ts,
+    timeSent: Number(`${date_ob.getHours()}${date_ob.getMinutes()}`),
+    daySent: Number(
+      `${date_ob.getMonth() + 1}${date_ob.getDate()}${date_ob.getFullYear()}`
+    ),
+    timeDateString: `${date_ob.toLocaleDateString()} at ${date_ob.toLocaleTimeString()}`,
+  };
+  renderMessages(message);
+});
+//Event listener for when recipient sends a message back
+// });
+const root = window.location.href;
+
 function parseQuery(queryString) {
   var query = {};
   var pairs = queryString.split("?")[1].split("&");
@@ -14,59 +38,7 @@ function parseQuery(queryString) {
   }
   return query;
 }
-// let sampleMessages = [
-//   {
-//     _id: "623fefbf6ad665f4ac91e4ae",
-//     userFrom: "gp",
-//     userTo: "gp2",
-//     read: false,
-//     messageContent: "hola",
-//     timeSent: 59,
-//     daySent: 3232022,
-//     timeDateString: " 3-23-2022 at 0:59",
-//   },
-//   {
-//     _id: "623fefbf6ad665f4ac91e4ae",
-//     userFrom: "gp2",
-//     userTo: "gp",
-//     read: false,
-//     messageContent: "bitch",
-//     timeSent: 109,
-//     daySent: 3272022,
-//     timeDateString: " 3-27-2022 at 1:49",
-//   },
-//   {
-//     _id: "623fefbf6ad665f4ac91e4ae",
-//     userFrom: "gp",
-//     userTo: "gp2",
-//     read: false,
-//     messageContent: "hey",
-//     timeSent: 59,
-//     daySent: 3272022,
-//     timeDateString: " 3-27-2022 at 0:59",
-//   },
-//   {
-//     _id: "623fefbf6ad665f4ac91e4ae",
-//     userFrom: "gp2",
-//     userTo: "gp",
-//     read: false,
-//     messageContent:
-//       "AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH",
-//     timeSent: 49,
-//     daySent: 3272021,
-//     timeDateString: " 3-27-2022 at 0:49",
-//   },
-//   {
-//     _id: "623fefbf6ad665f4ac91e4ae",
-//     userFrom: "gp",
-//     userTo: "gp2",
-//     read: false,
-//     messageContent: "bon jour",
-//     timeSent: 55,
-//     daySent: 3232022,
-//     timeDateString: " 3-23-2022 at 0:55",
-//   },
-// ];
+
 let newUrl = root.split("?");
 newUrl = newUrl[0] + "/getMessages?" + newUrl[1];
 
@@ -86,8 +58,6 @@ async function getMessages() {
 //Takes array of message objects as input
 function renderMessages(messageArr) {
   messageArr.sort((x, y) => x.unixTime - y.unixTime);
-
-  // messageArr.sort((x, y) => x.timeSent - y.timeSent); //Sort array by time so latest messages appear first
 
   const query = parseQuery(window.location.href);
 
@@ -116,128 +86,70 @@ function getFriends() {
 }
 //Take in array of friend objects, display in side pane
 function renderFriends(friendsList) {
-  // const query = parseQuery(window.location.href);
-  // console.log(query);
-  // const userFrom = query.userFrom;
+  const query = parseQuery(window.location.href);
+  const userFrom = query.userFrom;
+
   //create a new div for each friend in current users friendslist
   let friendsCont = document.getElementById("friends");
   for (friend of friendsList) {
     let item = document.createElement("div");
-    // item.innerHTML =
-    //   `<img src=${"../images/blank-profile-pic.png"} alt=${
-    //     friend.username
-    //   }'s profile picture></img>` +
-    //   `<a href=${`/messages?userTo=${friend.username}&userFrom=${"test"}`}>${
-    //     friend.fname
-    //   } ${friend.lname}</a>`;
     item.innerHTML =
       `<img class=${"profile-pic"} src=${"../../images/blank-profile-pic.png"} alt=${
         friend.username
       }'s profile picture></img>` +
       `<p class='friend-name'>${friend.fname} ${friend.lname}</p>`;
-    item.addEventListener("click", () => {
-      window.location.href = `/messages?userTo=${
-        friend.username
-      }&userFrom=${"test"}`;
-    });
 
     item.className = "friend-item";
     item.id = `${friend.username}`;
+
+    //give friend a link to a new message box
+    item.addEventListener("click", () => {
+      window.location.href = `/messages?userTo=${item.id}&userFrom=${userFrom}`;
+    });
     friendsCont.appendChild(item);
   }
 }
-
-// let sampleFriends = [
-//   {
-//     fname: "gabe",
-//     lname: "price",
-//     username: "gp",
-//     password: "$2a$10$tsTLIu.2U5O3z1oYwRbJVu60e6GJ2.llKMSUeSb3DMF.qEuzkqCje",
-//     email: "gp@gmail.com",
-//   },
-//   {
-//     fname: "Jacob",
-//     lname: "Mazzarese",
-//     username: "jvmazz",
-//     password: "$2a$10$tsTLIu.2U5O3z1oYwRbJVu60e6GJ2.llKMSUeSb3DMF.qEuzkqCje",
-//     email: "gp@gmail.com",
-//   },
-//   {
-//     fname: "Joe",
-//     lname: "Mama",
-//     username: "yourmom",
-//     password: "$2a$10$tsTLIu.2U5O3z1oYwRbJVu60e6GJ2.llKMSUeSb3DMF.qEuzkqCje",
-//     email: "gp@gmail.com",
-//   },
-// ];
-
-// document.querySelectorAll(".friend-item").addEventListener("click", () => {
-//   let newUrl = root.split("?");
-//   newUrl = newUrl[0] + `userTo=${}`;
-//   window.location.href = {};
-// });
-
-// var socket = io();
 
 // var messages = document.getElementById("messages");
 var form = document.getElementById("form");
 var input = document.getElementById("input");
 
 form.addEventListener("submit", (e) => {
+  const query = parseQuery(window.location.href);
+  const userFrom = query.userFrom;
+  const userTo = query.userTo;
   e.preventDefault();
   let msg = "";
   if (input.value) {
     msg = input.value;
-    // socket.emit("chat message", input.value);
+    console.log(socket.id);
+    socket.emit("private message", input.value, userFrom, userTo);
     input.value = "";
   }
-  let message = [];
-  let date_ob = new Date();
-  const query = parseQuery(window.location.href);
-  const userFrom = query.userFrom;
-  const userTo = query.userTo;
-  var ts = Math.round(date_ob.getTime() / 1000);
-  message[0] = {
-    userFrom: userFrom,
-    userTo: userTo,
-    read: false,
-    messageContent: msg,
-    unixTime: ts,
-    timeSent: Number(`${date_ob.getHours()}${date_ob.getMinutes()}`),
-    daySent: Number(
-      `${date_ob.getMonth() + 1}${date_ob.getDate()}${date_ob.getFullYear()}`
-    ),
-    timeDateString: `${date_ob.toLocaleDateString()} at ${date_ob.toLocaleTimeString()}`,
-  };
-  renderMessages(message);
+  // let message = [];
+  // let date_ob = new Date();
+  // // const query = parseQuery(window.location.href);
+  // // const userFrom = query.userFrom;
+  // // const userTo = query.userTo;
+  // var ts = Math.round(date_ob.getTime() / 1000);
+  // message[0] = {
+  //   userFrom: userFrom,
+  //   userTo: userTo,
+  //   read: false,
+  //   messageContent: msg,
+  //   unixTime: ts,
+  //   timeSent: Number(`${date_ob.getHours()}${date_ob.getMinutes()}`),
+  //   daySent: Number(
+  //     `${date_ob.getMonth() + 1}${date_ob.getDate()}${date_ob.getFullYear()}`
+  //   ),
+  //   timeDateString: `${date_ob.toLocaleDateString()} at ${date_ob.toLocaleTimeString()}`,
+  // };
+  // renderMessages(message);
 });
 
-// socket.on("chat message", (msg) => {
-//   // var item = document.createElement("li");
-//   console.log(socket.id);
-//   let message = [];
-//   let date_ob = new Date();
-//   const query = parseQuery(window.location.href);
-//   const userFrom = query.userFrom;
-//   const userTo = query.userTo;
-//   var ts = Math.round(date_ob.getTime() / 1000);
-//   message[0] = {
-//     userFrom: userFrom,
-//     userTo: userTo,
-//     read: false,
-//     messageContent: msg,
-//     unixTime: ts,
-//     timeSent: Number(`${date_ob.getHours()}${date_ob.getMinutes()}`),
-//     daySent: Number(
-//       `${date_ob.getMonth() + 1}${date_ob.getDate()}${date_ob.getFullYear()}`
-//     ),
-//     timeDateString: `${date_ob.toLocaleDateString()} at ${date_ob.toLocaleTimeString()}`,
-//   };
-//   renderMessages(message);
-//   // item.textContent = msg;
-//   // messages.appendChild(item);
-//   // window.scrollTo(0, document.body.scrollHeight);
-// });
-// renderFriends(sampleFriends);
-getMessages();
-getFriends();
+//Display message recipient in message box
+let recipBar = document.getElementById("message-recip");
+recipBar.innerText = parseQuery(window.location.href).userTo;
+
+getMessages(); //get and render messages from db
+getFriends(); //get and render friends from db

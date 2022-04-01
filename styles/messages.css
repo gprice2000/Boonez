@@ -3,6 +3,8 @@ html,
 body {
   height: 100%;
   width: 100%;
+  margin: 0px;
+  padding: 0px;
   /* display: flex; */
 }
 body {
@@ -24,6 +26,7 @@ body {
   display: flex;
   /* width: 75%; */
   width: 100%;
+  /* width: 75%; */
   height: 100%;
   /* align-items: flex-end; */
   flex-direction: column;
@@ -35,7 +38,11 @@ body {
   width: 25%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(230, 230, 230);
+  background-color: #4a4c4f;
+}
+#friends h1 {
+  color: white;
+  font-size: 1.5rem;
 }
 .friend-item {
   width: 80%;
@@ -77,6 +84,7 @@ body {
   flex-grow: 1;
   border-radius: 1rem;
   overflow: scroll;
+  font-size: 1.7rem;
   margin: 0.25rem;
 }
 #input:focus {
@@ -142,4 +150,24 @@ button:hover {
   height: 40px;
   width: 40px;
   border-radius: 50%;
+}
+#message-recip {
+  display: flex;
+  width: 80vw;
+  /* width: 5rem; */
+
+  height: 5%;
+  font-size: 1.3em;
+  /* overflow: hidden; */
+  /* text-align: center; */
+  padding: 5px;
+  padding-left: 15px;
+  align-items: center;
+  /* box-shadow: ; */
+  /* background-color: #343a40; */
+  color: black;
+  font-weight: bold;
+  /* box-shadow: 1px 2px 2px rgb(89, 89, 89); */
+  background-color: rgb(230, 230, 230);
+  /* background-color: yellow; */
 }
