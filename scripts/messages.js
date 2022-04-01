@@ -1,20 +1,57 @@
 var socket = io();
 
+const query = parseQuery(window.location.href);
+
+const userFrom = query.userFrom;
+const userTo = query.userTo;
+// socket.on("userConnected", (socketid) => {
+//   // //check if a user is already in array but with different socket id
+//   // if (currentUsers.find((x) => x.user == userFrom))
+//   //   currentUsers = currentUsers.filter((x) => x.user != userFrom);
+
+//   // console.log(socketid);
+//   // //Check if the new user's recipient is already in the array
+//   // let possibleRecipient = currentUsers.find((x) => x.user == userTo);
+//   // console.log(possibleRecipient);
+//   // if (possibleRecipient) {
+//   //   currentUsers.push({
+//   //     user: userFrom,
+//   //     usersocket: socketid,
+//   //     recipient: userTo,
+//   //     recipientSocket: possibleRecipient.usersocket,
+//   //     msg: "",
+//   //   });
+//   // } else {
+//   //   currentUsers.push({
+//   //     user: userFrom,
+//   //     usersocket: socketid,
+//   //     recipient: userTo,
+//   //     recipientSocket: 0,
+//   //     msg: "",
+//   //   });
+//   // }
+
+//   // console.log(currentUsers);
+// });
+
 // socket.on("connect", () => {
 // console.log();
-socket.on("private message", function (msg, from, to) {
-  console.log(msg);
+socket.on("private message", function (msgData) {
+  console.log(msgData);
   let message = [];
   let date_ob = new Date();
-  const query = parseQuery(window.location.href);
-  const userFrom = from;
-  const userTo = to;
+
+  const userFrom = msgData.user;
+  const userTo = msgData.recipient;
+  // const query = parseQuery(window.location.href);
+  // const userFrom = from;
+  // const userTo = to;
   var ts = Math.round(date_ob.getTime() / 1000);
   message[0] = {
     userFrom: userFrom,
     userTo: userTo,
     read: false,
-    messageContent: msg,
+    messageContent: msgData.msg,
     unixTime: ts,
     timeSent: Number(`${date_ob.getHours()}${date_ob.getMinutes()}`),
     daySent: Number(
@@ -122,8 +159,14 @@ form.addEventListener("submit", (e) => {
   let msg = "";
   if (input.value) {
     msg = input.value;
-    console.log(socket.id);
-    socket.emit("private message", input.value, userFrom, userTo);
+
+    let userData = {
+      user: userFrom,
+      usersocket: socket.id,
+      recipient: userTo,
+      msg: msg,
+    };
+    socket.emit("private message", userData);
     input.value = "";
   }
   // let message = [];

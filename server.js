@@ -49,13 +49,22 @@ app.use(cookieParser());
 //used for keeping track of messages
 let date_ob = new Date();
 
+let chatters = [];
 function socketIOConnection(from, to) {
   let userId = from;
   let recipient = to;
 
-  let chatter = {};
-
   io.once("connection", (socket) => {
+    chatters.push({ username: from, usersocket: socket.id });
+    console.log(chatters);
+    io.emit("userConnected", socket.id); // let user = url.parse(req.url, true).query.userFrom;
+
+    //remove user from array of current users when disconnected
+    socket.on("disconnect", () => {
+      chatters = chatters.filter((x) => x.usersocket != socket.id);
+      console.log(chatters);
+    });
+
     //maybe send all messages in database when connected
     // if (!chattersArr.find((item) => item.user == from))
     //   chattersArr.push({ user: from, userSocket: socket.id });
@@ -68,15 +77,21 @@ function socketIOConnection(from, to) {
     // console.log(chatter);
     // io.socketsJoin("room1");
     // console.log("Your user: ", socket.id);
-    socket.on("private message", (msg, from, to) => {
+    socket.on("private message", (msgData) => {
       // console.log(`Message: ${msg} sent to ${recipientUsername}`);
 
       // console.log(chatter.user == recipientUsername);
       // let recipientId = chattersArr.find(
       //   (item) => item.user == recipientUsername
       // );
-      console.log(msg);
-      io.emit("private message", msg, from, to);
+      console.log(msgData);
+
+      let recipient = chatters.find((x) => x.username == msgData.recipient);
+      let recipientSocket = recipient ? recipient.usersocket : 0;
+      console.log(recipientSocket);
+      //send message only to the right sender and reciever
+      io.to(recipientSocket).emit("private message", msgData);
+      io.to(msgData.usersocket).emit("private message", msgData);
       // let recipientId =
       // chatter.user == recipientUsername ? chatter.userSocket : 0;
       // console.log(recipientId);
