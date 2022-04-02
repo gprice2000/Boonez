@@ -14,6 +14,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function friendList(data) {
 	let node = document.createElement('li');
+	let img = document.createElement('img');
+	let div = document.createElement('div');
+	node.setAttribute("class","friend");
+	div.setAttribute("class","name");
+	img.src = data.profilePic;
 	node.appendChild(document.createTextNode('Jacob'));
 	document.querySelector('#friendsList').appendChild(node);
 }
