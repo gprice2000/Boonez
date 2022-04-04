@@ -127,6 +127,17 @@ app.post("/signup", function (req, res) {
                       let input = req.body;
                       input.friends = [];
                       console.log(input);
+                      let dash = {
+                        username: input.username,
+                        friends: input.friends,
+                        classes: [],
+                        aboutme: null
+                      }
+                      dbc
+                        .db("Boonez")
+                        .collection("UserDashboard")
+                        .insertOne(dash)
+
                       dbc
                         .db("Boonez")
                         .collection("profiles")
