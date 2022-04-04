@@ -16,10 +16,11 @@ function friendList(data) {
 	let node = document.createElement('li');
 	let img = document.createElement('img');
 	let div = document.createElement('div');
-	node.setAttribute("class","friend");
-	div.setAttribute("class","name");
+	node.className = "friend";
+	div.className = "name";
 	img.src = data.profilePic;
-	node.appendChild(document.createTextNode('Jacob'));
+	node.appendChild(img);
+	node.appendChild(document.createTextNode());
 	document.querySelector('#friendsList').appendChild(node);
 }
 

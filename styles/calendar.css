@@ -3,12 +3,6 @@
 	--light-blue: #189CE2;
 }
 
-body {
-   margin: 0;
-   display: grid;
-
-}
-
 #myModal {
    display: none; /* Hidden by default */
    position: fixed; /* Stay in place */
