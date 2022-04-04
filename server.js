@@ -141,7 +141,6 @@ app.post("/signup", function (req, res) {
       });
   });
 });
-
 app.post("/login", function (req, res) {
   db.then(function (dbc) {
     dbc
@@ -388,6 +387,72 @@ app.get("/styles/index.css", function (req, res) {
 
 app.get("/signup", function (req, res) {
   res.sendFile("/pages/landing/signup.html", {
+    root: __dirname,
+  });
+});
+
+app.get("/signuptype", (req, res) => {
+  res.sendFile("/pages/landing/signuptype.html", {
+    root: __dirname,
+  });
+});
+
+app.get("/styles/signuptype.css", (req, res) => {
+  res.sendFile("/styles/signuptype.css", {
+    root: __dirname,
+  });
+});
+app.get("/businessSignup", (req, res) => {
+  res.sendFile("/pages/landing/businessSignup.html", {
+    root: __dirname,
+  });
+});
+app.post("/businessSignup", function (req, res) {
+  db.then(function (dbc) {
+    dbc
+      .db("Boonez")
+      .collection("profiles")
+      .findOne({ username: req.body.username }, function (err, result) {
+        if (result) {
+          res.send("username already in use");
+        } else {
+          dbc
+            .db("Boonez")
+            .collection("profiles")
+            .findOne({ email: req.body.email }, function (err, result) {
+              if (result) {
+                res.send("email already in use");
+              } else {
+                let pass = req.body.password;
+                bcrypt.genSalt(10, function (saltError, salt) {
+                  if (saltError) {
+                    throw saltError;
+                  } else {
+                    bcrypt.hash(pass, salt, function (hashError, hash) {
+                      if (hashError) {
+                        throw hashError;
+                      }
+                      req.body.password = hash;
+                      let input = req.body;
+                      input.friends = [];
+                      console.log(input);
+                      dbc
+                        .db("Boonez")
+                        .collection("profiles")
+                        .insertOne(req.body);
+                      res.redirect("/login");
+                    });
+                  }
+                });
+              }
+            });
+        }
+      });
+  });
+});
+
+app.get("/styles/businessSignup.css", (req, res) => {
+  res.sendFile("/styles/businessSignup.css", {
     root: __dirname,
   });
 });
