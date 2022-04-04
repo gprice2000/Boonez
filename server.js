@@ -173,6 +173,7 @@ app.post("/login", function (req, res) {
               } else {
                 session = req.session;
                 session.userid = req.body.username;
+                console.log("SESSION USER ID: " + session.userid)
                 res.redirect(`/dashboard/?user=${session.userid}`);
               }
             }
@@ -193,7 +194,7 @@ app.get("/logout", (req, res) => {
 //routing calendar.js to database
 app.post("/Pub_calendar", function (req, res) {
   db.then(function (dbc) {
-    let cur_user = req.cookies.userData;
+    let cur_user = session.userid;
     let cal_col = dbc.db("Boonez").collection("UserCalendars");
     let event = req.body;
     try {
@@ -220,7 +221,7 @@ app.post("/Pub_calendar", function (req, res) {
 app.get("/Pub_calendar", function (req, res) {
   db.then(function (dbc) {
     try {
-      let cur_user = req.cookies.userData;
+      let cur_user = session.userid;
       const query = { user: { $eq: cur_user } };
       dbc
         .db("Boonez")
@@ -237,7 +238,7 @@ app.get("/Pub_calendar", function (req, res) {
 
 app.post("/Priv_calendar", function (req, res) {
   db.then(function (dbc) {
-    let cur_user = req.cookies.userData;
+    let cur_user = session.userid;
     let cal_col = dbc.db("Boonez").collection("UserCalendars");
     let event = req.body;
     try {
@@ -264,7 +265,7 @@ app.post("/Priv_calendar", function (req, res) {
 app.get("/Priv_calendar", function (req, res) {
   db.then(function (dbc) {
     try {
-      let cur_user = req.cookies.userData;
+      let cur_user = session.userid;
       const query = { user: { $eq: cur_user } };
       dbc
         .db("Boonez")
@@ -285,7 +286,7 @@ app.post("/editEvent", function (req, res) {
   db.then(function (dbc) {
     try {
       let calDb = dbc.db("Boonez").collection("UserCalendars");
-      let cur_user = req.cookies.userData;
+      let cur_user = session.userid;
       let eventData = req.body.data;
       let cal_type = eventData.cal_type;
       const query = { user: { $eq: cur_user } };
@@ -319,7 +320,7 @@ app.delete("/deleteEvent", function (req, res) {
     try {
       let calDb = dbc.db("Boonez").collection("UserCalendars");
 
-      let cur_user = req.cookies.userData;
+      let cur_user = session.userid;
       const query = { user: { $eq: cur_user } };
       let eventData = req.body.data.info;
       console.log("Event to Delete: " + eventData);
@@ -346,7 +347,7 @@ app.delete("/deleteEvent", function (req, res) {
 
 app.post("/profilePicture", function (req, res) {
   db.then(function (dbc) {
-    let cur_user = req.cookies.userData;
+    let cur_user = session.userid;
     const query = { user: { $eq: cur_user } };
     console.log(req.body);
     let profdb = dbc.db("Boonez").collection("UserDashboard");
@@ -362,7 +363,7 @@ app.post("/profilePicture", function (req, res) {
 
 app.get("/userDashboard", function (req, res) {
   db.then(function (dbc) {
-    let cur_user = req.cookies.userData;
+    let cur_user = session.userid;
     const query = { user: { $eq: cur_user } };
     let doc = dbc
       .db("Boonez")
