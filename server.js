@@ -432,14 +432,19 @@ app.post("/businessSignup", function (req, res) {
                       if (hashError) {
                         throw hashError;
                       }
-                      req.body.password = hash;
-                      let input = req.body;
-                      input.friends = [];
-                      console.log(input);
+
+                      const businessProfile = {
+                        name: req.body.businessName,
+                        username: req.body.username,
+                        password: hash,
+                        email: req.body.email,
+                        followers: [],
+                        accountType: "business",
+                      };
                       dbc
                         .db("Boonez")
                         .collection("profiles")
-                        .insertOne(req.body);
+                        .insertOne(businessProfile);
                       res.redirect("/login");
                     });
                   }
