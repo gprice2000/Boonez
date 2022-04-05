@@ -129,9 +129,12 @@ app.post("/signup", function (req, res) {
                       console.log(input);
                       let dash = {
                         username: input.username,
+                        fname: input.fname,
+                        lname: input.lname,
                         friends: input.friends,
                         classes: [],
-                        aboutme: null
+                        aboutme: null,
+                        profilePic: null
                       }
                       dbc
                         .db("Boonez")
@@ -195,14 +198,15 @@ app.get("/logout", (req, res) => {
 app.post("/Pub_calendar", function (req, res) {
   db.then(function (dbc) {
     let cur_user = session.userid;
+    console.log("NEW PUBLIC EVENT FROM USER : " + cur_user)
     let cal_col = dbc.db("Boonez").collection("UserCalendars");
     let event = req.body;
     try {
-      const query = { user: { $eq: cur_user } };
+      const query = { username: { $eq: cur_user } };
       cal_col.findOne(query).then((doc) => {
         if (doc == undefined) {
           cal_col.insertOne({
-            user: cur_user,
+            username: cur_user,
             PubEventArray: [event],
             PriEventArray: [],
           });
@@ -222,7 +226,7 @@ app.get("/Pub_calendar", function (req, res) {
   db.then(function (dbc) {
     try {
       let cur_user = session.userid;
-      const query = { user: { $eq: cur_user } };
+      const query = { username: { $eq: cur_user } };
       dbc
         .db("Boonez")
         .collection("UserCalendars")
@@ -242,11 +246,11 @@ app.post("/Priv_calendar", function (req, res) {
     let cal_col = dbc.db("Boonez").collection("UserCalendars");
     let event = req.body;
     try {
-      const query = { user: { $eq: cur_user } };
+      const query = { username: { $eq: cur_user } };
       cal_col.findOne(query).then((doc) => {
         if (doc == undefined) {
           cal_col.insertOne({
-            user: cur_user,
+            username: cur_user,
             PubEventArray: [],
             PriEventArray: [event],
           });
@@ -266,7 +270,7 @@ app.get("/Priv_calendar", function (req, res) {
   db.then(function (dbc) {
     try {
       let cur_user = session.userid;
-      const query = { user: { $eq: cur_user } };
+      const query = { username: { $eq: cur_user } };
       dbc
         .db("Boonez")
         .collection("UserCalendars")
@@ -289,7 +293,7 @@ app.post("/editEvent", function (req, res) {
       let cur_user = session.userid;
       let eventData = req.body.data;
       let cal_type = eventData.cal_type;
-      const query = { user: { $eq: cur_user } };
+      const query = { username: { $eq: cur_user } };
       delete eventData.cal_type;
       console.log(eventData);
       if (cal_type == "pri") {
@@ -321,7 +325,7 @@ app.delete("/deleteEvent", function (req, res) {
       let calDb = dbc.db("Boonez").collection("UserCalendars");
 
       let cur_user = session.userid;
-      const query = { user: { $eq: cur_user } };
+      const query = { username: { $eq: cur_user } };
       let eventData = req.body.data.info;
       console.log("Event to Delete: " + eventData);
       calDb.findOne(query).then((doc) => {
@@ -348,7 +352,8 @@ app.delete("/deleteEvent", function (req, res) {
 app.post("/profilePicture", function (req, res) {
   db.then(function (dbc) {
     let cur_user = session.userid;
-    const query = { user: { $eq: cur_user } };
+    console.log("CURUSER FOR PROFILE PIC: " + cur_user)
+    const query = { username: { $eq: cur_user } };
     console.log(req.body);
     let profdb = dbc.db("Boonez").collection("UserDashboard");
     profdb.updateOne(
@@ -364,7 +369,7 @@ app.post("/profilePicture", function (req, res) {
 app.get("/userDashboard", function (req, res) {
   db.then(function (dbc) {
     let cur_user = session.userid;
-    const query = { user: { $eq: cur_user } };
+    const query = { username: { $eq: cur_user } };
     let doc = dbc
       .db("Boonez")
       .collection("UserDashboard")
@@ -650,6 +655,29 @@ app.get("/messages/getFriends", async (req, res) => {
   });
 });
 
+app.get("/findFriends", function (req, res) {
+  res.sendFile(__dirname + "/pages/main-app/findFriends.html");
+});
+
+app.get("/scripts/findFriends.js", function (req,res) {
+  res.sendFile(__dirname + "/scripts/findFriends.js");
+})
+
+app.post("/findFriend", (req,res) => {
+  db.then(function(dbc) {
+    dbc
+      .db("Boonez")
+      .collection("UserDashboard")
+      .find( {$or: [
+        {$and: [{ fname: {$eq: req.body.fname}},
+        { lname: {$eq: req.body.lname}}]},
+        { username: {$eq: req.body.username}} ]})
+      .toArray((err,result) => {
+        res.json(result);
+      })
+  })
+
+})
 server.listen(3000, () => {
   console.log("listening on http://localhost:3000");
 });
