@@ -12,16 +12,23 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 });
 
+document.getElementById("allFriends").addEventListener("click", function() {
+	window.location.href = "/findFriends";
+})
 function friendList(data) {
-	let node = document.createElement('li');
-	let img = document.createElement('img');
-	let div = document.createElement('div');
-	node.className = "friend";
-	div.className = "name";
-	img.src = data.profilePic;
-	node.appendChild(img);
-	node.appendChild(document.createTextNode());
-	document.querySelector('#friendsList').appendChild(node);
+	for (var i = 0; i < data.friends.length ; i++) {
+		console.log(data.friends[i])
+		let node = document.createElement('li');
+		let img = document.createElement('img');
+		let div = document.createElement('div');
+		node.className = "friend";
+		div.className = "name";
+		img.src = data.friends.profilePic;
+		node.appendChild(img);
+		//name of friend
+		node.appendChild(document.createTextNode(data.friends.name));
+		document.querySelector('#friendsList').appendChild(node);
+	}
 }
 
 function setProf() {
