@@ -16,17 +16,15 @@ document.getElementById("allFriends").addEventListener("click", function() {
 	window.location.href = "/findFriends";
 })
 function friendList(data) {
-	for (var i = 0; i < data.friends.length ; i++) {
-		console.log(data.friends[i])
+	for (var i = 0; i < 10 ; i++) {
 		let node = document.createElement('li');
 		let img = document.createElement('img');
 		let div = document.createElement('div');
 		node.className = "friend";
 		div.className = "name";
-		img.src = data.friends.profilePic;
+		img.src = data.friends[i].profilePic;
 		node.appendChild(img);
-		//name of friend
-		node.appendChild(document.createTextNode(data.friends.name));
+		node.appendChild(document.createTextNode(data.friends[i].fullname));
 		document.querySelector('#friendsList').appendChild(node);
 	}
 }
@@ -52,5 +50,4 @@ function setProf() {
 			modal.style.display = "none";
 		}
 	}
-
 }

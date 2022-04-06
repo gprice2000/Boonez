@@ -743,8 +743,20 @@ app.post("/addFriend", (req,res) => {
     dbc
       .db("Boonez")
       .collection("UserDashboard")
-      .updateOne(query, 
-        {$push: {"friends": req.body.username}})
+      .findOne({ username: {$eq: req.body.username}})
+      .then(doc => {
+        let friend = {
+          username: doc.username,
+          fullname: doc.fname + ' ' + doc.lname,
+          profilePic: doc.profilePic
+        }
+        dbc
+          .db("Boonez")
+          .collection("UserDashboard")
+          .updateOne(query, 
+            {$push: {"friends": friend}})
+      });
+
   })
 })
 
