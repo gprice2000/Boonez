@@ -15,14 +15,25 @@
     <title>Boonez Dashboard</title>
   </head>
   <body>
-    <div class="logo-container">
-      <img
-        src="../../images/word_logo.png"
-        alt="boonze logo"
-        width="195"
-        height="75px"
-      />
-    </div>
+    <nav class="landing-nav">
+      <div class="logo-container">
+        <img
+          src="../../images/word_logo.png"
+          alt="boonze logo"
+          width="195"
+          height="75px"
+        />
+      </div>
+      <div class="nav-links-container">
+        <a id = "dash" href="/dashboard">Dashboard</a>
+        <a id = "friends" href="/findFriends">Friends</a>
+        <a id = "messages" href="/messagesOverviewPage">Messages</a>
+        <!-- <a href="/signuptype.html">Businesses</a> -->
+        <a href="/logout">Logout</a>
+
+      </div>
+    </nav>
+
     <div class="profile-pic">
       <img
         src="../../images/blank-profile-pic.png"
@@ -40,7 +51,7 @@
           <h2>Event</h2>
         </div>
         <div class="modal-body">
-          <form action="/profilePicture" method="POST">
+          <form id="picForm" action="/profilePicture" method="POST">
             <label for="PicLink">Image Link:</label>
             <input type="text" id="PicLink" name="PicLink" />
             <br />
@@ -58,14 +69,44 @@
       <input type="text" id="aboutme" name="aboutme" /><br />
     </div>
 
-      <div class="friends">
+    <div class="userclass"> 
+      <button id="class">Add Courses</button>
+    </div>
+
+    <div id="classModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close">&times;</span>
+          <h2>Courses</h2>
+        </div>
+        <div class="modal-body">
+          <form class="" action="/course" method="POST">
+            <label for="course">CRN:</label>
+            <input type="text" id="course"/> 
+            <input type="text" id="course"/> 
+            <input type="text" id="course"/> 
+            <input type="text" id="course"/> 
+            <input type="text" id="course"/> 
+            <input type="text" id="course"/> 
+            <input type="text" id="course"/> 
+            <input type="text" id="course"/> 
+            <div class="modal-footer">
+              <input type="submit" value="Submit" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="friends">
         <button id="allFriends">All Friends</button>
         <ul id="friendsList"> 
         </ul>
-      </div>
-      <div id="calendar">
+    </div>
+    <div id="calendar">
         <button id="CalBtn">Private</button>
-      </div>
+    </div>
 
     <div id="myModal" class="modal">
       <div class="modal-content">
