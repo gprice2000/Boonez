@@ -17,8 +17,12 @@ const querystring = require("querystring");
 const url = require("url");
 const res = require("express/lib/response");
 const CryptoJS = require("crypto-js");
-
-let session = { userid: "" };
+const { redirect } = require("express/lib/response");
+// create an array of strings of user id , parse
+// urls to get current user, if theyre logging off
+// pop their name from array and redirect them to 
+// main page
+let session = [];
 
 //load favicon
 app.use(favicon(__dirname + "/favicon.ico"));
@@ -36,6 +40,15 @@ app.use(
     resave: false,
   })
 );
+
+function getCurUser(req) {
+  let user;
+  session.find( ele => {
+    user = ele.username;
+    return ele.id == req.session.id;
+  })
+  return user;
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -100,21 +113,39 @@ function socketIOConnection(from, to) {
 
 app.post("/signup", function (req, res) {
   db.then(function (dbc) {
+    let input = req.body;
+    //deleted white space and converted to lowercase for certain entries
+    input.username = input.username.replace(/\s+/g,'');
+    input.fname = input.fname.replace(/\s+/g, '').toLowerCase();
+    input.lname = input.lname.replace(/\s+/g, '').toLowerCase();
+    input.email = input.email.replace(/\s+/g,'');
+    input.friends = [];
+    console.log(input);
+    let dash = {
+      username: input.username,
+      fname: input.fname,
+      lname: input.lname,
+      friends: input.friends,
+      classes: [],
+      aboutme: null,
+      profilePic: null,
+      accountType:"personal"
+    }
     dbc
       .db("Boonez")
       .collection("profiles")
-      .findOne({ username: req.body.username }, function (err, result) {
+      .findOne({ username: input.username}, function (err, result) {
         if (result) {
           res.send("username already in use");
         } else {
           dbc
             .db("Boonez")
             .collection("profiles")
-            .findOne({ email: req.body.email }, function (err, result) {
+            .findOne({ email: input.email }, function (err, result) {
               if (result) {
                 res.send("email already in use");
               } else {
-                let pass = req.body.password;
+                let pass = input.password;
                 bcrypt.genSalt(10, function (saltError, salt) {
                   if (saltError) {
                     throw saltError;
@@ -123,19 +154,7 @@ app.post("/signup", function (req, res) {
                       if (hashError) {
                         throw hashError;
                       }
-                      req.body.password = hash;
-                      let input = req.body;
-                      input.friends = [];
-                      console.log(input);
-                      let dash = {
-                        username: input.username,
-                        fname: input.fname,
-                        lname: input.lname,
-                        friends: input.friends,
-                        classes: [],
-                        aboutme: null,
-                        profilePic: null
-                      }
+                      input.password = hash;
                       dbc
                         .db("Boonez")
                         .collection("UserDashboard")
@@ -144,7 +163,7 @@ app.post("/signup", function (req, res) {
                       dbc
                         .db("Boonez")
                         .collection("profiles")
-                        .insertOne(req.body);
+                        .insertOne(input);
                       res.redirect("/login");
                     });
                   }
@@ -157,35 +176,45 @@ app.post("/signup", function (req, res) {
 });
 app.post("/login", function (req, res) {
   db.then(function (dbc) {
-    dbc
-      .db("Boonez")
-      .collection("profiles")
-      .findOne({ username: req.body.username }, function (err, result) {
-        if (!result) {
-          console.log("Unable to locate account");
-          res.send("Cannot find username");
-        } else {
-          bcrypt.compare(
-            req.body.password,
-            result.password,
-            function (error, isMatch) {
-              if (error) {
-                throw error;
-              } else if (!isMatch) {
-                res.send("Password incorrect");
-              } else {
-                session = req.session;
-                session.userid = req.body.username;
-                if (result.accountType == "business") {
-                  res.redirect(`/BusinessDashboard/?user=${session.userid}`)
+    let input = req.body;
+    //console.log("session: " + session)
+    if (session.find(ele => ele.id == req.session.id) != undefined) {
+      //res.redirect(`/dashboard/?user=${ele.username}`);
+      res.redirect('/dashboard');
+    }
+    else {
+      dbc
+        .db("Boonez")
+        .collection("profiles")
+        .findOne({ username: input.username }, function (err, result) {
+          if (!result) {
+            console.log("Unable to locate account");
+            res.send("Cannot find username");
+          } else {
+            bcrypt.compare(
+              input.password,
+              result.password,
+              function (error, isMatch) {
+                if (error) {
+                  throw error;
+                } else if (!isMatch) {
+                  res.send("Password incorrect");
                 } else {
-                  res.redirect(`/dashboard/?user=${session.userid}`);
+                  let sn = req.session;
+                  sn.username = input.username;
+                  session.push(sn);
+                  //session.userid = req.body.username;
+                  if (result.accountType == "business") {
+                    res.redirect(`/BusinessDashboard/?user=${input.username}`)
+                  } else {
+                    res.redirect(`/dashboard/?user=${input.username}`);
+                  }
                 }
               }
-            }
-          );
-        }
-      });
+            );
+          }
+        });
+      }
   });
 });
 
@@ -193,6 +222,9 @@ app.post("/login", function (req, res) {
 
 //TODO: add a logout page
 app.get("/logout", (req, res) => {
+  console.log("all users in session: " + session)
+  //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+  session.splice(session.indexOf(req.session.id),1);
   req.session.destroy();
   res.redirect("/");
 });
@@ -200,7 +232,8 @@ app.get("/logout", (req, res) => {
 //routing calendar.js to database
 app.post("/Pub_calendar", function (req, res) {
   db.then(function (dbc) {
-    let cur_user = session.userid;
+    //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+    let cur_user = getCurUser(req);
     console.log("CUR USER: " + cur_user)
     let cal_col = dbc.db("Boonez").collection("UserCalendars");
     let event = req.body;
@@ -228,7 +261,8 @@ app.post("/Pub_calendar", function (req, res) {
 app.get("/Pub_calendar", function (req, res) {
   db.then(function (dbc) {
     try {
-      let cur_user = session.userid;
+      //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+      let cur_user = getCurUser(req);
       const query = { username: { $eq: cur_user } };
       dbc
         .db("Boonez")
@@ -245,7 +279,8 @@ app.get("/Pub_calendar", function (req, res) {
 
 app.post("/Priv_calendar", function (req, res) {
   db.then(function (dbc) {
-    let cur_user = session.userid;
+    //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+    let cur_user = getCurUser(req);
     let cal_col = dbc.db("Boonez").collection("UserCalendars");
     let event = req.body;
     try {
@@ -272,7 +307,9 @@ app.post("/Priv_calendar", function (req, res) {
 app.get("/Priv_calendar", function (req, res) {
   db.then(function (dbc) {
     try {
-      let cur_user = session.userid;
+      //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+      let cur_user = getCurUser(req);
+
       const query = { username: { $eq: cur_user } };
       dbc
         .db("Boonez")
@@ -293,7 +330,8 @@ app.post("/editEvent", function (req, res) {
   db.then(function (dbc) {
     try {
       let calDb = dbc.db("Boonez").collection("UserCalendars");
-      let cur_user = session.userid;
+      //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+      let cur_user = getCurUser(req);
       let eventData = req.body.data;
       let cal_type = eventData.cal_type;
       const query = { username: { $eq: cur_user } };
@@ -326,21 +364,24 @@ app.delete("/deleteEvent", function (req, res) {
   db.then(function (dbc) {
     try {
       let calDb = dbc.db("Boonez").collection("UserCalendars");
+      let cur_user = getCurUser(req);
 
-      let cur_user = session.userid;
+      //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+      console.log("cur user for delete : " + cur_user)
       const query = { username: { $eq: cur_user } };
-      let eventData = req.body.data.info;
+      let eventData = req.body.info;
+
       console.log("Event to Delete: " + eventData);
       calDb.findOne(query).then((doc) => {
         var cal =
-          req.body.data.cal_type == "pri"
+          req.body.cal_type == "pri"
             ? doc.PriEventArray
             : doc.PubEventArray;
         var fil = cal.filter(function (val, ind, ar) {
           if (val.id != eventData.id) return true;
         });
         console.log(fil);
-        if (req.body.data.cal_type == "pri") {
+        if (req.body.cal_type == "pri") {
           calDb.findOneAndUpdate(query, { $set: { PriEventArray: fil } });
         } else {
           calDb.findOneAndUpdate(query, { $set: { PubEventArray: fil } });
@@ -354,7 +395,10 @@ app.delete("/deleteEvent", function (req, res) {
 
 app.post("/profilePicture", function (req, res) {
   db.then(function (dbc) {
-    let cur_user = session.userid;
+    //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+    let cur_user = getCurUser(req);
+
+    console.log("curuser : " + cur_user)
     const query = { username: { $eq: cur_user } };
     let acttyp = "";
     let col = "";
@@ -363,11 +407,14 @@ app.post("/profilePicture", function (req, res) {
       .collection("profiles")
       .findOne(query)
       .then(doc => {
+        
+        console.log("doc.acctype: " + doc.accountType)
         acttyp = doc.accountType;
     });
-      
-    acttyp == "personal" ? col = "UserDashboard" : col = "BusinessDashboard";
-  
+    console.log("actype; " + acttyp)
+    acttyp == "personal" ?  col = "BusinessDashboard" : col = "UserDashboard" ;
+    console.log("piclink: " + req.body.PicLink )
+    console.log('col: ' + col)
     let profdb = dbc.db("Boonez").collection(col);
     profdb.updateOne(
       query,
@@ -381,7 +428,19 @@ app.post("/profilePicture", function (req, res) {
 
 app.get("/userDashboard", function (req, res) {
   db.then(function (dbc) {
-    let cur_user = session.userid;
+    console.log("req.url: " + req.url);
+    console.log("session id :" + req.session.id)
+    //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+    let cur_user = getCurUser(req);
+
+    console.log("cur_user: " + cur_user)
+    console.log("sessions: " + session)
+    if (session.find(ele => {
+      cur_user = ele.username;
+      return ele.id == req.session.id;}) == undefined) {
+      res.json("nsi") //not signed in flag is returned
+    } else {
+    console.log("node.js /userDashboard , cur_user : " + cur_user);
     const query = { username: { $eq: cur_user } };
     dbc
       .db("Boonez")
@@ -389,17 +448,21 @@ app.get("/userDashboard", function (req, res) {
       .findOne(query)
       .then((doc) => {
         if (doc != null) {
+          console.log("doc : " + doc.profilePic)
           res.json(doc);
         } else {
           res.json(null);
         }
       });
+    }
   });
 });
 
 app.get("/businessDashboard", function (req, res) {
   db.then(function (dbc) {
-    let cur_user = session.userid;
+    //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+    let cur_user = getCurUser(req);
+
     const query = { username: { $eq: cur_user } };
     dbc
       .db("Boonez")
@@ -456,21 +519,38 @@ app.get("/businessSignup", (req, res) => {
 });
 app.post("/businessSignup", function (req, res) {
   db.then(function (dbc) {
+    let input = req.body;
+    const businessProfile = {
+      name: input.businessName,
+      username: input.username.replace(/\s+/g,''),
+      password: undefined,
+      email: input.email.replace(/\s+/g,''),
+      followers: [],
+      accountType: "business",
+    };
+
+    const businessDash = {
+      name: input.businessName,
+      username: businessProfile.username,
+      email: businessProfile.email,
+      followers: [],
+      profilePic: undefined
+    }
     dbc
       .db("Boonez")
       .collection("profiles")
-      .findOne({ username: req.body.username }, function (err, result) {
+      .findOne({ username: businessProfile.username }, function (err, result) {
         if (result) {
           res.send("username already in use");
         } else {
           dbc
             .db("Boonez")
             .collection("profiles")
-            .findOne({ email: req.body.email }, function (err, result) {
+            .findOne({ email: businessProfile.email }, function (err, result) {
               if (result) {
                 res.send("email already in use");
               } else {
-                let pass = req.body.password;
+                let pass = input.password;
                 bcrypt.genSalt(10, function (saltError, salt) {
                   if (saltError) {
                     throw saltError;
@@ -479,23 +559,7 @@ app.post("/businessSignup", function (req, res) {
                       if (hashError) {
                         throw hashError;
                       }
-
-                      const businessProfile = {
-                        name: req.body.businessName,
-                        username: req.body.username,
-                        password: hash,
-                        email: req.body.email,
-                        followers: [],
-                        accountType: "business",
-                      };
-
-                      const businessDash = {
-                        name: req.body.businessName,
-                        username: req.body.username,
-                        email: req.body.email,
-                        followers: [],
-                        profilePic: undefined
-                      }
+                      businessProfile.password = hash;
                       dbc
                         .db("Boonez")
                         .collection("profiles")
@@ -523,9 +587,23 @@ app.get("/styles/businessSignup.css", (req, res) => {
   });
 });
 app.get("/login", function (req, res) {
-  res.sendFile("/pages/landing/login.html", {
-    root: __dirname,
-  });
+  console.log("login session: " + session)
+  let curuser;
+  console.log(session.find(ele => ele.id == req.session.id) )
+  if (session.find(ele => {
+
+    curuser = ele.username;
+    return (ele.id == req.session.id);
+
+  }) != undefined) {
+    console.log("user from session array: " + curuser)
+    res.redirect(`/dashboard/?user=${curuser}`);
+  }
+  else {
+    res.sendFile("/pages/landing/login.html", {
+      root: __dirname,
+    });
+  }
 });
 
 app.get("/images/word_logo.png", (req, res) => {
@@ -535,7 +613,7 @@ app.get("/images/word_logo.png", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  session = req.session;
+  //session = req.session;
 
   res.sendFile("index.html", {
     root: __dirname,
@@ -555,9 +633,8 @@ app.get("/images/add-user.png", (req, res) => {
 });
 
 app.get("/dashboard", (req, res) => {
-  res.sendFile("/pages/main-app/dashboard.html", {
-    root: __dirname,
-  });
+  console.log("/dashboard")
+  res.sendFile(__dirname + "/pages/main-app/dashboard.html");
 });
 
 //route to business dashboard
@@ -678,10 +755,12 @@ app.get("/scripts/messagesOverview.js", (req, res) => {
 });
 app.get("/messagesOverview", (req, res) => {
   db.then((dbc) => {
+    let cur_user = getCurUser(req);
+
     dbc
       .db("Boonez")
       .collection("profiles")
-      .findOne({ username: session.userid }, (err, result) => {
+      .findOne({ username: cur_user }, (err, result) => {
         if (result) {
           res.json(result);
         } else {
@@ -711,6 +790,7 @@ app.get("/messages/getFriends", async (req, res) => {
 });
 
 app.get("/findFriends", function (req, res) {
+  console.log("get /findfriends")
   res.sendFile(__dirname + "/pages/main-app/findFriends.html");
 });
 
@@ -723,14 +803,27 @@ app.get("/styles/findFriends.css", function (req,res) {
 })
 app.post("/findFriend", (req,res) => {
   db.then(function(dbc) {
-    dbc
+    console.log("findfriend")
+    let input = req.body;
+    let col = dbc
       .db("Boonez")
-      .collection("UserDashboard")
-      .find( {$or: [
-        {$and: [{ fname: {$eq: req.body.fname}},
-        { lname: {$eq: req.body.lname}}]},
-        { username: {$eq: req.body.username}} ]})
-      .toArray((err,result) => {
+      .collection("UserDashboard");
+    let findings;   
+    if (input.fname != '' &&
+        input.lname != '' &&
+        input.username != ''){
+          findings = col.find({$and: [{ fname: {$eq: req.body.fname}},
+            { lname: {$eq: req.body.lname}},
+            { username: {$eq: req.body.username}}]})
+    }
+    else {
+      findings = col.find( {$or: [
+          {$and: [{ fname: {$eq: req.body.fname}},
+          { lname: {$eq: req.body.lname}}]},
+          { username: {$eq: req.body.username}} ]})
+    }
+    findings.toArray((err,result) => {
+        console.log("db search output: " + result)
         res.json(result);
       })
   })
@@ -738,8 +831,10 @@ app.post("/findFriend", (req,res) => {
 
 app.post("/addFriend", (req,res) => {
   db.then(function(dbc) {
-    const query = { username: { $eq: session.userid} };
-    console.log("Current user: " + session.userid);
+    let cur_user = getCurUser(req);
+
+    const query = { username: { $eq: cur_user} };
+    console.log("Current user: " + url.parse(req.url, true).query.user);
     dbc
       .db("Boonez")
       .collection("UserDashboard")
@@ -757,6 +852,28 @@ app.post("/addFriend", (req,res) => {
             {$push: {"friends": friend}})
       });
 
+  })
+})
+
+app.get("/getFriends", (req,res) => {
+  db.then(function(dbc) {
+    //let cur_user = url.parse(req.url, true).query.user;
+    let cur_user = getCurUser(req);
+
+    console.log("req.session: " + req.session.id )
+    console.log("/getFriends cur_user: " + cur_user)
+    if (session.find(ele => ele.id == req.session.id) == undefined) {
+      res.json("nsi") //not signed in flag is returned
+    } else {
+      const query = { username: { $eq: cur_user} };
+      dbc
+        .db("Boonez")
+        .collection("UserDashboard")
+        .findOne(query)
+        .then(doc => {
+          res.json(doc)
+        })
+    }
   })
 })
 
