@@ -134,12 +134,12 @@ app.post("/signup", function (req, res) {
                         friends: input.friends,
                         classes: [],
                         aboutme: null,
-                        profilePic: null
-                      }
+                        profilePic: null,
+                      };
                       dbc
                         .db("Boonez")
                         .collection("UserDashboard")
-                        .insertOne(dash)
+                        .insertOne(dash);
 
                       dbc
                         .db("Boonez")
@@ -177,9 +177,9 @@ app.post("/login", function (req, res) {
                 session = req.session;
                 session.userid = req.body.username;
                 if (result.accountType == "business") {
-                  res.redirect(`/BusinessDashboard/?user=${session.userid}`)
+                  res.redirect(`/BusinessDashboard?user=${session.userid}`);
                 } else {
-                  res.redirect(`/dashboard/?user=${session.userid}`);
+                  res.redirect(`/dashboard?user=${session.userid}`);
                 }
               }
             }
@@ -201,7 +201,7 @@ app.get("/logout", (req, res) => {
 app.post("/Pub_calendar", function (req, res) {
   db.then(function (dbc) {
     let cur_user = session.userid;
-    console.log("CUR USER: " + cur_user)
+    console.log("CUR USER: " + cur_user);
     let cal_col = dbc.db("Boonez").collection("UserCalendars");
     let event = req.body;
     try {
@@ -217,7 +217,7 @@ app.post("/Pub_calendar", function (req, res) {
           let tmp_array = doc.PubEventArray;
           tmp_array.push(event);
           cal_col.updateOne(query, { $set: { PubEventArray: tmp_array } });
-         }
+        }
       });
     } catch (err) {
       console.log(err);
@@ -355,19 +355,23 @@ app.delete("/deleteEvent", function (req, res) {
 app.post("/profilePicture", function (req, res) {
   db.then(function (dbc) {
     let cur_user = session.userid;
-    const query = { username: { $eq: cur_user } };
+    // const query = { username: { $eq: cur_user } };
+    const query = { username: cur_user };
+    console.log(query);
     let acttyp = "";
     let col = "";
     dbc
       .db("Boonez")
       .collection("profiles")
       .findOne(query)
-      .then(doc => {
+      .then((doc) => {
         acttyp = doc.accountType;
-    });
-      
-    acttyp == "personal" ? col = "UserDashboard" : col = "BusinessDashboard";
-  
+      });
+
+    acttyp == "personal"
+      ? (col = "UserDashboard")
+      : (col = "BusinessDashboard");
+
     let profdb = dbc.db("Boonez").collection(col);
     profdb.updateOne(
       query,
@@ -397,23 +401,23 @@ app.get("/userDashboard", function (req, res) {
   });
 });
 
-app.get("/businessDashboard", function (req, res) {
-  db.then(function (dbc) {
-    let cur_user = session.userid;
-    const query = { username: { $eq: cur_user } };
-    dbc
-      .db("Boonez")
-      .collection("BusinessDashboard")
-      .findOne(query)
-      .then((doc) => {
-        if (doc != null) {
-          res.json(doc);
-        } else {
-          res.json(null);
-        }
-      });
-  });
-});
+// app.get("/businessDashboard", function (req, res) {
+//   db.then(function (dbc) {
+//     let cur_user = session.userid;
+//     const query = { username: { $eq: cur_user } };
+//     dbc
+//       .db("Boonez")
+//       .collection("BusinessDashboard")
+//       .findOne(query)
+//       .then((doc) => {
+//         if (doc != null) {
+//           res.json(doc);
+//         } else {
+//           res.json(null);
+//         }
+//       });
+//   });
+// });
 
 app.get("/styles/landingPage.css", function (req, res) {
   res.sendFile("/styles/landingPage.css", {
@@ -494,8 +498,8 @@ app.post("/businessSignup", function (req, res) {
                         username: req.body.username,
                         email: req.body.email,
                         followers: [],
-                        profilePic: undefined
-                      }
+                        profilePic: undefined,
+                      };
                       dbc
                         .db("Boonez")
                         .collection("profiles")
@@ -504,8 +508,8 @@ app.post("/businessSignup", function (req, res) {
                       dbc
                         .db("Boonez")
                         .collection("BusinessDashboard")
-                        .insertOne(businessDash)
-                      
+                        .insertOne(businessDash);
+
                       res.redirect("/login");
                     });
                   }
@@ -561,7 +565,7 @@ app.get("/dashboard", (req, res) => {
 });
 
 //route to business dashboard
-app.get("/BusinessDashboard", (req,res) => {
+app.get("/BusinessDashboard", (req, res) => {
   res.sendFile(__dirname + "/pages/main-app/busDashboard.html");
 });
 
@@ -714,60 +718,105 @@ app.get("/findFriends", function (req, res) {
   res.sendFile(__dirname + "/pages/main-app/findFriends.html");
 });
 
-app.get("/scripts/findFriends.js", function (req,res) {
+app.get("/scripts/findFriends.js", function (req, res) {
   res.sendFile(__dirname + "/scripts/findFriends.js");
-})
+});
 
-app.get("/styles/findFriends.css", function (req,res) {
+app.get("/styles/findFriends.css", function (req, res) {
   res.sendFile(__dirname + "/styles/findFriends.css");
-})
-app.post("/findFriend", (req,res) => {
-  db.then(function(dbc) {
+});
+app.post("/findFriend", (req, res) => {
+  db.then(function (dbc) {
     dbc
       .db("Boonez")
       .collection("UserDashboard")
-      .find( {$or: [
-        {$and: [{ fname: {$eq: req.body.fname}},
-        { lname: {$eq: req.body.lname}}]},
-        { username: {$eq: req.body.username}} ]})
-      .toArray((err,result) => {
-        res.json(result);
+      .find({
+        $or: [
+          {
+            $and: [
+              { fname: { $eq: req.body.fname } },
+              { lname: { $eq: req.body.lname } },
+            ],
+          },
+          { username: { $eq: req.body.username } },
+        ],
       })
-  })
-})
+      .toArray((err, result) => {
+        res.json(result);
+      });
+  });
+});
 
-app.post("/addFriend", (req,res) => {
-  db.then(function(dbc) {
-    const query = { username: { $eq: session.userid} };
+app.post("/addFriend", (req, res) => {
+  db.then(function (dbc) {
+    const query = { username: { $eq: session.userid } };
     console.log("Current user: " + session.userid);
     dbc
       .db("Boonez")
       .collection("UserDashboard")
-      .findOne({ username: {$eq: req.body.username}})
-      .then(doc => {
+      .findOne({ username: { $eq: req.body.username } })
+      .then((doc) => {
         let friend = {
           username: doc.username,
-          fullname: doc.fname + ' ' + doc.lname,
-          profilePic: doc.profilePic
-        }
+          fullname: doc.fname + " " + doc.lname,
+          profilePic: doc.profilePic,
+        };
         dbc
           .db("Boonez")
           .collection("UserDashboard")
-          .updateOne(query, 
-            {$push: {"friends": friend}})
+          .updateOne(query, { $push: { friends: friend } });
       });
+  });
+});
+app.get("/createAd", (req, res) => {
+  res.sendFile(__dirname + "/pages/main-app/createAd.html");
+});
 
-  })
-})
+app.post("/createAd", async (req, res) => {
+  await db.then(function (dbc) {
+    const ad = req.body;
+    dbc.db("Boonez").collection("Advertisements").insertOne(ad);
+  });
+  res.redirect("../viewAdvertisements");
+  res.end();
+});
+app.get("/styles/createAd.css", (req, res) => {
+  res.sendFile(__dirname + "/styles/createAd.css");
+});
 
-app.get("/styles/busDashboard.css", (req,res) => {
+app.get("/styles/busDashboard.css", (req, res) => {
   res.sendFile(__dirname + "/styles/busDashboard.css");
 });
 
-app.get("/scripts/busDashboard.js", (req,res) => {
-  res.sendFile(__dirname + "/scripts/busDashboard.js")
-})
+app.get("/scripts/busDashboard.js", (req, res) => {
+  res.sendFile(__dirname + "/scripts/busDashboard.js");
+});
 
+app.get("/viewAdvertisements", async (req, res) => {
+  res.sendFile(__dirname + "/pages/main-app/advertisementsPage.html");
+});
+app.get("/viewAdvertisements/fetchAds", async (req, res) => {
+  db.then((dbc) => {
+    dbc
+      .db("Boonez")
+      .collection("Advertisements")
+      .find()
+      .toArray((err, result) => {
+        if (result) {
+          //send client array of advertisement objects
+          res.json(result);
+        } else {
+          res.send(500, "something went wrong");
+        }
+      });
+  });
+});
+app.get("/styles/advertisementsPage.css", async (req, res) => {
+  res.send("/styles/advertisementsPage.css");
+});
+app.get("/scripts/advertisementsPage.js", async (req, res) => {
+  res.send("/scripts/advertisementsPage.js");
+});
 server.listen(3000, () => {
   console.log("listening on http://localhost:3000");
 });

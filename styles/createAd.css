@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap");
+* {
+  font-family: "Open Sans", sans-serif;
+}
+html {
+  height: 100%;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+body {
+  background-color: #343a40;
+  height: 100%;
+  width: 100%;
+}
+#main-cont {
+  display: flex;
+
+  margin-top: 2rem;
+}
+#ad-cont {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.865);
+  width: fit-content;
+  padding: 10px;
+  border-radius: 15px;
+  align-self: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+#page-title {
+  color: white;
+  font-size: 2.5rem;
+}
+.advertisement-form {
+  display: flex;
+  flex-direction: column;
+  font-size: 2rem;
+}
+.advertisement-form div {
+  display: flex;
+  margin: 1rem;
+}
+.advertisement-form div input {
+  align-self: flex-end;
+  margin-left: 0.2rem;
+  height: 1.5rem;
+  border-radius: 5px;
+  border: 2px solid rgb(84, 84, 84);
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.909);
+}
+.advertisement-form div input:focus {
+  outline: none;
+  border: 2px solid #ffcc00;
+  background-color: white;
+}
+#createad {
+  margin-left: auto;
+  margin-right: auto;
+  color: #ffcc00;
+  background-color: #25292e;
+  border-radius: 10px;
+  border: none;
+  font-size: 1.5rem;
+  padding: 15px;
+  width: fit-content;
+  height: fit-content;
+}
+#createad:hover {
+  cursor: pointer;
+}
