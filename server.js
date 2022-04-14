@@ -41,6 +41,7 @@ app.use(
   })
 );
 
+//get username through session id
 function getCurUser(req) {
   let user;
   session.find( ele => {
@@ -119,13 +120,12 @@ app.post("/signup", function (req, res) {
     input.fname = input.fname.replace(/\s+/g, '').toLowerCase();
     input.lname = input.lname.replace(/\s+/g, '').toLowerCase();
     input.email = input.email.replace(/\s+/g,'');
-    input.friends = [];
     console.log(input);
     let dash = {
       username: input.username,
       fname: input.fname,
       lname: input.lname,
-      friends: input.friends,
+      friends: [],
       classes: [],
       aboutme: null,
       profilePic: null,
@@ -177,7 +177,7 @@ app.post("/signup", function (req, res) {
 app.post("/login", function (req, res) {
   db.then(function (dbc) {
     let input = req.body;
-    //console.log("session: " + session)
+    //search current session array to determine if user is logged in already
     if (session.find(ele => ele.id == req.session.id) != undefined) {
       //res.redirect(`/dashboard/?user=${ele.username}`);
       res.redirect('/dashboard');
@@ -200,10 +200,10 @@ app.post("/login", function (req, res) {
                 } else if (!isMatch) {
                   res.send("Password incorrect");
                 } else {
+                  //get current session with username and push to session array
                   let sn = req.session;
                   sn.username = input.username;
                   session.push(sn);
-                  //session.userid = req.body.username;
                   if (result.accountType == "business") {
                     res.redirect(`/BusinessDashboard/?user=${input.username}`)
                   } else {
@@ -223,16 +223,17 @@ app.post("/login", function (req, res) {
 //TODO: add a logout page
 app.get("/logout", (req, res) => {
   console.log("all users in session: " + session)
-  //let cur_user = url.parse(req.url, true).query.user;//session.userid;
-  session.splice(session.indexOf(req.session.id),1);
+  //let cur_user = url.parse(req.url, true).query.user;
+  // destroy session and remove from session array 
   req.session.destroy();
+  session.splice(session.indexOf(req.session.id),1);
   res.redirect("/");
 });
 
 //routing calendar.js to database
 app.post("/Pub_calendar", function (req, res) {
   db.then(function (dbc) {
-    //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+    //let cur_user = url.parse(req.url, true).query.user;
     let cur_user = getCurUser(req);
     console.log("CUR USER: " + cur_user)
     let cal_col = dbc.db("Boonez").collection("UserCalendars");
@@ -428,33 +429,28 @@ app.post("/profilePicture", function (req, res) {
 
 app.get("/userDashboard", function (req, res) {
   db.then(function (dbc) {
-    console.log("req.url: " + req.url);
-    console.log("session id :" + req.session.id)
     //let cur_user = url.parse(req.url, true).query.user;//session.userid;
     let cur_user = getCurUser(req);
 
-    console.log("cur_user: " + cur_user)
-    console.log("sessions: " + session)
     if (session.find(ele => {
       cur_user = ele.username;
       return ele.id == req.session.id;}) == undefined) {
-      res.json("nsi") //not signed in flag is returned
+        res.json("nsi") //not signed in flag is returned
     } else {
-    console.log("node.js /userDashboard , cur_user : " + cur_user);
-    const query = { username: { $eq: cur_user } };
-    dbc
-      .db("Boonez")
-      .collection("UserDashboard")
-      .findOne(query)
-      .then((doc) => {
-        if (doc != null) {
-          console.log("doc : " + doc.profilePic)
-          res.json(doc);
-        } else {
-          res.json(null);
-        }
-      });
-    }
+        const query = { username: { $eq: cur_user } };
+        dbc
+          .db("Boonez")
+          .collection("UserDashboard")
+          .findOne(query)
+          .then((doc) => {
+            if (doc != null) {
+              console.log("doc : " + doc.profilePic)
+              res.json(doc);
+            } else {
+              res.json(null);
+            }
+          });
+      }
   });
 });
 
@@ -614,7 +610,6 @@ app.get("/images/word_logo.png", (req, res) => {
 
 app.get("/", (req, res) => {
   //session = req.session;
-
   res.sendFile("index.html", {
     root: __dirname,
   });
@@ -801,9 +796,10 @@ app.get("/scripts/findFriends.js", function (req,res) {
 app.get("/styles/findFriends.css", function (req,res) {
   res.sendFile(__dirname + "/styles/findFriends.css");
 })
+//search for specific user in database
+//TODO: add class search functionality
 app.post("/findFriend", (req,res) => {
   db.then(function(dbc) {
-    console.log("findfriend")
     let input = req.body;
     let col = dbc
       .db("Boonez")
@@ -817,6 +813,8 @@ app.post("/findFriend", (req,res) => {
             { username: {$eq: req.body.username}}]})
     }
     else {
+      //search for fname + lname and username if provided
+      //fname requires lname to search and vice-versa
       findings = col.find( {$or: [
           {$and: [{ fname: {$eq: req.body.fname}},
           { lname: {$eq: req.body.lname}}]},
@@ -829,12 +827,11 @@ app.post("/findFriend", (req,res) => {
   })
 })
 
+//adds specific friend to friends list using user
 app.post("/addFriend", (req,res) => {
   db.then(function(dbc) {
     let cur_user = getCurUser(req);
-
     const query = { username: { $eq: cur_user} };
-    console.log("Current user: " + url.parse(req.url, true).query.user);
     dbc
       .db("Boonez")
       .collection("UserDashboard")
@@ -855,13 +852,11 @@ app.post("/addFriend", (req,res) => {
   })
 })
 
+//get all user friends
 app.get("/getFriends", (req,res) => {
   db.then(function(dbc) {
     //let cur_user = url.parse(req.url, true).query.user;
     let cur_user = getCurUser(req);
-
-    console.log("req.session: " + req.session.id )
-    console.log("/getFriends cur_user: " + cur_user)
     if (session.find(ele => ele.id == req.session.id) == undefined) {
       res.json("nsi") //not signed in flag is returned
     } else {
