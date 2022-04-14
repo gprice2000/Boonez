@@ -222,11 +222,21 @@ app.post("/login", function (req, res) {
 
 //TODO: add a logout page
 app.get("/logout", (req, res) => {
-  console.log("all users in session: " + session)
+  for(let i = 0; i < session.length; i++) {
+    console.log("session: " + session[i].username)
+  }
   //let cur_user = url.parse(req.url, true).query.user;
   // destroy session and remove from session array 
   req.session.destroy();
-  //session.splice(session.indexOf(req.session.id),1);
+  for(let i = 0; i < session.length; i++) {
+    console.log("session: " + session[i].username)
+
+    if (session.id == req.id){
+      session.splice(i,1);
+    }
+  }
+  console.log("session: " + session.length)
+
   res.redirect("/");
 });
 
@@ -425,6 +435,26 @@ app.post("/profilePicture", function (req, res) {
       { upsert: true }
     );
   });
+});
+
+
+app.post("/courses", function(req,res) {
+  db.then(function (dbc) {
+
+    let cur_user = getCurUser(req);
+    dbc
+    .db("Boonez")
+    .collection("UserDashboard")
+    .updateOne(query, 
+      {$push: {"friends": friend}})
+      req.body.course0
+
+    for (let i = 0; i < 8 ; ) {
+      let course = "course0";
+      req.body
+    }
+  })
+
 });
 
 app.get("/userDashboard", function (req, res) {
