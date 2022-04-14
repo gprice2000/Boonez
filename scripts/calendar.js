@@ -1,4 +1,5 @@
 var cur_cal;
+const search = window.location.search;
 
 document.addEventListener('DOMContentLoaded', function() {
 	var calendarEl = document.getElementById('calendar');
@@ -36,6 +37,7 @@ function dateFormat(date) {
 	return year + "-" + month + "-" + day;
 }
 function privateCal(calendarEl) {
+	//cur user
 		var calendar = new FullCalendar.Calendar(calendarEl, {
 			headers: {
 				left: 'prev,next today',
@@ -51,7 +53,7 @@ function privateCal(calendarEl) {
 			},
 			eventSources: [
 				{
-					url: '/Priv_calendar',
+					url: '/Priv_calendar/'+search,
 					method: 'GET',
 					success: function(res) {
 						console.log("Calendar Events received:");
@@ -73,22 +75,7 @@ function privateCal(calendarEl) {
 						end: info.endStr,
 					};
 					this.addEvent(new_event);
-					fetch('http://localhost:3000/Priv_calendar', {
-						method: 'POST', 
-						credentials: 'same-origin',
-						mode: 'same-origin',
-						headers: {
-							'Content-Type' : 'application/json',
-						},
-						body: JSON.stringify(new_event),
-					})
-					.then(response => response.json())
-					.then(new_event => {
-						console.log('Success:');
-					})
-					.catch((error) => {
-						console.error("Error:");
-					});
+					serverCon('POST',new_event,'/Priv_calendar')
 				}
 
 			}
@@ -123,7 +110,7 @@ function publicCal(calendarEl) {
 		},
 		eventSources: [
 			{
-				url: '/Pub_calendar',
+				url: '/Pub_calendar/' + search,
 				method: 'GET',
 				success: function(res) {
 					pub_arr = res 
@@ -147,23 +134,7 @@ function publicCal(calendarEl) {
 					end: info.endStr,
 				};
 				this.addEvent(new_event);
-
-				fetch('http://localhost:3000/Pub_calendar', {
-					method: 'POST', 
-					credentials: 'same-origin',
-					mode: 'same-origin',
-					headers: {
-						'Content-Type' : 'application/json',
-					},
-					body: JSON.stringify(new_event),
-				})
-				.then(response => response.json())
-				.then(new_event => {
-					console.log('Success:');
-				})
-				.catch((error) => {
-					console.error("Error:");
-				});
+				serverCon('POST',new_event,'/Pub_calendar')
 			}
 		}
 	});
@@ -208,9 +179,11 @@ function editEvent(cal_type, info) {
 		serverCon('POST',{id,cal_type,title,start,end},'/editEvent');
 
 	}
-	delBtn.onclick = function() {
+	delBtn.onclick = function(event) {
+		event.preventDefault();
 		var obj = {id,info, cal_type};
 		serverCon('DELETE',obj,'/deleteEvent');
+		cur_cal.render();
 	}
 	var span = document.getElementsByClassName("close")[0];
 
@@ -228,21 +201,28 @@ function editEvent(cal_type, info) {
 	cur_cal.render();
 }
 
-function serverCon(method, data,url) {
-	fetch('http://localhost:3000'+url, {
+async function serverCon(method, data,url) {
+	
+	await fetch('http://localhost:3000'+url + '/' + search, {
 		method: method, 
 		credentials: 'same-origin',
 		mode: 'same-origin',
 		headers: {
 			'Content-Type' : 'application/json',
 		},
-		body: JSON.stringify({data}),
+		body: JSON.stringify(data),
 	})
 	.then(response => response.json())
 	.then(new_event => {
-		console.log('Success:');
+
 	})
 	.catch((error) => {
-		console.error("Error:");
+		console.error("Error: " + error);
+		/*
+		if (method == 'DELETE') {
+			console.log("DELETE")
+			window.location.replace(window.location.pathname + window.location.search);}
+		*/
 	});
+
 }
