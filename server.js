@@ -226,7 +226,7 @@ app.get("/logout", (req, res) => {
   //let cur_user = url.parse(req.url, true).query.user;
   // destroy session and remove from session array 
   req.session.destroy();
-  session.splice(session.indexOf(req.session.id),1);
+  //session.splice(session.indexOf(req.session.id),1);
   res.redirect("/");
 });
 
