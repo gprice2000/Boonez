@@ -832,6 +832,7 @@ app.post("/findFriend", (req,res) => {
       .db("Boonez")
       .collection("UserDashboard");
     let findings;   
+    console.log(input.fname + input.lname + input.username)
     if (input.fname != '' &&
         input.lname != '' &&
         input.username != ''){
@@ -850,7 +851,7 @@ app.post("/findFriend", (req,res) => {
     findings.toArray((err,result) => {
         console.log("db search output: " + result)
         res.json(result);
-      })
+    })
   })
 })
 

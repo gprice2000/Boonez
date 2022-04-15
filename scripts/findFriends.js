@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById("friendSearch").innerHTML = "";
         let fname = document.getElementById("fname").value.replace(/\s+/g,'').toLowerCase();
         let lname = document.getElementById("lname").value.replace(/\s+/g, '').toLowerCase();
-        let username = document.getElementById("username").value.replace(/\s+/g, '').toLowerCase();
+        let username = document.getElementById("username").value.replace(/\s+/g, '');
         let obj = {fname,lname,username};
         fetch('http://localhost:3000/findFriend', {
             method: 'POST', 
