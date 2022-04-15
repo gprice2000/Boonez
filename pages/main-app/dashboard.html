@@ -69,8 +69,9 @@
       <input type="text" id="aboutme" name="aboutme" /><br />
     </div>
 
-    <div class="userclass"> 
-      <button id="class">Add Courses</button>
+    <div class="courses">
+      <ul id="courseList">
+      </ul>
     </div>
 
     <div id="classModal" class="modal">
@@ -80,23 +81,24 @@
           <h2>Courses</h2>
         </div>
         <div class="modal-body">
-          <form class="" action="/course" method="POST">
-            <label for="course">CRN:</label>
-            <input type="text" id="course"/> 
-            <input type="text" id="course"/> 
-            <input type="text" id="course"/> 
-            <input type="text" id="course"/> 
-            <input type="text" id="course"/> 
-            <input type="text" id="course"/> 
-            <input type="text" id="course"/> 
-            <input type="text" id="course"/> 
+          <form id="courseform" name="courseform">
+            <label for="course0">CRN:</label>
+            <input type="text" id="course0" name="course0"/> 
+            <input type="text" id="course1" name="course1" /> 
+            <input type="text" id="course2" name="course2" /> 
+            <input type="text" id="course3" name="course3" /> 
+            <input type="text" id="course4" name="course4" /> 
+            <input type="text" id="course5" name="course5" /> 
+            <input type="text" id="course6" name="course6" /> 
+            <input type="text" id="course7" name="course7" /> 
             <div class="modal-footer">
-              <input type="submit" value="Submit" />
+              <input id="courseSub" type="submit" value="Save" />
             </div>
           </form>
         </div>
       </div>
     </div>
+
 
 
     <div class="friends">

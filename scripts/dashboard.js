@@ -17,27 +17,90 @@ document.addEventListener('DOMContentLoaded', function() {
 				let proPic = document.getElementById("profile-pic")
 				proPic.src = data.profilePic;
 			}
-			friendList(data)
+			if (data.classes.length != 0) {
+				courseList(data.classes);
+			} else {
+				getCourseList();
+			}
+			friendList(data.friends)
 		})
 		.catch((error) => {
 			console.log("Error: " + error)
 		});
 	}
 
+	function getCourseList() {
+		console.log("getcourselist")
+		let classModal = document.getElementById("classModal");
+		classModal.style.display = "initial";
+		let classForm = document.querySelector("#courseform");
+		let classes = [];
+
+
+		classForm.addEventListener('submit', (event) => {
+			event.preventDefault();
+			const formData = new FormData(event.target)
+			for(let pair of formData.entries()) {
+				if (pair[1] != "") {classes.push(pair[1].replace(/\s+/g, ''))}
+			}
+			console.log("classes: " + classes)
+			fetch("http://localhost:3000/courses",
+				{
+					method: 'POST', 
+					credentials: 'same-origin',
+					mode: 'same-origin',
+					headers: {
+						'Content-Type' : 'application/json',
+					},
+					body: JSON.stringify(classes),
+				})
+			.then(response =>  response.json())
+			.then(data => {
+
+			})
+			.catch((error) => {
+				console.log("Error: " + error)
+			});			classModal.style.display = "none";
+
+
+		})
+
+			/*
+			for(let i = 0; i < 8; i++) {
+
+				console.log(classForm.get("course0"));
+			}*/
+		
+
+	}
+
+
+	function courseList(courses) {
+		for (var i = 0; i < courses.length; i++) {
+			let node = document.createElement('li');
+			let div = document.createElement('div');
+
+			node.id = courses[i];
+			node.className = "course";
+			node.appendChild(document.createTextNode(courses[i]));
+			document.querySelector("#courseList").appendChild(node);
+		}
+	}
+
 	function friendList(data) {
 		for (var i = 0; i < 10 ; i++) {
-			if (i >= data.friends.length) {break;}
+			if (i >= data.length) {break;}
 			let node = document.createElement('li');
 			let img = document.createElement('img');
 			let div = document.createElement('div');
 
 			//user id is stored in node id , this way we can keep track upon 
 			//element click.
-			node.id = data.friends[i].username;
-			if (data.friends[i].profilePic == undefined) {
+			node.id = data[i].username;
+			if (data[i].profilePic == undefined) {
 				img.src = "/images/blank-profile-pic.png"
 			} else {
-				img.src = data.friends[i].profilePic;
+				img.src = data[i].profilePic;
 			}
 			node.addEventListener("click", (event) => {
 				//redirect user to dashboard view page
@@ -45,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			node.className = "friend";
 			div.className = "name";
 			node.appendChild(img);
-			node.appendChild(document.createTextNode(data.friends[i].fullname));
+			node.appendChild(document.createTextNode(data[i].fullname));
 			document.querySelector('#friendsList').appendChild(node);
 		}
 	}
@@ -55,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		window.location.href = "/findFriends/" + search;
 	})
 });
+
 
 function setProf() {
 	let picLink = document.getElementById("PicLink");

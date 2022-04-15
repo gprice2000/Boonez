@@ -440,21 +440,18 @@ app.post("/profilePicture", function (req, res) {
 
 app.post("/courses", function(req,res) {
   db.then(function (dbc) {
-
+    let input = req.body;
     let cur_user = getCurUser(req);
+    const query = { username: { $eq: cur_user } };
+    console.log("req.body /courses: " + req.body);
+
+    
     dbc
     .db("Boonez")
     .collection("UserDashboard")
     .updateOne(query, 
-      {$push: {"friends": friend}})
-      req.body.course0
-
-    for (let i = 0; i < 8 ; ) {
-      let course = "course0";
-      req.body
-    }
+      {$set: {"classes": req.body}})
   })
-
 });
 
 app.get("/userDashboard", function (req, res) {

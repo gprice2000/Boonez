@@ -19,6 +19,9 @@
   }
 
 
+#classModal{
+	display: none;
+}
 
 body {
 	display:grid;
