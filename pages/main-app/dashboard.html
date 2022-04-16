@@ -64,9 +64,35 @@
       </div>
     </div>
 
-    <div class="about-me">
-      <label for="aboutme">About me:</label><br />
-      <input type="text" id="aboutme" name="aboutme" /><br />
+    <div class="about-me-cont">
+      <div class="about-me-header">
+        <h2>About Me</h2>
+        <img src= "../../images/icons8-edit-24 (1).png" onclick="setAboutMe()">
+      </div>
+      <div >
+        <p id="am-content">
+        </p>
+      </div>
+    </div>
+
+    <div id="aboutModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2> Edit About Me</h2>
+        </div>
+        <div class="modal-body">
+          <form>
+            <label for="aboutme">You can write about your major, 
+                                interests or desired career</label><br />
+            <textarea id="aboutmeText" name="aboutme" >
+            </textarea>
+              <br />
+          </form>
+        </div>
+        <div class="modal-footer">
+          <input id="amSub" type="submit" value="Save" />
+        </div>
+      </div>
     </div>
 
     <div class="courses">

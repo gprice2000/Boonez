@@ -22,11 +22,26 @@ document.addEventListener('DOMContentLoaded', function() {
 			} else {
 				getCourseList();
 			}
+			if (data.aboutme != null) {
+				getAboutMe();
+			}
+			else {
+				setAboutMe();
+			}
 			friendList(data.friends)
 		})
 		.catch((error) => {
 			console.log("Error: " + error)
 		});
+	}
+
+	function setAboutMe(){
+		document.getElementById()
+
+	}
+
+	function getAboutMe(){
+
 	}
 
 	function getCourseList() {

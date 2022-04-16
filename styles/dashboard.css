@@ -19,6 +19,9 @@
   }
 
 
+#aboutModal {
+	display: none;
+}
 #classModal{
 	display: none;
 }

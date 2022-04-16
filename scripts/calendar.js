@@ -1,4 +1,4 @@
-var cur_cal;
+let cur_cal;
 const search = window.location.search;
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -38,6 +38,7 @@ function dateFormat(date) {
 }
 function privateCal(calendarEl) {
 	//cur user
+
 		var calendar = new FullCalendar.Calendar(calendarEl, {
 			headers: {
 				left: 'prev,next today',
@@ -80,12 +81,14 @@ function privateCal(calendarEl) {
 
 			}
 		});
-		cur_cal = calendar;
+		
 		calendar.render();
+		cur_cal = calendar;
 
 }
 
 function publicCal(calendarEl) {
+
 	var calendar = new FullCalendar.Calendar(calendarEl, {
 		headers: {
 			left: 'prev,next today',
@@ -138,8 +141,9 @@ function publicCal(calendarEl) {
 			}
 		}
 	});
-	cur_cal = calendar;
 	calendar.render();
+	cur_cal = calendar;
+
 }
 function genID() {
 	return (cur_cal.getEvents()).length;
@@ -182,8 +186,9 @@ function editEvent(cal_type, info) {
 	delBtn.onclick = function(event) {
 		event.preventDefault();
 		var obj = {id,info, cal_type};
-		serverCon('DELETE',obj,'/deleteEvent');
 		cur_cal.render();
+		modal.style.display = "none";
+		serverCon('DELETE',obj,'/deleteEvent');
 	}
 	var span = document.getElementsByClassName("close")[0];
 
