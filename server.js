@@ -437,6 +437,20 @@ app.post("/profilePicture", function (req, res) {
   });
 });
 
+app.post("/aboutMe", function(req,res) {
+  db.then(function (dbc) {
+    console.log("/boutme")
+    let cur_user = getCurUser(req);
+    console.log("about me : " + req.body.aboutme)
+    const query = { username: { $eq: cur_user } };
+    let col = dbc
+        .db("Boonez")
+        .collection("UserDashboard")
+    col.updateOne(query, 
+        {$set: {"aboutme": req.body}})
+
+  })
+})
 
 app.post("/courses", function(req,res) {
   db.then(function (dbc) {

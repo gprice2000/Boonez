@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 	function getAboutMe(){
-
+		
 	}
 
 	function getCourseList() {
@@ -127,6 +127,32 @@ document.addEventListener('DOMContentLoaded', function() {
 	})
 });
 
+async function serverCon(method, data,url) {
+	
+	await fetch('http://localhost:3000'+url, {
+		method: method, 
+		credentials: 'same-origin',
+		mode: 'same-origin',
+		headers: {
+			'Content-Type' : 'application/json',
+		},
+		body: JSON.stringify(data),
+	})
+	.then(response => response.json())
+	.then(new_event => {
+
+	})
+	.catch((error) => {
+		console.error("Error: " + error);
+		/*
+		if (method == 'DELETE') {
+			console.log("DELETE")
+			window.location.replace(window.location.pathname + window.location.search);}
+		*/
+	});
+}
+
+
 function setAboutMe(){
 	let modal = document.getElementById("aboutModal");
 	let text = document.getElementById("aboutmeText");
@@ -134,7 +160,10 @@ function setAboutMe(){
 	modal.style.display = "initial";
 
 	savebtn.onclick = function(event) {
-		console.log(event);
+		event.preventDefault();
+		console.log(text.value)
+		serverCon('POST',{"aboutme":text.value},'/aboutMe')
+		console.log(event.target);
 
 	}
 
