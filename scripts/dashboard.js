@@ -25,9 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			if (data.aboutme != null) {
 				getAboutMe();
 			}
-			else {
-				setAboutMe();
-			}
 			friendList(data.friends)
 		})
 		.catch((error) => {
@@ -35,10 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
-	function setAboutMe(){
-		document.getElementById()
-
-	}
 
 	function getAboutMe(){
 
@@ -134,6 +127,18 @@ document.addEventListener('DOMContentLoaded', function() {
 	})
 });
 
+function setAboutMe(){
+	let modal = document.getElementById("aboutModal");
+	let text = document.getElementById("aboutmeText");
+	let savebtn = document.getElementById("amSub")
+	modal.style.display = "initial";
+
+	savebtn.onclick = function(event) {
+		console.log(event);
+
+	}
+
+}
 
 function setProf() {
 	let picLink = document.getElementById("PicLink");
