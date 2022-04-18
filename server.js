@@ -272,8 +272,11 @@ app.post("/Pub_calendar", function (req, res) {
 app.get("/Pub_calendar", function (req, res) {
   db.then(function (dbc) {
     try {
-      //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+      let userCal = url.parse(req.url, true).query.user;
       let cur_user = getCurUser(req);
+      if (userCal != cur_user){
+        cur_user = userCal;
+      }
       const query = { username: { $eq: cur_user } };
       dbc
         .db("Boonez")
@@ -439,7 +442,6 @@ app.post("/profilePicture", function (req, res) {
 
 app.post("/aboutMe", function(req,res) {
   db.then(function (dbc) {
-    console.log("/boutme")
     let cur_user = getCurUser(req);
     console.log("about me : " + req.body.aboutme)
     const query = { username: { $eq: cur_user } };
@@ -447,7 +449,7 @@ app.post("/aboutMe", function(req,res) {
         .db("Boonez")
         .collection("UserDashboard")
     col.updateOne(query, 
-        {$set: {"aboutme": req.body}})
+        {$set: {"aboutme": req.body.aboutme}})
 
   })
 })
@@ -915,8 +917,27 @@ app.get("/getFriends", (req,res) => {
 })
 
 app.get("/viewDashboard", (req,res) => {
-  
-  console.log("url: " + url.parse(req.url, true).query.user)
+  db.then(function(dbc) {
+    let cur_user = getCurUser(req);
+    if (cur_user == undefined) {
+      res.redirect("/login");
+    }
+    else {
+      let dashView = url.parse(req.url, true).query.user;
+      const query = { username: { $eq: dashView} };
+
+      dbc
+        .db("Boonez")
+        .collection("UserDashboard")
+        .findOne(query)
+        .then(doc => {
+          let dashobj = { cur_user: cur_user, doc:doc}
+          res.json(dashobj)
+        })
+    }
+
+  })
+
 });
 
 app.get("/scripts/viewDashboard.js", (req,res) => {
