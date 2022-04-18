@@ -101,17 +101,21 @@ document.addEventListener('DOMContentLoaded', function() {
 			let node = document.createElement('li');
 			let img = document.createElement('img');
 			let div = document.createElement('div');
-
 			//user id is stored in node id , this way we can keep track upon 
-			//element click.
+			//element click.'
 			node.id = data[i].username;
 			if (data[i].profilePic == undefined) {
 				img.src = "/images/blank-profile-pic.png"
 			} else {
 				img.src = data[i].profilePic;
 			}
+			
+			
 			node.addEventListener("click", (event) => {
 				//redirect user to dashboard view page
+				console.log("friend: " + event.target.id)
+				window.location.href = `/viewDash/?user=${event.target.id}`;
+
 			});
 			node.className = "friend";
 			div.className = "name";
@@ -151,7 +155,6 @@ async function serverCon(method, data,url) {
 		*/
 	});
 }
-
 
 function setAboutMe(){
 	let modal = document.getElementById("aboutModal");

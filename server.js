@@ -914,6 +914,27 @@ app.get("/getFriends", (req,res) => {
   })
 })
 
+app.get("/viewDashboard", (req,res) => {
+  
+  console.log("url: " + url.parse(req.url, true).query.user)
+});
+
+app.get("/scripts/viewDashboard.js", (req,res) => {
+  res.sendFile(__dirname + "scripts/viewDashboard.js");
+});
+
+app.get("/scripts/viewCalendar.js", (req,res) => {
+  res.sendFile(__dirname + "/scripts/viewCalendar.js");
+})
+
+app.get("/styles/viewDashboard.css", (req,res) => {
+  res.sendFile(__dirname + "/styles/viewDashboard.css");
+});
+
+app.get("/styles/viewCalendar.css", (req,res) => {
+  res.sendFile(__dirname + "/styles/viewCalendar.css");
+})
+
 app.get("/styles/busDashboard.css", (req,res) => {
   res.sendFile(__dirname + "/styles/busDashboard.css");
 });
@@ -921,6 +942,10 @@ app.get("/styles/busDashboard.css", (req,res) => {
 app.get("/scripts/busDashboard.js", (req,res) => {
   res.sendFile(__dirname + "/scripts/busDashboard.js")
 })
+
+app.get("/viewDash", function(req,res) {
+  res.sendFile(__dirname + "/pages/main-app/viewDashboard.html");
+});
 
 server.listen(3000, () => {
   console.log("listening on http://localhost:3000");
