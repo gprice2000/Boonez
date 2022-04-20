@@ -18,6 +18,7 @@ const url = require("url");
 const res = require("express/lib/response");
 const CryptoJS = require("crypto-js");
 const { redirect } = require("express/lib/response");
+const { query } = require("express");
 // create an array of strings of user id , parse
 // urls to get current user, if theyre logging off
 // pop their name from array and redirect them to 
@@ -346,29 +347,54 @@ app.post("/editEvent", function (req, res) {
       let calDb = dbc.db("Boonez").collection("UserCalendars");
       //let cur_user = url.parse(req.url, true).query.user;//session.userid;
       let cur_user = getCurUser(req);
-      let eventData = req.body.data;
+      let eventData = req.body;
+
+      
       let cal_type = eventData.cal_type;
-      const query = { username: { $eq: cur_user } };
-      delete eventData.cal_type;
+      const query = { username: { $eq: cur_user }};
+
+
+
+
+      //delete eventData.cal_type;
       console.log(eventData);
       if (cal_type == "pri") {
         calDb.findOne(query).then((doc) => {
+          console.log("doc: " + doc)
+
           let ind = doc.PriEventArray.findIndex(
             (ele) => ele.id == eventData.id
           );
-          doc.PriEventArray[ind] = eventData;
-          calDb.replaceOne(query, doc);
-        });
-      } else {
-        calDb.findOne(query).then((doc) => {
-          let ind = doc.PubEventArray.findIndex(
-            (ele) => ele.id == eventData.id
-          );
-          doc.PubEventArray[ind] = eventData;
+
+          if (ind == -1) {
+            doc.PriEventArray.push(eventData)
+          }
+          else {
+            doc.PriEventArray[ind] = eventData;
+          }
           calDb.replaceOne(query, doc);
         });
       }
-    } catch (err) {
+      else {
+      
+        calDb.findOne(query).then((doc) => {
+
+          console.log("doc: " + doc)
+          let ind = doc.PubEventArray.findIndex(
+            (ele) => ele.id == eventData.id
+          );
+          console.log("ind: " + ind)
+          if (ind == -1) {
+            doc.PubEventArray.push(eventData)
+          }
+          else {
+            doc.PubEventArray[ind] = eventData;
+          }
+          calDb.replaceOne(query, doc);
+        });
+      }
+    }
+      catch (err) {
       console.log(err);
     }
   });
