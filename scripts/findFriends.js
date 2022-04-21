@@ -1,5 +1,6 @@
         //add delete friend functionality
 let cur_friends;
+let cur_user;
 const search = window.location.search;
 document.addEventListener('DOMContentLoaded', function() {
 	document.getElementById("dash").href = `/dashboard/${search}`;
@@ -86,11 +87,11 @@ document.addEventListener('DOMContentLoaded', function() {
             addedFriend = cur_friends.find(ele =>
                 ele.username == user);
 
-            if(addedFriend == undefined) {
+            if(addedFriend == undefined && user != cur_user) {
                 addf.src = "/images/add-user.png";
                 addf.className = "addfriend";
                 node.appendChild(addf);
-            } else {
+            } else if (user != cur_user){
                 del.src = "/images/del-friend.png";
                 del.className = "delfriend"
                 node.appendChild(del)
@@ -159,6 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data == "nsi") {
                 window.location.href = "/login";
             }
+            cur_user = data.username;
             cur_friends = data.friends;
             allFriends(data);
         })
