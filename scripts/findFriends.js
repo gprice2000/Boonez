@@ -1,3 +1,4 @@
+        //add delete friend functionality
 let cur_friends;
 const search = window.location.search;
 document.addEventListener('DOMContentLoaded', function() {
@@ -13,7 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
         let fname = document.getElementById("fname").value.replace(/\s+/g,'').toLowerCase();
         let lname = document.getElementById("lname").value.replace(/\s+/g, '').toLowerCase();
         let username = document.getElementById("username").value.replace(/\s+/g, '');
-        let obj = {fname,lname,username};
+        let crn = document.getElementById("crn").value.replace(/\s+/g, '');
+        let obj = {items: [fname,lname,username,crn]};
         fetch('http://localhost:3000/findFriend', {
             method: 'POST', 
             credentials: 'same-origin',
@@ -34,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     function allFriends(data) {
+        let del = document.createElement('img');
         for (var i = 0; i < data.friends.length ; i++) {
             let node = document.createElement('li');
             let img = document.createElement('img');
@@ -44,6 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
             node.id = data.friends[i].username;
             //added delete friend image 
             //del.src = "/images/"
+            del.src = "/images/del-friend.png";
+            del.className = "delfriend"
+            node.appendChild(del)
+            
             node.addEventListener("click", (event) => {
                 //redirect user to dashboard view page
             });
@@ -57,17 +64,24 @@ document.addEventListener('DOMContentLoaded', function() {
             //name of friend 
             node.appendChild(document.createTextNode(data.friends[i].fullname));
             document.querySelector('#friendsList').appendChild(node);
+            del.addEventListener("click",(event) => {
+                console.log("event: " + event.target.innerHTML)
+                let obj = {username: node.id}
+                serverCon("POST", obj, "/delFriend");
+                getFriends();
+            })
         }        
     }
 
-    function searchFriend(data) {  
-        let node = document.createElement('li');
-        let img = document.createElement('img');
-        let div = document.createElement('div');
+    function searchFriend(data) { 
         let addf = document.createElement('img');
-        let addedFriend;
+        let del = document.createElement('img');
         for (var i = 0; i < data.length ; i++) { 
             let user = data[i].username;
+            let node = document.createElement('li');
+            let img = document.createElement('img');
+            let div = document.createElement('div');
+            let addedFriend;
 
             addedFriend = cur_friends.find(ele =>
                 ele.username == user);
@@ -76,6 +90,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 addf.src = "/images/add-user.png";
                 addf.className = "addfriend";
                 node.appendChild(addf);
+            } else {
+                del.src = "/images/del-friend.png";
+                del.className = "delfriend"
+                node.appendChild(del)
             }
             node.className = "friend";
             node.id = user;
@@ -91,14 +109,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
             node.appendChild(document.createTextNode(fullname));
             document.querySelector('#friendSearch').appendChild(node);
+            del.addEventListener("click",(event) => {
+                console.log("event: " + event.target.innerHTML)
+                let obj = {username: node.id}
+                serverCon("POST", obj, "/delFriend");
+                getFriends();
+            })
+            addf.addEventListener("click", (event) => {
+                console.log("add : " + node.id)
+                let obj = {username: node.id}
+                serverCon("POST", obj,"/addFriend");
+                getFriends();
+                document.getElementById(node.id).innerHTML = "";
+    
+            })
         }
-        addf.addEventListener("click", () => {
-            console.log("add : " + node.id)
-            let obj = {username: node.id}
-            serverCon("POST", obj,"/addFriend");
-            getFriends()
 
-        })
+
         
     }
 
