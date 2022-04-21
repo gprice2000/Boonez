@@ -25,6 +25,7 @@
     "express-session": "^1.17.2",
     "fullcalendar": "^5.10.2",
     "mongodb": "^4.4.1",
+    "mongoose": "^6.3.0",
     "querystring": "^0.2.1",
     "serve-favicon": "^2.5.0",
     "socket.io": "^4.4.1",

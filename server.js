@@ -19,6 +19,10 @@ const res = require("express/lib/response");
 const CryptoJS = require("crypto-js");
 const { redirect } = require("express/lib/response");
 const { query } = require("express");
+//mongoose connect to mongodb atlas database
+const mongoose = require("mongoose");
+mongoose.connect("mongodb+srv://mazzaresejv:B00nze2022@cluster0.awpng.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
+
 // create an array of strings of user id , parse
 // urls to get current user, if theyre logging off
 // pop their name from array and redirect them to 
@@ -872,6 +876,13 @@ app.get("/styles/findFriends.css", function (req,res) {
 //TODO: add class search functionality
 app.post("/findFriend", (req,res) => {
   db.then(function(dbc) {
+    const searchSch = new Schema({
+      fname: String,
+      lname: String,
+      username: String,
+      classes: [Number]
+    })
+    const search = mongoose.model('searchSch', searchSch)
     /*
     let array = [{fname: {$eq: req.body.items[0]}}];
     console.log("req.body.items: " + req.body.items)
