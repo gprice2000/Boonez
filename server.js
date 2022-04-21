@@ -202,9 +202,9 @@ app.post("/login", function (req, res) {
                   sn.username = input.username;
                   session.push(sn);
                   if (result.accountType == "business") {
-                    res.redirect(`/BusinessDashboard/?user=${input.username}`);
+                    res.redirect(`/BusinessDashboard?user=${input.username}`);
                   } else {
-                    res.redirect(`/dashboard/?user=${input.username}`);
+                    res.redirect(`/dashboard?user=${input.username}`);
                   }
                 }
               }
@@ -217,7 +217,6 @@ app.post("/login", function (req, res) {
 
 //socket.io implementation
 
-//TODO: add a logout page
 app.get("/logout", (req, res) => {
   for (let i = 0; i < session.length; i++) {
     console.log("session: " + session[i].username);
@@ -504,7 +503,11 @@ app.get("/userDashboard", function (req, res) {
     }
   });
 });
-
+app.get("/BusinessDashboard", function (req, res) {
+  res.sendFile("/pages/main-app/busDashboard.html", {
+    root: __dirname,
+  });
+});
 app.get("/businessDashboard", function (req, res) {
   db.then(function (dbc) {
     //let cur_user = url.parse(req.url, true).query.user;//session.userid;
@@ -517,9 +520,9 @@ app.get("/businessDashboard", function (req, res) {
       .findOne(query)
       .then((doc) => {
         if (doc != null) {
-          res.json(doc);
+          // res.json(doc);
         } else {
-          res.json(null);
+          // res.json(null);
         }
       });
   });
@@ -644,7 +647,7 @@ app.get("/login", function (req, res) {
     }) != undefined
   ) {
     console.log("user from session array: " + curuser);
-    res.redirect(`/dashboard/?user=${curuser}`);
+    res.redirect(`/dashboard?user=${curuser}`);
   } else {
     res.sendFile("/pages/landing/login.html", {
       root: __dirname,

@@ -15,7 +15,6 @@ body {
 }
 #main-cont {
   display: flex;
-
   margin-top: 2rem;
 }
 #ad-cont {
@@ -27,6 +26,10 @@ body {
   align-self: center;
   margin-left: auto;
   margin-right: auto;
+}
+input {
+  visibility: visible;
+  overflow: auto;
 }
 #page-title {
   color: white;

@@ -4,8 +4,8 @@ async function getAdvertisements() {
     .then((res) => res.json())
     .then((data) => {
       //send array of message objects
-      console.log(data);
-      //   renderAds(data);
+      // console.log(data);
+      renderAds(data);
     });
 }
 
@@ -19,91 +19,101 @@ function renderAds(adsArr) {
       rgba(255, 255, 255, 0.75), 
       rgba(255, 255, 255, 0.75)
     ),url(${ad.imglink})`;
-
+    let adComp = document.createElement("h1");
+    adComp.className = "comp-name";
+    adComp.innerText = ad.compname;
+    adItem.appendChild(adComp);
     let adTitle = document.createElement("h1");
+    adTitle.className = "ad-head";
     adTitle.innerText = ad.adhead;
 
     adItem.onclick = () => window.open(ad.weblink, "__blank");
     adItem.appendChild(adTitle);
+
+    let adBody = document.createElement("p");
+    adBody.className = "ad-body";
+    adBody.innerText = ad.adbody;
+    adItem.appendChild(adBody);
+
     adCont.appendChild(adItem);
   }
 }
 
 // getAdvertisements();
 
-let testData = [
-  {
-    adhead: "WingStop",
-    compname: "WingStop",
-    category: "Food",
-    adbody: "We have the best wings and beer in the area!",
-    imglink:
-      "https://cdn.winsightmedia.com/platform/files/public/2021-04/background/Wingstop-Exterior-Day_1617293539.jpg?VersionId=2tqBKPS8kpAM1GJeS12hIMaWUoO1kdn3",
-    weblink: "https://www.wingstop.com/",
-  },
-  {
-    adhead: "WingStop",
-    compname: "WingStop",
-    category: "Food",
-    adbody: "We have the best wings and beer in the area!",
-    imglink:
-      "https://cdn.winsightmedia.com/platform/files/public/2021-04/background/Wingstop-Exterior-Day_1617293539.jpg?VersionId=2tqBKPS8kpAM1GJeS12hIMaWUoO1kdn3",
-    weblink: "https://www.wingstop.com/",
-  },
-  {
-    adhead: "WingStop",
-    compname: "WingStop",
-    category: "Food",
-    adbody: "We have the best wings and beer in the area!",
-    imglink:
-      "https://cdn.winsightmedia.com/platform/files/public/2021-04/background/Wingstop-Exterior-Day_1617293539.jpg?VersionId=2tqBKPS8kpAM1GJeS12hIMaWUoO1kdn3",
-    weblink: "https://www.wingstop.com/",
-  },
-  {
-    adhead: "WingStop",
-    compname: "WingStop",
-    category: "Food",
-    adbody: "We have the best wings and beer in the area!",
-    imglink:
-      "https://cdn.winsightmedia.com/platform/files/public/2021-04/background/Wingstop-Exterior-Day_1617293539.jpg?VersionId=2tqBKPS8kpAM1GJeS12hIMaWUoO1kdn3",
-    weblink: "https://www.wingstop.com/",
-  },
-  {
-    adhead: "WingStop",
-    compname: "WingStop",
-    category: "Food",
-    adbody: "We have the best wings and beer in the area!",
-    imglink:
-      "https://cdn.winsightmedia.com/platform/files/public/2021-04/background/Wingstop-Exterior-Day_1617293539.jpg?VersionId=2tqBKPS8kpAM1GJeS12hIMaWUoO1kdn3",
-    weblink: "https://www.wingstop.com/",
-  },
-  {
-    adhead: "WingStop",
-    compname: "WingStop",
-    category: "Food",
-    adbody: "We have the best wings and beer in the area!",
-    imglink:
-      "https://cdn.winsightmedia.com/platform/files/public/2021-04/background/Wingstop-Exterior-Day_1617293539.jpg?VersionId=2tqBKPS8kpAM1GJeS12hIMaWUoO1kdn3",
-    weblink: "https://www.wingstop.com/",
-  },
-  {
-    adhead: "WingStop",
-    compname: "WingStop",
-    category: "Food",
-    adbody: "We have the best wings and beer in the area!",
-    imglink:
-      "https://cdn.winsightmedia.com/platform/files/public/2021-04/background/Wingstop-Exterior-Day_1617293539.jpg?VersionId=2tqBKPS8kpAM1GJeS12hIMaWUoO1kdn3",
-    weblink: "https://www.wingstop.com/",
-  },
-  {
-    adhead: "WingStop",
-    compname: "WingStop",
-    category: "Food",
-    adbody: "We have the best wings and beer in the area!",
-    imglink:
-      "https://cdn.winsightmedia.com/platform/files/public/2021-04/background/Wingstop-Exterior-Day_1617293539.jpg?VersionId=2tqBKPS8kpAM1GJeS12hIMaWUoO1kdn3",
-    weblink: "https://www.wingstop.com/",
-  },
-];
+// let testData = [
+//   {
+//     adhead: "WingStop",
+//     compname: "WingStop",
+//     category: "Food",
+//     adbody: "We have the best wings and beer in the area!",
+//     imglink:
+//       "https://cdn.winsightmedia.com/platform/files/public/2021-04/background/Wingstop-Exterior-Day_1617293539.jpg?VersionId=2tqBKPS8kpAM1GJeS12hIMaWUoO1kdn3",
+//     weblink: "https://www.wingstop.com/",
+//   },
+//   {
+//     adhead: "WingStop",
+//     compname: "WingStop",
+//     category: "Food",
+//     adbody: "We have the best wings and beer in the area!",
+//     imglink:
+//       "https://cdn.winsightmedia.com/platform/files/public/2021-04/background/Wingstop-Exterior-Day_1617293539.jpg?VersionId=2tqBKPS8kpAM1GJeS12hIMaWUoO1kdn3",
+//     weblink: "https://www.wingstop.com/",
+//   },
+//   {
+//     adhead: "WingStop",
+//     compname: "WingStop",
+//     category: "Food",
+//     adbody: "We have the best wings and beer in the area!",
+//     imglink:
+//       "https://cdn.winsightmedia.com/platform/files/public/2021-04/background/Wingstop-Exterior-Day_1617293539.jpg?VersionId=2tqBKPS8kpAM1GJeS12hIMaWUoO1kdn3",
+//     weblink: "https://www.wingstop.com/",
+//   },
+//   {
+//     adhead: "WingStop",
+//     compname: "WingStop",
+//     category: "Food",
+//     adbody: "We have the best wings and beer in the area!",
+//     imglink:
+//       "https://cdn.winsightmedia.com/platform/files/public/2021-04/background/Wingstop-Exterior-Day_1617293539.jpg?VersionId=2tqBKPS8kpAM1GJeS12hIMaWUoO1kdn3",
+//     weblink: "https://www.wingstop.com/",
+//   },
+//   {
+//     adhead: "WingStop",
+//     compname: "WingStop",
+//     category: "Food",
+//     adbody: "We have the best wings and beer in the area!",
+//     imglink:
+//       "https://cdn.winsightmedia.com/platform/files/public/2021-04/background/Wingstop-Exterior-Day_1617293539.jpg?VersionId=2tqBKPS8kpAM1GJeS12hIMaWUoO1kdn3",
+//     weblink: "https://www.wingstop.com/",
+//   },
+//   {
+//     adhead: "WingStop",
+//     compname: "WingStop",
+//     category: "Food",
+//     adbody: "We have the best wings and beer in the area!",
+//     imglink:
+//       "https://cdn.winsightmedia.com/platform/files/public/2021-04/background/Wingstop-Exterior-Day_1617293539.jpg?VersionId=2tqBKPS8kpAM1GJeS12hIMaWUoO1kdn3",
+//     weblink: "https://www.wingstop.com/",
+//   },
+//   {
+//     adhead: "WingStop",
+//     compname: "WingStop",
+//     category: "Food",
+//     adbody: "We have the best wings and beer in the area!",
+//     imglink:
+//       "https://cdn.winsightmedia.com/platform/files/public/2021-04/background/Wingstop-Exterior-Day_1617293539.jpg?VersionId=2tqBKPS8kpAM1GJeS12hIMaWUoO1kdn3",
+//     weblink: "https://www.wingstop.com/",
+//   },
+//   {
+//     adhead: "WingStop",
+//     compname: "WingStop",
+//     category: "Food",
+//     adbody: "We have the best wings and beer in the area!",
+//     imglink:
+//       "https://cdn.winsightmedia.com/platform/files/public/2021-04/background/Wingstop-Exterior-Day_1617293539.jpg?VersionId=2tqBKPS8kpAM1GJeS12hIMaWUoO1kdn3",
+//     weblink: "https://www.wingstop.com/",
+//   },
+// ];
 
-renderAds(testData);
+getAdvertisements();
