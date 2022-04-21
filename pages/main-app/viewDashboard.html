@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- add routing and js files-->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../../node_modules/fullcalendar/main.css" />
+    <link rel="stylesheet" href="../../styles/viewCalendar.css" />
+    <link rel="stylesheet" href="../../styles/viewDashboard.css" />
+
+    <script src="../../node_modules/fullcalendar/main.js"></script>
+    <script defer src="../../scripts/viewDashboard.js"></script>
+    <script src="../../scripts/viewCalendar.js"></script>
+    <title>Boonez Dashboard</title>
+  </head>
+  <body>
+    <div class="logo-container">
+      <img
+        src="../../images/word_logo.png"
+        alt="boonze logo"
+        width="195"
+        height="75px"
+      />
+    </div>
+    <div class="profile-pic">
+      <img
+        src="../../images/blank-profile-pic.png"
+        id="profile-pic"
+        alt="profile pic"
+        width="200"
+        height="80px"
+      />
+    </div>
+
+
+    <div class="about-me">
+      <label for="aboutme">About me:</label><br />
+      <input type="text" id="aboutme" name="aboutme" value="" readonly="readonly"/><br />
+    </div>
+
+    <div id="courses">
+      <ul id="courseList"> 
+      </ul>
+
+    </div>
+
+    <div id="calendar"></div>
+    <div class="friends">
+        <h2>Friends:</h2>
+        <ul id="friendsList"> 
+        </ul>
+    </div>
+
+
+  </body>
+</html>

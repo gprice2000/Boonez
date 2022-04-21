@@ -17,8 +17,13 @@ const querystring = require("querystring");
 const url = require("url");
 const res = require("express/lib/response");
 const CryptoJS = require("crypto-js");
-
-let session = { userid: "" };
+const { redirect } = require("express/lib/response");
+const { query } = require("express");
+// create an array of strings of user id , parse
+// urls to get current user, if theyre logging off
+// pop their name from array and redirect them to
+// main page
+let session = [];
 
 //load favicon
 app.use(favicon(__dirname + "/favicon.ico"));
@@ -36,6 +41,16 @@ app.use(
     resave: false,
   })
 );
+
+//get username through session id
+function getCurUser(req) {
+  let user;
+  session.find((ele) => {
+    user = ele.username;
+    return ele.id == req.session.id;
+  });
+  return user;
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -100,21 +115,38 @@ function socketIOConnection(from, to) {
 
 app.post("/signup", function (req, res) {
   db.then(function (dbc) {
+    let input = req.body;
+    //deleted white space and converted to lowercase for certain entries
+    input.username = input.username.replace(/\s+/g, "");
+    input.fname = input.fname.replace(/\s+/g, "").toLowerCase();
+    input.lname = input.lname.replace(/\s+/g, "").toLowerCase();
+    input.email = input.email.replace(/\s+/g, "");
+    console.log(input);
+    let dash = {
+      username: input.username,
+      fname: input.fname,
+      lname: input.lname,
+      friends: [],
+      classes: [],
+      aboutme: null,
+      profilePic: null,
+      accountType: "personal",
+    };
     dbc
       .db("Boonez")
       .collection("profiles")
-      .findOne({ username: req.body.username }, function (err, result) {
+      .findOne({ username: input.username }, function (err, result) {
         if (result) {
           res.send("username already in use");
         } else {
           dbc
             .db("Boonez")
             .collection("profiles")
-            .findOne({ email: req.body.email }, function (err, result) {
+            .findOne({ email: input.email }, function (err, result) {
               if (result) {
                 res.send("email already in use");
               } else {
-                let pass = req.body.password;
+                let pass = input.password;
                 bcrypt.genSalt(10, function (saltError, salt) {
                   if (saltError) {
                     throw saltError;
@@ -123,28 +155,13 @@ app.post("/signup", function (req, res) {
                       if (hashError) {
                         throw hashError;
                       }
-                      req.body.password = hash;
-                      let input = req.body;
-                      input.friends = [];
-                      console.log(input);
-                      let dash = {
-                        username: input.username,
-                        fname: input.fname,
-                        lname: input.lname,
-                        friends: input.friends,
-                        classes: [],
-                        aboutme: null,
-                        profilePic: null,
-                      };
+                      input.password = hash;
                       dbc
                         .db("Boonez")
                         .collection("UserDashboard")
                         .insertOne(dash);
 
-                      dbc
-                        .db("Boonez")
-                        .collection("profiles")
-                        .insertOne(req.body);
+                      dbc.db("Boonez").collection("profiles").insertOne(input);
                       res.redirect("/login");
                     });
                   }
@@ -157,35 +174,44 @@ app.post("/signup", function (req, res) {
 });
 app.post("/login", function (req, res) {
   db.then(function (dbc) {
-    dbc
-      .db("Boonez")
-      .collection("profiles")
-      .findOne({ username: req.body.username }, function (err, result) {
-        if (!result) {
-          console.log("Unable to locate account");
-          res.send("Cannot find username");
-        } else {
-          bcrypt.compare(
-            req.body.password,
-            result.password,
-            function (error, isMatch) {
-              if (error) {
-                throw error;
-              } else if (!isMatch) {
-                res.send("Password incorrect");
-              } else {
-                session = req.session;
-                session.userid = req.body.username;
-                if (result.accountType == "business") {
-                  res.redirect(`/BusinessDashboard?user=${session.userid}`);
+    let input = req.body;
+    //search current session array to determine if user is logged in already
+    if (session.find((ele) => ele.id == req.session.id) != undefined) {
+      //res.redirect(`/dashboard/?user=${ele.username}`);
+      res.redirect("/dashboard");
+    } else {
+      dbc
+        .db("Boonez")
+        .collection("profiles")
+        .findOne({ username: input.username }, function (err, result) {
+          if (!result) {
+            console.log("Unable to locate account");
+            res.send("Cannot find username");
+          } else {
+            bcrypt.compare(
+              input.password,
+              result.password,
+              function (error, isMatch) {
+                if (error) {
+                  throw error;
+                } else if (!isMatch) {
+                  res.send("Password incorrect");
                 } else {
-                  res.redirect(`/dashboard?user=${session.userid}`);
+                  //get current session with username and push to session array
+                  let sn = req.session;
+                  sn.username = input.username;
+                  session.push(sn);
+                  if (result.accountType == "business") {
+                    res.redirect(`/BusinessDashboard/?user=${input.username}`);
+                  } else {
+                    res.redirect(`/dashboard/?user=${input.username}`);
+                  }
                 }
               }
-            }
-          );
-        }
-      });
+            );
+          }
+        });
+    }
   });
 });
 
@@ -193,14 +219,29 @@ app.post("/login", function (req, res) {
 
 //TODO: add a logout page
 app.get("/logout", (req, res) => {
+  for (let i = 0; i < session.length; i++) {
+    console.log("session: " + session[i].username);
+  }
+  //let cur_user = url.parse(req.url, true).query.user;
+  // destroy session and remove from session array
   req.session.destroy();
+  for (let i = 0; i < session.length; i++) {
+    console.log("session: " + session[i].username);
+
+    if (session.id == req.id) {
+      session.splice(i, 1);
+    }
+  }
+  console.log("session: " + session.length);
+
   res.redirect("/");
 });
 
 //routing calendar.js to database
 app.post("/Pub_calendar", function (req, res) {
   db.then(function (dbc) {
-    let cur_user = session.userid;
+    //let cur_user = url.parse(req.url, true).query.user;
+    let cur_user = getCurUser(req);
     console.log("CUR USER: " + cur_user);
     let cal_col = dbc.db("Boonez").collection("UserCalendars");
     let event = req.body;
@@ -228,7 +269,11 @@ app.post("/Pub_calendar", function (req, res) {
 app.get("/Pub_calendar", function (req, res) {
   db.then(function (dbc) {
     try {
-      let cur_user = session.userid;
+      let userCal = url.parse(req.url, true).query.user;
+      let cur_user = getCurUser(req);
+      if (userCal != cur_user) {
+        cur_user = userCal;
+      }
       const query = { username: { $eq: cur_user } };
       dbc
         .db("Boonez")
@@ -245,7 +290,8 @@ app.get("/Pub_calendar", function (req, res) {
 
 app.post("/Priv_calendar", function (req, res) {
   db.then(function (dbc) {
-    let cur_user = session.userid;
+    //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+    let cur_user = getCurUser(req);
     let cal_col = dbc.db("Boonez").collection("UserCalendars");
     let event = req.body;
     try {
@@ -272,7 +318,9 @@ app.post("/Priv_calendar", function (req, res) {
 app.get("/Priv_calendar", function (req, res) {
   db.then(function (dbc) {
     try {
-      let cur_user = session.userid;
+      //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+      let cur_user = getCurUser(req);
+
       const query = { username: { $eq: cur_user } };
       dbc
         .db("Boonez")
@@ -293,26 +341,42 @@ app.post("/editEvent", function (req, res) {
   db.then(function (dbc) {
     try {
       let calDb = dbc.db("Boonez").collection("UserCalendars");
-      let cur_user = session.userid;
-      let eventData = req.body.data;
+      //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+      let cur_user = getCurUser(req);
+      let eventData = req.body;
+
       let cal_type = eventData.cal_type;
       const query = { username: { $eq: cur_user } };
-      delete eventData.cal_type;
+
+      //delete eventData.cal_type;
       console.log(eventData);
       if (cal_type == "pri") {
         calDb.findOne(query).then((doc) => {
+          console.log("doc: " + doc);
+
           let ind = doc.PriEventArray.findIndex(
             (ele) => ele.id == eventData.id
           );
-          doc.PriEventArray[ind] = eventData;
+
+          if (ind == -1) {
+            doc.PriEventArray.push(eventData);
+          } else {
+            doc.PriEventArray[ind] = eventData;
+          }
           calDb.replaceOne(query, doc);
         });
       } else {
         calDb.findOne(query).then((doc) => {
+          console.log("doc: " + doc);
           let ind = doc.PubEventArray.findIndex(
             (ele) => ele.id == eventData.id
           );
-          doc.PubEventArray[ind] = eventData;
+          console.log("ind: " + ind);
+          if (ind == -1) {
+            doc.PubEventArray.push(eventData);
+          } else {
+            doc.PubEventArray[ind] = eventData;
+          }
           calDb.replaceOne(query, doc);
         });
       }
@@ -326,21 +390,22 @@ app.delete("/deleteEvent", function (req, res) {
   db.then(function (dbc) {
     try {
       let calDb = dbc.db("Boonez").collection("UserCalendars");
+      let cur_user = getCurUser(req);
 
-      let cur_user = session.userid;
+      //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+      console.log("cur user for delete : " + cur_user);
       const query = { username: { $eq: cur_user } };
-      let eventData = req.body.data.info;
+      let eventData = req.body.info;
+
       console.log("Event to Delete: " + eventData);
       calDb.findOne(query).then((doc) => {
         var cal =
-          req.body.data.cal_type == "pri"
-            ? doc.PriEventArray
-            : doc.PubEventArray;
+          req.body.cal_type == "pri" ? doc.PriEventArray : doc.PubEventArray;
         var fil = cal.filter(function (val, ind, ar) {
           if (val.id != eventData.id) return true;
         });
         console.log(fil);
-        if (req.body.data.cal_type == "pri") {
+        if (req.body.cal_type == "pri") {
           calDb.findOneAndUpdate(query, { $set: { PriEventArray: fil } });
         } else {
           calDb.findOneAndUpdate(query, { $set: { PubEventArray: fil } });
@@ -354,10 +419,11 @@ app.delete("/deleteEvent", function (req, res) {
 
 app.post("/profilePicture", function (req, res) {
   db.then(function (dbc) {
-    let cur_user = session.userid;
-    // const query = { username: { $eq: cur_user } };
-    const query = { username: cur_user };
-    console.log(query);
+    //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+    let cur_user = getCurUser(req);
+
+    console.log("curuser : " + cur_user);
+    const query = { username: { $eq: cur_user } };
     let acttyp = "";
     let col = "";
     dbc
@@ -365,13 +431,15 @@ app.post("/profilePicture", function (req, res) {
       .collection("profiles")
       .findOne(query)
       .then((doc) => {
+        console.log("doc.acctype: " + doc.accountType);
         acttyp = doc.accountType;
       });
-
+    console.log("actype; " + acttyp);
     acttyp == "personal"
-      ? (col = "UserDashboard")
-      : (col = "BusinessDashboard");
-
+      ? (col = "BusinessDashboard")
+      : (col = "UserDashboard");
+    console.log("piclink: " + req.body.PicLink);
+    console.log("col: " + col);
     let profdb = dbc.db("Boonez").collection(col);
     profdb.updateOne(
       query,
@@ -383,13 +451,69 @@ app.post("/profilePicture", function (req, res) {
   });
 });
 
-app.get("/userDashboard", function (req, res) {
+app.post("/aboutMe", function (req, res) {
   db.then(function (dbc) {
-    let cur_user = session.userid;
+    let cur_user = getCurUser(req);
+    console.log("about me : " + req.body.aboutme);
     const query = { username: { $eq: cur_user } };
+    let col = dbc.db("Boonez").collection("UserDashboard");
+    col.updateOne(query, { $set: { aboutme: req.body.aboutme } });
+  });
+});
+
+app.post("/courses", function (req, res) {
+  db.then(function (dbc) {
+    let input = req.body;
+    let cur_user = getCurUser(req);
+    const query = { username: { $eq: cur_user } };
+    console.log("req.body /courses: " + req.body);
+
     dbc
       .db("Boonez")
       .collection("UserDashboard")
+      .updateOne(query, { $set: { classes: req.body } });
+  });
+});
+
+app.get("/userDashboard", function (req, res) {
+  db.then(function (dbc) {
+    //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+    let cur_user = getCurUser(req);
+
+    if (
+      session.find((ele) => {
+        cur_user = ele.username;
+        return ele.id == req.session.id;
+      }) == undefined
+    ) {
+      res.json("nsi"); //not signed in flag is returned
+    } else {
+      const query = { username: { $eq: cur_user } };
+      dbc
+        .db("Boonez")
+        .collection("UserDashboard")
+        .findOne(query)
+        .then((doc) => {
+          if (doc != null) {
+            console.log("doc : " + doc.profilePic);
+            res.json(doc);
+          } else {
+            res.json(null);
+          }
+        });
+    }
+  });
+});
+
+app.get("/businessDashboard", function (req, res) {
+  db.then(function (dbc) {
+    //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+    let cur_user = getCurUser(req);
+
+    const query = { username: { $eq: cur_user } };
+    dbc
+      .db("Boonez")
+      .collection("BusinessDashboard")
       .findOne(query)
       .then((doc) => {
         if (doc != null) {
@@ -400,24 +524,6 @@ app.get("/userDashboard", function (req, res) {
       });
   });
 });
-
-// app.get("/businessDashboard", function (req, res) {
-//   db.then(function (dbc) {
-//     let cur_user = session.userid;
-//     const query = { username: { $eq: cur_user } };
-//     dbc
-//       .db("Boonez")
-//       .collection("BusinessDashboard")
-//       .findOne(query)
-//       .then((doc) => {
-//         if (doc != null) {
-//           res.json(doc);
-//         } else {
-//           res.json(null);
-//         }
-//       });
-//   });
-// });
 
 app.get("/styles/landingPage.css", function (req, res) {
   res.sendFile("/styles/landingPage.css", {
@@ -460,21 +566,38 @@ app.get("/businessSignup", (req, res) => {
 });
 app.post("/businessSignup", function (req, res) {
   db.then(function (dbc) {
+    let input = req.body;
+    const businessProfile = {
+      name: input.businessName,
+      username: input.username.replace(/\s+/g, ""),
+      password: undefined,
+      email: input.email.replace(/\s+/g, ""),
+      followers: [],
+      accountType: "business",
+    };
+
+    const businessDash = {
+      name: input.businessName,
+      username: businessProfile.username,
+      email: businessProfile.email,
+      followers: [],
+      profilePic: undefined,
+    };
     dbc
       .db("Boonez")
       .collection("profiles")
-      .findOne({ username: req.body.username }, function (err, result) {
+      .findOne({ username: businessProfile.username }, function (err, result) {
         if (result) {
           res.send("username already in use");
         } else {
           dbc
             .db("Boonez")
             .collection("profiles")
-            .findOne({ email: req.body.email }, function (err, result) {
+            .findOne({ email: businessProfile.email }, function (err, result) {
               if (result) {
                 res.send("email already in use");
               } else {
-                let pass = req.body.password;
+                let pass = input.password;
                 bcrypt.genSalt(10, function (saltError, salt) {
                   if (saltError) {
                     throw saltError;
@@ -483,23 +606,7 @@ app.post("/businessSignup", function (req, res) {
                       if (hashError) {
                         throw hashError;
                       }
-
-                      const businessProfile = {
-                        name: req.body.businessName,
-                        username: req.body.username,
-                        password: hash,
-                        email: req.body.email,
-                        followers: [],
-                        accountType: "business",
-                      };
-
-                      const businessDash = {
-                        name: req.body.businessName,
-                        username: req.body.username,
-                        email: req.body.email,
-                        followers: [],
-                        profilePic: undefined,
-                      };
+                      businessProfile.password = hash;
                       dbc
                         .db("Boonez")
                         .collection("profiles")
@@ -527,9 +634,22 @@ app.get("/styles/businessSignup.css", (req, res) => {
   });
 });
 app.get("/login", function (req, res) {
-  res.sendFile("/pages/landing/login.html", {
-    root: __dirname,
-  });
+  console.log("login session: " + session);
+  let curuser;
+  console.log(session.find((ele) => ele.id == req.session.id));
+  if (
+    session.find((ele) => {
+      curuser = ele.username;
+      return ele.id == req.session.id;
+    }) != undefined
+  ) {
+    console.log("user from session array: " + curuser);
+    res.redirect(`/dashboard/?user=${curuser}`);
+  } else {
+    res.sendFile("/pages/landing/login.html", {
+      root: __dirname,
+    });
+  }
 });
 
 app.get("/images/word_logo.png", (req, res) => {
@@ -539,8 +659,7 @@ app.get("/images/word_logo.png", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  session = req.session;
-
+  //session = req.session;
   res.sendFile("index.html", {
     root: __dirname,
   });
@@ -559,9 +678,8 @@ app.get("/images/add-user.png", (req, res) => {
 });
 
 app.get("/dashboard", (req, res) => {
-  res.sendFile("/pages/main-app/dashboard.html", {
-    root: __dirname,
-  });
+  console.log("/dashboard");
+  res.sendFile(__dirname + "/pages/main-app/dashboard.html");
 });
 
 //route to business dashboard
@@ -682,10 +800,12 @@ app.get("/scripts/messagesOverview.js", (req, res) => {
 });
 app.get("/messagesOverview", (req, res) => {
   db.then((dbc) => {
+    let cur_user = getCurUser(req);
+
     dbc
       .db("Boonez")
       .collection("profiles")
-      .findOne({ username: session.userid }, (err, result) => {
+      .findOne({ username: cur_user }, (err, result) => {
         if (result) {
           res.json(result);
         } else {
@@ -714,7 +834,11 @@ app.get("/messages/getFriends", async (req, res) => {
   });
 });
 
+//TODO fix functionality to account not all form inputs
+//in case user leaves one blank, fix the error where users
+//with specific classes arent appearing
 app.get("/findFriends", function (req, res) {
+  console.log("get /findfriends");
   res.sendFile(__dirname + "/pages/main-app/findFriends.html");
 });
 
@@ -725,32 +849,70 @@ app.get("/scripts/findFriends.js", function (req, res) {
 app.get("/styles/findFriends.css", function (req, res) {
   res.sendFile(__dirname + "/styles/findFriends.css");
 });
+//search for specific user in database
+//TODO: add class search functionality
 app.post("/findFriend", (req, res) => {
   db.then(function (dbc) {
-    dbc
-      .db("Boonez")
-      .collection("UserDashboard")
-      .find({
-        $or: [
-          {
-            $and: [
-              { fname: { $eq: req.body.fname } },
-              { lname: { $eq: req.body.lname } },
-            ],
-          },
-          { username: { $eq: req.body.username } },
-        ],
-      })
-      .toArray((err, result) => {
-        res.json(result);
-      });
+    /*
+    let array = [{fname: {$eq: req.body.items[0]}}];
+    console.log("req.body.items: " + req.body.items)
+
+    for(let i = 0; i < req.body.items.length; i++) {
+      if (req.body.items[i] != '') {
+        array.push({fname: {$eq: req.body.items[i]}})
+      }
+    }
+    */
+    let input = req.body;
+    let col = dbc.db("Boonez").collection("UserDashboard");
+    let findings;
+    let query = {};
+
+    //console.log(input.fname + input.lname + input.username)
+    /*
+    if (input.fname != '' &&
+        input.lname != '' &&
+        input.username != '' &&
+        input.crn != ''){
+          findings = col.find({$and: [{ fname: {$eq: input.fname}},
+            { lname: {$eq: input.lname}},
+            { username: {$eq: input.username}},
+            { classes: {$all: input.crn}}
+            ]})
+    }
+    else {
+    */
+    //search for fname + lname and username if provided
+    //fname requires lname to search and vice-versa
+    /*
+      findings = col.find( {$or: [
+          {$and: [{ fname: {$eq: req.body.fname}},
+          { lname: {$eq: req.body.lname}}]},
+          { username: {$eq: req.body.username}} ]})
+    }*/
+    console.log("fname : " + input.items[0]);
+    findings = col.find({
+      $or: [
+        { fname: { $eq: input.items[0] } },
+        { lname: { $eq: input.items[1] } },
+        { username: { $eq: input.items[2] } },
+        { classes: { $all: [input.items[3]] } },
+      ],
+    });
+    //findings = col.find(query)
+    findings.toArray((err, result) => {
+      console.log("error: " + err);
+      console.log("db search output: " + result);
+      res.json(result);
+    });
   });
 });
 
+//adds specific friend to friends list using user
 app.post("/addFriend", (req, res) => {
   db.then(function (dbc) {
-    const query = { username: { $eq: session.userid } };
-    console.log("Current user: " + session.userid);
+    let cur_user = getCurUser(req);
+    const query = { username: { $eq: cur_user } };
     dbc
       .db("Boonez")
       .collection("UserDashboard")
@@ -782,6 +944,75 @@ app.post("/createAd", async (req, res) => {
 });
 app.get("/styles/createAd.css", (req, res) => {
   res.sendFile(__dirname + "/styles/createAd.css");
+});
+
+app.post("/delFriend", (req, res) => {
+  db.then(function (dbc) {
+    let cur_user = getCurUser(req);
+    const query = { username: { $eq: cur_user } };
+    dbc
+      .db("Boonez")
+      .collection("UserDashboard")
+      .findOneAndUpdate(query, {
+        $pull: { friends: { username: req.body.username } },
+      });
+  });
+});
+//get all user friends
+app.get("/getFriends", (req, res) => {
+  db.then(function (dbc) {
+    //let cur_user = url.parse(req.url, true).query.user;
+    let cur_user = getCurUser(req);
+    if (session.find((ele) => ele.id == req.session.id) == undefined) {
+      res.json("nsi"); //not signed in flag is returned
+    } else {
+      const query = { username: { $eq: cur_user } };
+      dbc
+        .db("Boonez")
+        .collection("UserDashboard")
+        .findOne(query)
+        .then((doc) => {
+          res.json(doc);
+        });
+    }
+  });
+});
+
+app.get("/viewDashboard", (req, res) => {
+  db.then(function (dbc) {
+    let cur_user = getCurUser(req);
+    if (cur_user == undefined) {
+      res.redirect("/login");
+    } else {
+      let dashView = url.parse(req.url, true).query.user;
+      const query = { username: { $eq: dashView } };
+
+      dbc
+        .db("Boonez")
+        .collection("UserDashboard")
+        .findOne(query)
+        .then((doc) => {
+          let dashobj = { cur_user: cur_user, doc: doc };
+          res.json(dashobj);
+        });
+    }
+  });
+});
+
+app.get("/scripts/viewDashboard.js", (req, res) => {
+  res.sendFile(__dirname + "scripts/viewDashboard.js");
+});
+
+app.get("/scripts/viewCalendar.js", (req, res) => {
+  res.sendFile(__dirname + "/scripts/viewCalendar.js");
+});
+
+app.get("/styles/viewDashboard.css", (req, res) => {
+  res.sendFile(__dirname + "/styles/viewDashboard.css");
+});
+
+app.get("/styles/viewCalendar.css", (req, res) => {
+  res.sendFile(__dirname + "/styles/viewCalendar.css");
 });
 
 app.get("/styles/busDashboard.css", (req, res) => {
@@ -817,6 +1048,10 @@ app.get("/styles/advertisementsPage.css", async (req, res) => {
 app.get("/scripts/advertisementsPage.js", async (req, res) => {
   res.send("/scripts/advertisementsPage.js");
 });
+app.get("/viewDash", function (req, res) {
+  res.sendFile(__dirname + "/pages/main-app/viewDashboard.html");
+});
+
 server.listen(3000, () => {
   console.log("listening on http://localhost:3000");
 });

@@ -15,14 +15,25 @@
     <title>Boonez Dashboard</title>
   </head>
   <body>
-    <div class="logo-container">
-      <img
-        src="../../images/word_logo.png"
-        alt="boonze logo"
-        width="195"
-        height="75px"
-      />
-    </div>
+    <nav class="landing-nav">
+      <div class="logo-container">
+        <img
+          src="../../images/word_logo.png"
+          alt="boonze logo"
+          width="195"
+          height="75px"
+        />
+      </div>
+      <div class="nav-links-container">
+        <a id = "dash" href="/dashboard">Dashboard</a>
+        <a id = "friends" href="/findFriends">Friends</a>
+        <a id = "messages" href="/messagesOverviewPage">Messages</a>
+        <!-- <a href="/signuptype.html">Businesses</a> -->
+        <a href="/logout">Logout</a>
+
+      </div>
+    </nav>
+
     <div class="profile-pic">
       <img
         src="../../images/blank-profile-pic.png"
@@ -36,11 +47,11 @@
     <div id="picModal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
-          <span id="closePic">&times;</span>
           <h2>Event</h2>
+          <span id="closePic">&times;</span>
         </div>
         <div class="modal-body">
-          <form action="/profilePicture" method="POST">
+          <form id="picForm" action="/profilePicture" method="POST">
             <label for="PicLink">Image Link:</label>
             <input type="text" id="PicLink" name="PicLink" />
             <br />
@@ -52,25 +63,95 @@
         </div>
       </div>
     </div>
+      <div class="about-me-cont">
+        <div class="header">
+          <h2>About Me</h2>
+          <img class="click-icon" src= "../../images/icons8-edit-24 (1).png" onclick="setAboutMe()">
+        </div>
+        <div class="content">
+          <p id="am-content">
+          </p>
+        </div>
+      </div>
+    <div id="aboutModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span id="closeabout">&times;</span>
+          <h2> Edit About Me</h2>
+        </div>
+        <div class="modal-body">
+          <form action="/aboutMe" method="POST">
+            <label for="aboutme">You can write about your major, 
+                                interests or desired career</label><br />
+            <textarea id="aboutmeText" name="aboutme" >
+            </textarea>
+              <br />
+            </div>
+            <div class="modal-footer">
+              <input id="amSub" type="submit" value="Save" />
+            </div>
+          </form>
+        </div>
+      </div>
 
-    <div class="about-me">
-      <label for="aboutme">About me:</label><br />
-      <input type="text" id="aboutme" name="aboutme" /><br />
+    <div class="courses">
+      <div class="header">
+        <h2>Courses</h2>
+        <img class="click-icon" src= "../../images/icons8-edit-24 (1).png" onclick="getCourseList()">
+      </div>
+      <div class="content">
+        <ul id="courseList">
+        </ul>
+      </div>
     </div>
 
-      <div class="friends">
+    <div id="classModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span id="closecourse">&times;</span>
+          <h2>Courses</h2>
+        </div>
+        <div class="modal-body">
+          <form id="courseform" name="courseform">
+            <label for="course0">CRN:</label>
+            <input type="text" id="course0" name="course0"/> 
+            <input type="text" id="course1" name="course1" /> 
+            <input type="text" id="course2" name="course2" /> 
+            <input type="text" id="course3" name="course3" /> 
+            <input type="text" id="course4" name="course4" /> 
+            <input type="text" id="course5" name="course5" /> 
+            <input type="text" id="course6" name="course6" /> 
+            <input type="text" id="course7" name="course7" /> 
+            <div class="modal-footer">
+              <input id="courseSub" type="submit" value="Save" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="friends">
+      <div class="header">
+        <h2>Friends</h2>
         <button id="allFriends">All Friends</button>
+      </div>
+      <div class="content">
         <ul id="friendsList"> 
         </ul>
       </div>
-      <div id="calendar">
+    </div>
+
+
+    <div id="calendar">
         <button id="CalBtn">Private</button>
-      </div>
+    </div>
 
     <div id="myModal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
-          <span class="close">&times;</span>
+          <span id="calclose">&times;</span>
           <h2>Event</h2>
         </div>
         <div class="modal-body">

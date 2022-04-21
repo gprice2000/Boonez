@@ -9,6 +9,16 @@
     <title>Find Friends</title>
   </head>
   <body>
+    <nav class="landing-nav">
+      <div class="nav-links-container">
+        <a id = "dash" href="/dashboard">Dashboard</a>
+        <a id = "friends" href="/findFriends">Friends</a>
+        <a id = "messages" href="/messagesOverviewPage">Messages</a>
+        <!-- <a href="/signuptype.html">Businesses</a> -->
+        <a href="/logout">Logout</a>
+
+      </div>
+    </nav>
     <form class="findFriend">
         <label for="fname">First name:</label>
         <input type="text" id="fname" name="fname" />
@@ -19,11 +29,22 @@
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" />
         <br />
+        <label for="crn">CRN:</label>
+        <input type="text" id="crn" name="crn" />
         <button id="friendSub">Search</button> 
         <br />
       </form>
+
+
       <div class="friends">
+        <h2>All Friends</h2>
         <ul id="friendsList"> 
+        </ul>
+      </div>
+      <br />
+      <div id="searchOutput" class="friends">
+        <h2>Results</h2>
+        <ul id="friendSearch"> 
         </ul>
       </div>
   </body>
