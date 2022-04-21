@@ -853,6 +853,9 @@ app.get("/messages/getFriends", async (req, res) => {
   });
 });
 
+//TODO fix functionality to account not all form inputs
+//in case user leaves one blank, fix the error where users
+//with specific classes arent appearing
 app.get("/findFriends", function (req, res) {
   console.log("get /findfriends")
   res.sendFile(__dirname + "/pages/main-app/findFriends.html");
@@ -869,31 +872,60 @@ app.get("/styles/findFriends.css", function (req,res) {
 //TODO: add class search functionality
 app.post("/findFriend", (req,res) => {
   db.then(function(dbc) {
+    /*
+    let array = [{fname: {$eq: req.body.items[0]}}];
+    console.log("req.body.items: " + req.body.items)
+
+    for(let i = 0; i < req.body.items.length; i++) {
+      if (req.body.items[i] != '') {
+        array.push({fname: {$eq: req.body.items[i]}})
+      }
+    }
+    */
     let input = req.body;
     let col = dbc
       .db("Boonez")
       .collection("UserDashboard");
-    let findings;   
-    console.log(input.fname + input.lname + input.username)
+    let findings;
+    let query = {}
+    
+
+
+    //console.log(input.fname + input.lname + input.username)
+    /*
     if (input.fname != '' &&
         input.lname != '' &&
-        input.username != ''){
-          findings = col.find({$and: [{ fname: {$eq: req.body.fname}},
-            { lname: {$eq: req.body.lname}},
-            { username: {$eq: req.body.username}}]})
+        input.username != '' &&
+        input.crn != ''){
+          findings = col.find({$and: [{ fname: {$eq: input.fname}},
+            { lname: {$eq: input.lname}},
+            { username: {$eq: input.username}},
+            { classes: {$all: input.crn}}
+            ]})
     }
     else {
+    */
       //search for fname + lname and username if provided
       //fname requires lname to search and vice-versa
+      /*
       findings = col.find( {$or: [
           {$and: [{ fname: {$eq: req.body.fname}},
           { lname: {$eq: req.body.lname}}]},
           { username: {$eq: req.body.username}} ]})
-    }
+    }*/
+    console.log("fname : " + input.items[0])
+    findings = col.find({$or: [{fname: {$eq: input.items[0]}},
+      {lname: {$eq: input.items[1]}},
+      {username: {$eq: input.items[2]}},
+      {classes: {$all: [input.items[3]]}}
+    ]})
+    //findings = col.find(query)
     findings.toArray((err,result) => {
+        console.log("error: " + err)
         console.log("db search output: " + result)
         res.json(result);
     })
+  
   })
 })
 
@@ -922,6 +954,17 @@ app.post("/addFriend", (req,res) => {
   })
 })
 
+app.post("/delFriend", (req,res) => {
+  db.then(function(dbc) {
+    let cur_user = getCurUser(req);
+    const query = { username: { $eq: cur_user}}
+    dbc
+      .db("Boonez")
+      .collection("UserDashboard")
+      .findOneAndUpdate(query,
+          {$pull: {friends: {username: req.body.username}}})
+  })
+})
 //get all user friends
 app.get("/getFriends", (req,res) => {
   db.then(function(dbc) {
