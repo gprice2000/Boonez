@@ -198,11 +198,11 @@ function editEvent(cal_type, info) {
 		modal.style.display = "none";
 		serverCon('DELETE',obj,'/deleteEvent');
 	}
-	var span = document.getElementsByClassName("close")[0];
+	var span = document.getElementById("calclose");
 
 	// When the user clicks on <span> (x), close the modal
 	span.onclick = function() {
-	modal.style.display = "none";
+		modal.style.display = "none";
 	}
 
 	// When the user clicks anywhere outside of the modal, close it
