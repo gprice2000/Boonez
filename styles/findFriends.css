@@ -18,6 +18,20 @@ body {
 .addfriend:hover {
 	background: rgb(0, 252, 63);
 }
+
+.delfriend {
+	position: relative;
+	width: 45px;
+	height: 45px;
+	object-fit: cover;
+	overflow: auto;
+	float: right;
+}
+
+.delfriend:hover {
+	background: rgb(255, 0, 0);
+}
+
 #friendsList { 
 	display: block;
 	margin: 0;
