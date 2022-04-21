@@ -47,8 +47,8 @@
     <div id="picModal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
-          <span id="closePic">&times;</span>
           <h2>Event</h2>
+          <span id="closePic">&times;</span>
         </div>
         <div class="modal-body">
           <form id="picForm" action="/profilePicture" method="POST">
@@ -63,21 +63,20 @@
         </div>
       </div>
     </div>
-
-    <div class="about-me-cont">
-      <div class="about-me-header">
-        <h2>About Me</h2>
-        <img src= "../../images/icons8-edit-24 (1).png" onclick="setAboutMe()">
+      <div class="about-me-cont">
+        <div class="header">
+          <h2>About Me</h2>
+          <img class="click-icon" src= "../../images/icons8-edit-24 (1).png" onclick="setAboutMe()">
+        </div>
+        <div class="content">
+          <p id="am-content">
+          </p>
+        </div>
       </div>
-      <div >
-        <p id="am-content">
-        </p>
-      </div>
-    </div>
-
     <div id="aboutModal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
+          <span id="closeabout">&times;</span>
           <h2> Edit About Me</h2>
         </div>
         <div class="modal-body">
@@ -96,14 +95,20 @@
       </div>
 
     <div class="courses">
-      <ul id="courseList">
-      </ul>
+      <div class="header">
+        <h2>Courses</h2>
+        <img class="click-icon" src= "../../images/icons8-edit-24 (1).png" onclick="getCourseList()">
+      </div>
+      <div class="content">
+        <ul id="courseList">
+        </ul>
+      </div>
     </div>
 
     <div id="classModal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
-          <span class="close">&times;</span>
+          <span id="closecourse">&times;</span>
           <h2>Courses</h2>
         </div>
         <div class="modal-body">
@@ -128,10 +133,17 @@
 
 
     <div class="friends">
+      <div class="header">
+        <h2>Friends</h2>
         <button id="allFriends">All Friends</button>
+      </div>
+      <div class="content">
         <ul id="friendsList"> 
         </ul>
+      </div>
     </div>
+
+
     <div id="calendar">
         <button id="CalBtn">Private</button>
     </div>
@@ -139,7 +151,7 @@
     <div id="myModal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
-          <span class="close">&times;</span>
+          <span id="calclose">&times;</span>
           <h2>Event</h2>
         </div>
         <div class="modal-body">
