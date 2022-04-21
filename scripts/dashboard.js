@@ -19,11 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 			if (data.classes.length != 0) {
 				courseList(data.classes);
-			} else {
-				getCourseList();
 			}
 			if (data.aboutme != null) {
-				getAboutMe();
+				console.log("data.aboutme: " + data.aboutme)
+				getAboutMe(data.aboutme);
 			}
 			friendList(data.friends)
 		})
@@ -33,55 +32,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 
-	function getAboutMe(){
-		
+	function getAboutMe(text){
+		let aboutme_body = document.getElementById("am-content");
+		aboutme_body.innerHTML = text;
 	}
-
-	function getCourseList() {
-		console.log("getcourselist")
-		let classModal = document.getElementById("classModal");
-		classModal.style.display = "initial";
-		let classForm = document.querySelector("#courseform");
-		let classes = [];
-
-
-		classForm.addEventListener('submit', (event) => {
-			event.preventDefault();
-			const formData = new FormData(event.target)
-			for(let pair of formData.entries()) {
-				if (pair[1] != "") {classes.push(pair[1].replace(/\s+/g, ''))}
-			}
-			console.log("classes: " + classes)
-			fetch("http://localhost:3000/courses",
-				{
-					method: 'POST', 
-					credentials: 'same-origin',
-					mode: 'same-origin',
-					headers: {
-						'Content-Type' : 'application/json',
-					},
-					body: JSON.stringify(classes),
-				})
-			.then(response =>  response.json())
-			.then(data => {
-
-			})
-			.catch((error) => {
-				console.log("Error: " + error)
-			});			classModal.style.display = "none";
-
-
-		})
-
-			/*
-			for(let i = 0; i < 8; i++) {
-
-				console.log(classForm.get("course0"));
-			}*/
-		
-
-	}
-
 
 	function courseList(courses) {
 		for (var i = 0; i < courses.length; i++) {
@@ -162,7 +116,24 @@ function setAboutMe(){
 	let savebtn = document.getElementById("amSub")
 	modal.style.display = "initial";
 
+	/*
+	window.onclick = function(event) {
+		console.log("about me modal outside window click: " + event)
+		console.log("event target: " + event.target)
+		console.log("modal : " + modal)
+		if (event.target == modal) {
+			console.log("x click")
+			modal.style.display = "none";
+		}
+	}
+	*/
+
+	document.getElementById("closeabout").onclick = function() {
+		modal.style.display = "none";
+	}
 	savebtn.onclick = function(event) {
+		modal.style.display = "none";
+		document.getElementById("am-content").innerHTML = text.value;
 		event.preventDefault();
 		console.log(text.value)
 		serverCon('POST',{"aboutme":text.value},'/aboutMe')
@@ -172,6 +143,55 @@ function setAboutMe(){
 
 }
 
+function getCourseList() {
+	let classModal = document.getElementById("classModal");
+	classModal.style.display = "initial";
+	let classForm = document.querySelector("#courseform");
+	let classes = [];
+
+
+	classForm.addEventListener('submit', (event) => {
+		event.preventDefault();
+		const formData = new FormData(event.target)
+		for(let pair of formData.entries()) {
+			if (pair[1] != "") {classes.push(pair[1].replace(/\s+/g, ''))}
+		}
+		console.log("classes: " + classes)
+		fetch("http://localhost:3000/courses",
+			{
+				method: 'POST', 
+				credentials: 'same-origin',
+				mode: 'same-origin',
+				headers: {
+					'Content-Type' : 'application/json',
+				},
+				body: JSON.stringify(classes),
+			})
+		.then(response =>  response.json())
+		.then(data => {
+
+		})
+		.catch((error) => {
+			console.log("Error: " + error)
+		});			classModal.style.display = "none";
+
+
+	})
+
+	var span = document.getElementById("closecourse");
+	//when user clicks x modal closes
+	span.onclick = function() {
+		classModal.style.display = "none";
+	}
+
+		/*
+		for(let i = 0; i < 8; i++) {
+
+			console.log(classForm.get("course0"));
+		}*/
+	
+
+}
 function setProf() {
 	let picLink = document.getElementById("PicLink");
 	let picSub = document.getElementById("PicSub");
@@ -181,7 +201,7 @@ function setProf() {
 	}
 	let modal = document.getElementById("picModal");
 	modal.style.display = "block";
-	var span = document.getElementsByClassName("close")[0];
+	var span = document.getElementById("closePic")
 	//when user clicks x modal closes
 	span.onclick = function() {
 		modal.style.display = "none";

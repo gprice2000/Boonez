@@ -18,7 +18,18 @@
 	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
   }
 
+.header {
+	display: inline;
+	float: left;
+	background: #1abc9c;
+	color: yellow;
+	font-size: 20px;
+}
 
+.click-icon {
+	display: inline;
+	float: right;
+}
 #aboutModal {
 	display: none;
 }
