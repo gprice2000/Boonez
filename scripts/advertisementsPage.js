@@ -21,8 +21,9 @@ function renderAds(adsArr) {
     ),url(${ad.imglink})`;
 
     let adTitle = document.createElement("h1");
-    adTitle.innerText = "Yo";
+    adTitle.innerText = ad.adhead;
 
+    adItem.onclick = () => window.open(ad.weblink, "__blank");
     adItem.appendChild(adTitle);
     adCont.appendChild(adItem);
   }

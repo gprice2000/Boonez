@@ -22,8 +22,8 @@ body {
   overflow: auto;
 }
 .advertisement {
-  width: 40%;
-  height: 25%;
+  width: 45%;
+  height: 30%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 2rem;
@@ -36,4 +36,13 @@ body {
   padding: 0.5em;
   background-size: cover;
   background-repeat: no-repeat;
+}
+.advertisement * {
+  margin: 1rem;
+}
+.advertisement h1 {
+  text-align: center;
+}
+.advertisement:hover {
+  cursor: pointer;
 }
