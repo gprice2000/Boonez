@@ -18,6 +18,7 @@ body {
   height: 100%;
   background-color: #25292e;
   display: flex;
+  /* flex-wrap: wrap-reverse; */
   flex-wrap: wrap;
   overflow: auto;
 }
@@ -26,6 +27,7 @@ body {
   height: max-content;
   /* height: 30%; */
   margin-left: auto;
+  /* margin: 2rem; */
   margin-right: auto;
   margin-top: 2rem;
 

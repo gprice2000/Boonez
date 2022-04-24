@@ -1,8 +1,9 @@
 const root = "http://localhost:3000/messagesOverviewPage"; // Or whatever your backend URL is
 const url = new URL("/messagesOverview", root).href;
-document.getElementById("dash").href = `/dashboard/${search}`;
-document.getElementById("friends").href = `/findFriends/${search}`;
-document.getElementById("messages").href = `/messagesOverviewPage/${search}`;
+// const
+// document.getElementById("dash").href = `/dashboard/${search}`;
+// document.getElementById("friends").href = `/findFriends/${search}`;
+// document.getElementById("messages").href = `/messagesOverviewPage/${search}`;
 //fetch friends from server and render them onto page
 
 //for testing

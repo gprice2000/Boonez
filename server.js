@@ -435,18 +435,20 @@ app.post("/profilePicture", function (req, res) {
       });
     console.log("actype; " + acttyp);
     acttyp == "personal"
-      ? (col = "BusinessDashboard")
-      : (col = "UserDashboard");
+      ? (col = "UserDashboard")
+      : (col = "BusinessDashboard");
     console.log("piclink: " + req.body.PicLink);
     console.log("col: " + col);
     let profdb = dbc.db("Boonez").collection(col);
-    profdb.updateOne(
-      query,
-      {
-        $set: { profilePic: req.body.PicLink },
-      },
-      { upsert: true }
-    );
+    profdb
+      .updateOne(
+        query,
+        {
+          $set: { profilePic: req.body.PicLink },
+        },
+        { upsert: true }
+      )
+      .then(res.redirect("/BusinessDashboard?user=" + cur_user));
   });
 });
 
@@ -520,9 +522,9 @@ app.get("/businessDashboard", function (req, res) {
       .findOne(query)
       .then((doc) => {
         if (doc != null) {
-          // res.json(doc);
+          res.json(doc);
         } else {
-          // res.json(null);
+          res.json(null);
         }
       });
   });
@@ -1054,7 +1056,37 @@ app.get("/scripts/advertisementsPage.js", async (req, res) => {
 app.get("/viewDash", function (req, res) {
   res.sendFile(__dirname + "/pages/main-app/viewDashboard.html");
 });
-
+app.get("/removeAd", (req, res) => {
+  res.redirect("/removeAdvertisement?user=" + getCurUser(req));
+});
+app.get("/removeAdvertisement", (req, res) => {
+  res.sendFile(__dirname + "/pages/main-app/removeAdvertisement.html");
+});
+app.get("/scripts/removeAd.js", (req, res) => {
+  res.sendFile(__dirname + "/scripts/removeAd.js");
+});
+app.get("/styles/removeAd.css", (req, res) => {
+  res.sendFile(__dirname + "/scripts/removeAd.css");
+});
+app.get("/getUsersAds", async (req, res) => {
+  let cur_user = await getCurUser(req);
+  db.then((dbc) => {
+    dbc
+      .db("Boonez")
+      .collection("Advertisements")
+      .find({ username: cur_user })
+      .toArray((err, result) => {
+        if (result) {
+          //send client array of advertisement objects
+          console.log(result);
+          // res.json(result);
+        } else {
+          res.send(500, "something went wrong");
+        }
+      });
+  });
+});
+app.post("/removeCurUsersAds", (req, res) => {});
 server.listen(3000, () => {
   console.log("listening on http://localhost:3000");
 });

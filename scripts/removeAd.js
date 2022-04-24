@@ -1,11 +1,11 @@
 async function getAdvertisements() {
-  let url = new URL(window.location.href + "/fetchAds");
+  let url = new URL(window.location.href + "/getUsersAds");
   await fetch(url)
     .then((res) => res.json())
     .then((data) => {
       //send array of message objects
-      // console.log(data);
-      renderAds(data);
+      console.log(data);
+      //   renderAds(data);
     });
 }
 

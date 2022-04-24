@@ -7,12 +7,16 @@
     <link rel="stylesheet" href="../../node_modules/fullcalendar/main.css" />
     <link rel="stylesheet" href="../../styles/calendar.css" />
     <link rel="stylesheet" href="../../styles/busDashboard.css" />
-    <script src="../../node_modules/fullcalendar/main.js"></script>
-    <script src="../../scripts/calendar.js"></script>
-    <script src="../../scripts/busDashboard.js"></script>
+    <script defer src="../../node_modules/fullcalendar/main.js"></script>
+    <script defer src="../../scripts/calendar.js"></script>
+    <script defer src="../../scripts/busDashboard.js"></script>
     <title>Boonez | Business Dashboard</title>
   </head>
   <body>
+    <div class="nav-links-container">
+      <!-- <a id="dash" href="/BusinessDashboard">Business Dashboard</a> -->
+      <a href="/logout">Logout</a>
+    </div>
     <div class="logo-container">
       <img
         src="../../images/word_logo.png"
@@ -55,6 +59,9 @@
       <label for="aboutus">About us:</label><br />
       <input type="text" id="aboutus" name="aboutus" /><br />
     </div>
+    <a href="./createAd">Create advertisement</a>
+    <a href="./removeAd">Delete advertisement</a>
+    <a href="./viewAdvertisements">View All Advertisements</a>
 
     <!-- Followers section-->
     <div id="calendar">
@@ -88,7 +95,5 @@
         </div>
       </div>
     </div>
-    <a href="./createAd">Create advertisement</a>
-    <a href="./viewAdvertisements">View Advertisements</a>
   </body>
 </html>
