@@ -1081,7 +1081,7 @@ app.get("/getUsersAds", async (req, res) => {
       .toArray((err, result) => {
         if (result) {
           //send client array of advertisement objects
-          console.log(result);
+          // console.log(result);
           res.json(result);
         } else {
           res.send(500, "something went wrong");
@@ -1089,8 +1089,13 @@ app.get("/getUsersAds", async (req, res) => {
       });
   });
 });
-app.post("/removeCurUsersAds", (req, res) => {
+app.post("/removeCurUsersAd", (req, res) => {
   console.log(req.body);
+  let mongoQuery = `$or:[]`;
+  console.log(mongoQuery);
+  const query = { mongoQuery };
+
+  console.log(mongoQuery);
 });
 server.listen(3000, () => {
   console.log("listening on http://localhost:3000");

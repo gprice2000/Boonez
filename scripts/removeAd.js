@@ -27,7 +27,8 @@ function renderAdForm(adsArr) {
     checkBox.className = "checkRemove";
     checkBox.type = "checkbox";
     checkBox.name = `remove_${count}`;
-    checkBox.value = ad.id;
+    checkBox.value = ad._id;
+    // checkBox.onclick = () => (checkBox.checked = !checkBox.checked);
     adItem.appendChild(checkBox);
     let adComp = document.createElement("h1");
     adComp.className = "comp-name";
@@ -37,7 +38,7 @@ function renderAdForm(adsArr) {
     adTitle.className = "ad-head";
     adTitle.innerText = ad.adhead;
 
-    // adItem.onclick = () => window.open(ad.weblink, "__blank");
+    // adItem.onclick = () => (checkBox.checked = !checkBox.checked);
     adItem.appendChild(adTitle);
 
     let adBody = document.createElement("p");
