@@ -28,6 +28,7 @@ body {
   flex-wrap: wrap;
   overflow: auto;
   align-self: center;
+  border-radius: 15px;
 }
 .advertisement {
   width: 45%;

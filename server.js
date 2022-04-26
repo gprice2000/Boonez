@@ -5,6 +5,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const mongodb = require("mongodb");
+// const ObjectId = require("mongodb");
 const bcrypt = require("bcryptjs");
 const bodyParser = require("body-parser");
 const path = require("path");
@@ -1090,12 +1091,21 @@ app.get("/getUsersAds", async (req, res) => {
   });
 });
 app.post("/removeCurUsersAd", (req, res) => {
-  console.log(req.body);
-  let mongoQuery = `$or:[]`;
-  console.log(mongoQuery);
-  const query = { mongoQuery };
-
-  console.log(mongoQuery);
+  // console.log(req.body);
+  let objIdArr = [];
+  for (const prop in req.body) {
+    // objIdArr.push(`{_id:ObjectId("${req.body[prop]}")}`);
+    objIdArr.push(`${req.body[prop]}`);
+  }
+  for (const id of objIdArr) {
+    db.then((dbc) => {
+      dbc
+        .db("Boonez")
+        .collection("Advertisements")
+        .deleteOne({ _id: mongodb.ObjectId(id) });
+    });
+  }
+  res.redirect("/removeAdvertisement" + "?user=" + getCurUser(req));
 });
 server.listen(3000, () => {
   console.log("listening on http://localhost:3000");
