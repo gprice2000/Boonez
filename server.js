@@ -942,6 +942,7 @@ app.get("/createAd", (req, res) => {
 app.post("/createAd", async (req, res) => {
   await db.then(function (dbc) {
     const ad = req.body;
+    ad.username = getCurUser(req);
     dbc.db("Boonez").collection("Advertisements").insertOne(ad);
   });
   res.redirect("../viewAdvertisements");
@@ -1069,7 +1070,9 @@ app.get("/styles/removeAd.css", (req, res) => {
   res.sendFile(__dirname + "/scripts/removeAd.css");
 });
 app.get("/getUsersAds", async (req, res) => {
-  let cur_user = await getCurUser(req);
+  let cur_user = url.parse(req.url, true).query.user;
+  console.log(req.url);
+  console.log(cur_user);
   db.then((dbc) => {
     dbc
       .db("Boonez")
@@ -1079,14 +1082,16 @@ app.get("/getUsersAds", async (req, res) => {
         if (result) {
           //send client array of advertisement objects
           console.log(result);
-          // res.json(result);
+          res.json(result);
         } else {
           res.send(500, "something went wrong");
         }
       });
   });
 });
-app.post("/removeCurUsersAds", (req, res) => {});
+app.post("/removeCurUsersAds", (req, res) => {
+  console.log(req.body);
+});
 server.listen(3000, () => {
   console.log("listening on http://localhost:3000");
 });

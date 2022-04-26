@@ -1,16 +1,20 @@
 async function getAdvertisements() {
-  let url = new URL(window.location.href + "/getUsersAds");
+  // console.log(window.location.origin + "/getUsersAds" + window.location.search);
+  let url = new URL(
+    window.location.origin + "/getUsersAds" + window.location.search
+  );
   await fetch(url)
     .then((res) => res.json())
     .then((data) => {
       //send array of message objects
-      console.log(data);
-      //   renderAds(data);
+      // console.log(data);
+      renderAdForm(data);
     });
 }
 
-function renderAds(adsArr) {
+function renderAdForm(adsArr) {
   let adCont = document.getElementById("ad-cont");
+  let count = 0;
   for (ad of adsArr) {
     console.dir(ad);
     let adItem = document.createElement("div");
@@ -19,6 +23,12 @@ function renderAds(adsArr) {
       rgba(255, 255, 255, 0.60), 
       rgba(255, 255, 255, 0.60)
     ),url(${ad.imglink})`;
+    let checkBox = document.createElement("input");
+    checkBox.className = "checkRemove";
+    checkBox.type = "checkbox";
+    checkBox.name = `remove_${count}`;
+    checkBox.value = ad.id;
+    adItem.appendChild(checkBox);
     let adComp = document.createElement("h1");
     adComp.className = "comp-name";
     adComp.innerText = ad.compname;
@@ -27,7 +37,7 @@ function renderAds(adsArr) {
     adTitle.className = "ad-head";
     adTitle.innerText = ad.adhead;
 
-    adItem.onclick = () => window.open(ad.weblink, "__blank");
+    // adItem.onclick = () => window.open(ad.weblink, "__blank");
     adItem.appendChild(adTitle);
 
     let adBody = document.createElement("p");
@@ -36,6 +46,7 @@ function renderAds(adsArr) {
     adItem.appendChild(adBody);
 
     adCont.appendChild(adItem);
+    count++;
   }
 }
 
