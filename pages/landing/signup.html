@@ -8,23 +8,32 @@
     <link rel="stylesheet" href="../../styles/signup.css" />
   </head>
   <body>
+    <h1>Signup</h1>
     <form class="signup-form" action="/signup" method="POST">
-      <label for="fname">First name:</label>
-      <input type="text" id="fname" name="fname" />
-      <br />
-      <label for="lname">Last name:</label>
-      <input type="text" id="lname" name="lname" />
-      <br />
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" />
-      <br />
-      <label for="password">Password:</label>
-      <input type="text" id="password" name="password" />
-      <br />
-      <label for="email">Email:</label>
-      <input type="text" id="email" name="email" />
-      <input type="submit" value="Submit" />
-      <br />
+      <div class="form-line">
+        <label for="fname">First name:</label>
+        <input type="text" id="fname" name="fname" />
+      </div>
+      <div class="form-line">
+        <label for="lname">Last name:</label>
+        <input type="text" id="lname" name="lname" />
+      </div>
+
+      <div class="form-line">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" />
+      </div>
+
+      <div class="form-line">
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="password" />
+      </div>
+
+      <div class="form-line">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" />
+      </div>
+      <input class="submit-btn" type="submit" value="Submit" />
     </form>
   </body>
 </html>
