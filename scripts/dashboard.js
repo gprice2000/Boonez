@@ -1,3 +1,4 @@
+let cur_user;
 document.addEventListener('DOMContentLoaded', function() {
 	const search = window.location.search;
 	document.getElementById("dash").href = `/dashboard/${search}`;
@@ -10,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		await fetch("http://localhost:3000/userDashboard/" + search)///?user=${}`)
 		.then(response =>  response.json())
 		.then(data => {
+			cur_user = data;
 			if (data == "nsi") {
 				window.location.href = "/login";
 			}
@@ -106,11 +108,7 @@ async function serverCon(method, data,url) {
 	})
 	.catch((error) => {
 		console.error("Error: " + error);
-		/*
-		if (method == 'DELETE') {
-			console.log("DELETE")
-			window.location.replace(window.location.pathname + window.location.search);}
-		*/
+
 	});
 }
 
@@ -118,6 +116,7 @@ function setAboutMe(){
 	let modal = document.getElementById("aboutModal");
 	let text = document.getElementById("aboutmeText");
 	let savebtn = document.getElementById("amSub")
+	text.value = cur_user.aboutme
 	modal.style.display = "initial";
 
 	/*
@@ -131,8 +130,12 @@ function setAboutMe(){
 		}
 	}
 	*/
-
-	document.getElementById("closeabout").onclick = function() {
+	window.onclick = function(event) {
+		if (event.target == modal) {
+			modal.style.display = "none";
+		}
+	}
+	document.getElementById("close").onclick = function() {
 		modal.style.display = "none";
 	}
 	savebtn.onclick = function(event) {

@@ -40,9 +40,8 @@
           src="../../images/blank-profile-pic.png"
           id="profile-pic"
           alt="profile pic"
-          width="200"
-          height="80px"
           onclick="setProf()"
+          class="profileimage"
         />
       </div>
       <div id="picModal" class="modal">
@@ -70,22 +69,23 @@
             <img class="click-icon" src= "../../images/icons8-edit-24 (1).png" onclick="setAboutMe()">
           </div>
           <div class="content">
-            <p id="am-content">
-            </p>
+            <span id="am-content">
+            </span>
           </div>
         </div>
         <div id="aboutModal" class="modal">
           <div class="modal-content">
             <div class="modal-header">
-              <span id="closeabout">&times;</span>
+              <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                <span id="close" aria-hidden="true">&times;</span>
+              </button>
               <h2> Edit About Me</h2>
             </div>
             <div class="modal-body">
               <form action="/aboutMe" method="POST">
                 <label for="aboutme">You can write about your major, 
                                     interests or desired career</label><br />
-                <textarea id="aboutmeText" name="aboutme" >
-                </textarea>
+                <textarea id="aboutmeText" name="aboutme" ></textarea>
                   <br />
                 </div>
                 <div class="modal-footer">
@@ -109,7 +109,11 @@
 
     <div class="mid-container">
       <div class="container">
+        <div class="header">
+          <h2 id="caltitle">Public Calendar</h2>
+        </div>
         <div id="calendar">
+          <br/>
           <button id="CalBtn">Private</button>
         </div>
       </div>
@@ -178,9 +182,5 @@
         </div>
       </div>
     </div>
-
-
-
-    <a href="../messagesOverviewPage">messages overview</a>
   </body>
 </html>
