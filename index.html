@@ -22,12 +22,14 @@
     </nav>
     <div class="connect-motto">Connect with your mountaineer community</div>
     <div class="login-signup-btn-container">
-      <button class="login-signup-btn" id="signup-btn">Signup</button>
-      <button class="login-signup-btn" id="login-btn">Login</button>
+      <div class="innerCnt">
+        <button class="login-signup-btn" id="signup-btn">Signup</button>
+        <button class="login-signup-btn" id="login-btn">Login</button>
+      </div>
     </div>
     <script>
       document.getElementById("signup-btn").addEventListener("click", () => {
-        window.location.replace("/signuptype");
+        window.location.href = "/signuptype";
       });
       document.getElementById("login-btn").addEventListener("click", () => {
         window.location.href = "/login";

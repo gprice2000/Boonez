@@ -99,6 +99,7 @@ body {
   margin-left: auto;
   margin-right: auto;
   align-items: center;
+  /* align-items: flex-end; */
   grid-column-start: 5;
   grid-row-start: 30;
 }
@@ -114,10 +115,18 @@ body {
   width: max-content;
   height: fit-content;
   /* margin: 5rem; */
+  /* margin-left: auto; */
+  /* margin-right: auto; */
+  margin: 3rem;
+  /* align-self: center; */
+  margin-bottom: 5rem;
+}
+.innerCnt {
+  height: 100%;
+  display: flex;
+  align-items: center;
   margin-left: auto;
   margin-right: auto;
-
-  margin-bottom: 5rem;
 }
 .login-signup-btn:hover {
   cursor: pointer;
