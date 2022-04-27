@@ -222,8 +222,6 @@ app.post("/login", function (req, res) {
   });
 });
 
-//socket.io implementation
-
 app.get("/logout", (req, res) => {
   for (let i = 0; i < session.length; i++) {
     console.log("session: " + session[i].username);
@@ -1082,6 +1080,9 @@ app.get("/scripts/removeAd.js", (req, res) => {
 });
 app.get("/styles/removeAd.css", (req, res) => {
   res.sendFile(__dirname + "/scripts/removeAd.css");
+});
+app.get("/styles/login.css", (req, res) => {
+  res.sendFile(__dirname + "/styles/login.css");
 });
 app.get("/getUsersAds", async (req, res) => {
   let cur_user = url.parse(req.url, true).query.user;
