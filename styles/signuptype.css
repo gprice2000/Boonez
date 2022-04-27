@@ -1,0 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap");
+* {
+  font-family: "Open Sans", sans-serif;
+}
+html {
+  /* height: 100%; */
+  /* width: 100%; */
+  margin: 0px;
+  padding: 0px;
+}
+body {
+  background-color: #343a40;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* width: 100%; */
+}
+h1 {
+  color: white;
+  margin-top: 5rem;
+  font-size: 3rem;
+}
+
+.typeBtn {
+  margin: 3rem;
+  color: #ffcc00;
+  background-color: #25292e;
+  border-radius: 10px;
+  border: none;
+  font-size: 2rem;
+  padding: 15px;
+  width: max-content;
+  height: max-content;
+  text-decoration: none;
+}
+.btnCnt {
+  margin-top: 5rem;
+  display: flex;
+}

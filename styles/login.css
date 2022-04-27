@@ -21,22 +21,21 @@ h1 {
   font-size: 3rem;
 }
 
-.signup-form {
+.login-form {
   display: flex;
   flex-direction: column;
   background-color: rgba(255, 255, 255, 0.865);
-  /* width: 40rem; */
-  width: max-content;
+  width: 40rem;
   /* height: 20rem; */
   height: max-content;
-  margin-top: 7rem;
+  margin-top: 10rem;
   border-radius: 15px;
   margin-bottom: center;
   align-items: center;
 }
 .form-line {
   display: flex;
-  margin: 2rem;
+  margin: 3rem;
   font-size: 2rem;
 }
 .form-line input {

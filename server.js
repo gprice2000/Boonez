@@ -5,6 +5,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const mongodb = require("mongodb");
+// const ObjectId = require("mongodb");
 const bcrypt = require("bcryptjs");
 const bodyParser = require("body-parser");
 const path = require("path");
@@ -21,11 +22,13 @@ const { redirect } = require("express/lib/response");
 const { query } = require("express");
 //mongoose connect to mongodb atlas database
 const mongoose = require("mongoose");
-mongoose.connect("mongodb+srv://mazzaresejv:B00nze2022@cluster0.awpng.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
+mongoose.connect(
+  "mongodb+srv://mazzaresejv:B00nze2022@cluster0.awpng.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+);
 
 // create an array of strings of user id , parse
 // urls to get current user, if theyre logging off
-// pop their name from array and redirect them to 
+// pop their name from array and redirect them to
 // main page
 let session = [];
 
@@ -49,10 +52,10 @@ app.use(
 //get username through session id
 function getCurUser(req) {
   let user;
-  session.find( ele => {
+  session.find((ele) => {
     user = ele.username;
     return ele.id == req.session.id;
-  })
+  });
   return user;
 }
 
@@ -121,10 +124,10 @@ app.post("/signup", function (req, res) {
   db.then(function (dbc) {
     let input = req.body;
     //deleted white space and converted to lowercase for certain entries
-    input.username = input.username.replace(/\s+/g,'');
-    input.fname = input.fname.replace(/\s+/g, '').toLowerCase();
-    input.lname = input.lname.replace(/\s+/g, '').toLowerCase();
-    input.email = input.email.replace(/\s+/g,'');
+    input.username = input.username.replace(/\s+/g, "");
+    input.fname = input.fname.replace(/\s+/g, "").toLowerCase();
+    input.lname = input.lname.replace(/\s+/g, "").toLowerCase();
+    input.email = input.email.replace(/\s+/g, "");
     console.log(input);
     let dash = {
       username: input.username,
@@ -134,12 +137,12 @@ app.post("/signup", function (req, res) {
       classes: [],
       aboutme: null,
       profilePic: null,
-      accountType:"personal"
-    }
+      accountType: "personal",
+    };
     dbc
       .db("Boonez")
       .collection("profiles")
-      .findOne({ username: input.username}, function (err, result) {
+      .findOne({ username: input.username }, function (err, result) {
         if (result) {
           res.send("username already in use");
         } else {
@@ -163,12 +166,9 @@ app.post("/signup", function (req, res) {
                       dbc
                         .db("Boonez")
                         .collection("UserDashboard")
-                        .insertOne(dash)
+                        .insertOne(dash);
 
-                      dbc
-                        .db("Boonez")
-                        .collection("profiles")
-                        .insertOne(input);
+                      dbc.db("Boonez").collection("profiles").insertOne(input);
                       res.redirect("/login");
                     });
                   }
@@ -183,11 +183,10 @@ app.post("/login", function (req, res) {
   db.then(function (dbc) {
     let input = req.body;
     //search current session array to determine if user is logged in already
-    if (session.find(ele => ele.id == req.session.id) != undefined) {
+    if (session.find((ele) => ele.id == req.session.id) != undefined) {
       //res.redirect(`/dashboard/?user=${ele.username}`);
-      res.redirect('/dashboard');
-    }
-    else {
+      res.redirect("/dashboard");
+    } else {
       dbc
         .db("Boonez")
         .collection("profiles")
@@ -210,37 +209,34 @@ app.post("/login", function (req, res) {
                   sn.username = input.username;
                   session.push(sn);
                   if (result.accountType == "business") {
-                    res.redirect(`/BusinessDashboard/?user=${input.username}`)
+                    res.redirect(`/BusinessDashboard?user=${input.username}`);
                   } else {
-                    res.redirect(`/dashboard/?user=${input.username}`);
+                    res.redirect(`/dashboard?user=${input.username}`);
                   }
                 }
               }
             );
           }
         });
-      }
+    }
   });
 });
 
-//socket.io implementation
-
-//TODO: add a logout page
 app.get("/logout", (req, res) => {
-  for(let i = 0; i < session.length; i++) {
-    console.log("session: " + session[i].username)
+  for (let i = 0; i < session.length; i++) {
+    console.log("session: " + session[i].username);
   }
   //let cur_user = url.parse(req.url, true).query.user;
-  // destroy session and remove from session array 
+  // destroy session and remove from session array
   req.session.destroy();
-  for(let i = 0; i < session.length; i++) {
-    console.log("session: " + session[i].username)
+  for (let i = 0; i < session.length; i++) {
+    console.log("session: " + session[i].username);
 
-    if (session.id == req.id){
-      session.splice(i,1);
+    if (session.id == req.id) {
+      session.splice(i, 1);
     }
   }
-  console.log("session: " + session.length)
+  console.log("session: " + session.length);
 
   res.redirect("/");
 });
@@ -250,7 +246,7 @@ app.post("/Pub_calendar", function (req, res) {
   db.then(function (dbc) {
     //let cur_user = url.parse(req.url, true).query.user;
     let cur_user = getCurUser(req);
-    console.log("CUR USER: " + cur_user)
+    console.log("CUR USER: " + cur_user);
     let cal_col = dbc.db("Boonez").collection("UserCalendars");
     let event = req.body;
     try {
@@ -266,7 +262,7 @@ app.post("/Pub_calendar", function (req, res) {
           let tmp_array = doc.PubEventArray;
           tmp_array.push(event);
           cal_col.updateOne(query, { $set: { PubEventArray: tmp_array } });
-         }
+        }
       });
     } catch (err) {
       console.log(err);
@@ -279,7 +275,7 @@ app.get("/Pub_calendar", function (req, res) {
     try {
       let userCal = url.parse(req.url, true).query.user;
       let cur_user = getCurUser(req);
-      if (userCal != cur_user){
+      if (userCal != cur_user) {
         cur_user = userCal;
       }
       const query = { username: { $eq: cur_user } };
@@ -353,52 +349,42 @@ app.post("/editEvent", function (req, res) {
       let cur_user = getCurUser(req);
       let eventData = req.body;
 
-      
       let cal_type = eventData.cal_type;
-      const query = { username: { $eq: cur_user }};
-
-
-
+      const query = { username: { $eq: cur_user } };
 
       //delete eventData.cal_type;
       console.log(eventData);
       if (cal_type == "pri") {
         calDb.findOne(query).then((doc) => {
-          console.log("doc: " + doc)
+          console.log("doc: " + doc);
 
           let ind = doc.PriEventArray.findIndex(
             (ele) => ele.id == eventData.id
           );
 
           if (ind == -1) {
-            doc.PriEventArray.push(eventData)
-          }
-          else {
+            doc.PriEventArray.push(eventData);
+          } else {
             doc.PriEventArray[ind] = eventData;
           }
           calDb.replaceOne(query, doc);
         });
-      }
-      else {
-      
+      } else {
         calDb.findOne(query).then((doc) => {
-
-          console.log("doc: " + doc)
+          console.log("doc: " + doc);
           let ind = doc.PubEventArray.findIndex(
             (ele) => ele.id == eventData.id
           );
-          console.log("ind: " + ind)
+          console.log("ind: " + ind);
           if (ind == -1) {
-            doc.PubEventArray.push(eventData)
-          }
-          else {
+            doc.PubEventArray.push(eventData);
+          } else {
             doc.PubEventArray[ind] = eventData;
           }
           calDb.replaceOne(query, doc);
         });
       }
-    }
-      catch (err) {
+    } catch (err) {
       console.log(err);
     }
   });
@@ -411,16 +397,14 @@ app.delete("/deleteEvent", function (req, res) {
       let cur_user = getCurUser(req);
 
       //let cur_user = url.parse(req.url, true).query.user;//session.userid;
-      console.log("cur user for delete : " + cur_user)
+      console.log("cur user for delete : " + cur_user);
       const query = { username: { $eq: cur_user } };
       let eventData = req.body.info;
 
       console.log("Event to Delete: " + eventData);
       calDb.findOne(query).then((doc) => {
         var cal =
-          req.body.cal_type == "pri"
-            ? doc.PriEventArray
-            : doc.PubEventArray;
+          req.body.cal_type == "pri" ? doc.PriEventArray : doc.PubEventArray;
         var fil = cal.filter(function (val, ind, ar) {
           if (val.id != eventData.id) return true;
         });
@@ -442,7 +426,7 @@ app.post("/profilePicture", function (req, res) {
     //let cur_user = url.parse(req.url, true).query.user;//session.userid;
     let cur_user = getCurUser(req);
 
-    console.log("curuser : " + cur_user)
+    console.log("curuser : " + cur_user);
     const query = { username: { $eq: cur_user } };
     let acttyp = "";
     let col = "";
@@ -450,54 +434,51 @@ app.post("/profilePicture", function (req, res) {
       .db("Boonez")
       .collection("profiles")
       .findOne(query)
-      .then(doc => {
-        
-        console.log("doc.acctype: " + doc.accountType)
+      .then((doc) => {
+        console.log("doc.acctype: " + doc.accountType);
         acttyp = doc.accountType;
-    });
-    console.log("actype; " + acttyp)
-    acttyp == "personal" ?  col = "BusinessDashboard" : col = "UserDashboard" ;
-    console.log("piclink: " + req.body.PicLink )
-    console.log('col: ' + col)
+      });
+    console.log("actype; " + acttyp);
+    acttyp == "personal"
+      ? (col = "UserDashboard")
+      : (col = "BusinessDashboard");
+    console.log("piclink: " + req.body.PicLink);
+    console.log("col: " + col);
     let profdb = dbc.db("Boonez").collection(col);
-    profdb.updateOne(
-      query,
-      {
-        $set: { profilePic: req.body.PicLink },
-      },
-      { upsert: true }
-    );
+    profdb
+      .updateOne(
+        query,
+        {
+          $set: { profilePic: req.body.PicLink },
+        },
+        { upsert: true }
+      )
+      .then(res.redirect("/BusinessDashboard?user=" + cur_user));
   });
 });
 
-app.post("/aboutMe", function(req,res) {
+app.post("/aboutMe", function (req, res) {
   db.then(function (dbc) {
     let cur_user = getCurUser(req);
-    console.log("about me : " + req.body.aboutme)
+    console.log("about me : " + req.body.aboutme);
     const query = { username: { $eq: cur_user } };
-    let col = dbc
-        .db("Boonez")
-        .collection("UserDashboard")
-    col.updateOne(query, 
-        {$set: {"aboutme": req.body.aboutme}})
+    let col = dbc.db("Boonez").collection("UserDashboard");
+    col.updateOne(query, { $set: { aboutme: req.body.aboutme } });
+  });
+});
 
-  })
-})
-
-app.post("/courses", function(req,res) {
+app.post("/courses", function (req, res) {
   db.then(function (dbc) {
     let input = req.body;
     let cur_user = getCurUser(req);
     const query = { username: { $eq: cur_user } };
     console.log("req.body /courses: " + req.body);
 
-    
     dbc
-    .db("Boonez")
-    .collection("UserDashboard")
-    .updateOne(query, 
-      {$set: {"classes": req.body}})
-  })
+      .db("Boonez")
+      .collection("UserDashboard")
+      .updateOne(query, { $set: { classes: req.body } });
+  });
 });
 
 app.get("/userDashboard", function (req, res) {
@@ -505,28 +486,35 @@ app.get("/userDashboard", function (req, res) {
     //let cur_user = url.parse(req.url, true).query.user;//session.userid;
     let cur_user = getCurUser(req);
 
-    if (session.find(ele => {
-      cur_user = ele.username;
-      return ele.id == req.session.id;}) == undefined) {
-        res.json("nsi") //not signed in flag is returned
+    if (
+      session.find((ele) => {
+        cur_user = ele.username;
+        return ele.id == req.session.id;
+      }) == undefined
+    ) {
+      res.json("nsi"); //not signed in flag is returned
     } else {
-        const query = { username: { $eq: cur_user } };
-        dbc
-          .db("Boonez")
-          .collection("UserDashboard")
-          .findOne(query)
-          .then((doc) => {
-            if (doc != null) {
-              console.log("doc : " + doc.profilePic)
-              res.json(doc);
-            } else {
-              res.json(null);
-            }
-          });
-      }
+      const query = { username: { $eq: cur_user } };
+      dbc
+        .db("Boonez")
+        .collection("UserDashboard")
+        .findOne(query)
+        .then((doc) => {
+          if (doc != null) {
+            console.log("doc : " + doc.profilePic);
+            res.json(doc);
+          } else {
+            res.json(null);
+          }
+        });
+    }
   });
 });
-
+app.get("/BusinessDashboard", function (req, res) {
+  res.sendFile("/pages/main-app/busDashboard.html", {
+    root: __dirname,
+  });
+});
 app.get("/businessDashboard", function (req, res) {
   db.then(function (dbc) {
     //let cur_user = url.parse(req.url, true).query.user;//session.userid;
@@ -591,9 +579,9 @@ app.post("/businessSignup", function (req, res) {
     let input = req.body;
     const businessProfile = {
       name: input.businessName,
-      username: input.username.replace(/\s+/g,''),
+      username: input.username.replace(/\s+/g, ""),
       password: undefined,
-      email: input.email.replace(/\s+/g,''),
+      email: input.email.replace(/\s+/g, ""),
       followers: [],
       accountType: "business",
     };
@@ -603,8 +591,8 @@ app.post("/businessSignup", function (req, res) {
       username: businessProfile.username,
       email: businessProfile.email,
       followers: [],
-      profilePic: undefined
-    }
+      profilePic: undefined,
+    };
     dbc
       .db("Boonez")
       .collection("profiles")
@@ -637,8 +625,8 @@ app.post("/businessSignup", function (req, res) {
                       dbc
                         .db("Boonez")
                         .collection("BusinessDashboard")
-                        .insertOne(businessDash)
-                      
+                        .insertOne(businessDash);
+
                       res.redirect("/login");
                     });
                   }
@@ -656,19 +644,18 @@ app.get("/styles/businessSignup.css", (req, res) => {
   });
 });
 app.get("/login", function (req, res) {
-  console.log("login session: " + session)
+  console.log("login session: " + session);
   let curuser;
-  console.log(session.find(ele => ele.id == req.session.id) )
-  if (session.find(ele => {
-
-    curuser = ele.username;
-    return (ele.id == req.session.id);
-
-  }) != undefined) {
-    console.log("user from session array: " + curuser)
-    res.redirect(`/dashboard/?user=${curuser}`);
-  }
-  else {
+  console.log(session.find((ele) => ele.id == req.session.id));
+  if (
+    session.find((ele) => {
+      curuser = ele.username;
+      return ele.id == req.session.id;
+    }) != undefined
+  ) {
+    console.log("user from session array: " + curuser);
+    res.redirect(`/dashboard?user=${curuser}`);
+  } else {
     res.sendFile("/pages/landing/login.html", {
       root: __dirname,
     });
@@ -701,12 +688,12 @@ app.get("/images/add-user.png", (req, res) => {
 });
 
 app.get("/dashboard", (req, res) => {
-  console.log("/dashboard")
+  console.log("/dashboard");
   res.sendFile(__dirname + "/pages/main-app/dashboard.html");
 });
 
 //route to business dashboard
-app.get("/BusinessDashboard", (req,res) => {
+app.get("/BusinessDashboard", (req, res) => {
   res.sendFile(__dirname + "/pages/main-app/busDashboard.html");
 });
 
@@ -861,28 +848,28 @@ app.get("/messages/getFriends", async (req, res) => {
 //in case user leaves one blank, fix the error where users
 //with specific classes arent appearing
 app.get("/findFriends", function (req, res) {
-  console.log("get /findfriends")
+  console.log("get /findfriends");
   res.sendFile(__dirname + "/pages/main-app/findFriends.html");
 });
 
-app.get("/scripts/findFriends.js", function (req,res) {
+app.get("/scripts/findFriends.js", function (req, res) {
   res.sendFile(__dirname + "/scripts/findFriends.js");
-})
+});
 
-app.get("/styles/findFriends.css", function (req,res) {
+app.get("/styles/findFriends.css", function (req, res) {
   res.sendFile(__dirname + "/styles/findFriends.css");
-})
+});
 //search for specific user in database
 //TODO: add class search functionality
-app.post("/findFriend", (req,res) => {
-  db.then(function(dbc) {
+app.post("/findFriend", (req, res) => {
+  db.then(function (dbc) {
     const searchSch = new Schema({
       fname: String,
       lname: String,
       username: String,
-      classes: [Number]
-    })
-    const search = mongoose.model('searchSch', searchSch)
+      classes: [Number],
+    });
+    const search = mongoose.model("searchSch", searchSch);
     /*
     let array = [{fname: {$eq: req.body.items[0]}}];
     console.log("req.body.items: " + req.body.items)
@@ -894,13 +881,9 @@ app.post("/findFriend", (req,res) => {
     }
     */
     let input = req.body;
-    let col = dbc
-      .db("Boonez")
-      .collection("UserDashboard");
+    let col = dbc.db("Boonez").collection("UserDashboard");
     let findings;
-    let query = {}
-    
-
+    let query = {};
 
     //console.log(input.fname + input.lname + input.username)
     /*
@@ -916,138 +899,228 @@ app.post("/findFriend", (req,res) => {
     }
     else {
     */
-      //search for fname + lname and username if provided
-      //fname requires lname to search and vice-versa
-      /*
+    //search for fname + lname and username if provided
+    //fname requires lname to search and vice-versa
+    /*
       findings = col.find( {$or: [
           {$and: [{ fname: {$eq: req.body.fname}},
           { lname: {$eq: req.body.lname}}]},
           { username: {$eq: req.body.username}} ]})
     }*/
-    console.log("fname : " + input.items[0])
-    findings = col.find({$or: [{fname: {$eq: input.items[0]}},
-      {lname: {$eq: input.items[1]}},
-      {username: {$eq: input.items[2]}},
-      {classes: {$all: [input.items[3]]}}
-    ]})
+    console.log("fname : " + input.items[0]);
+    findings = col.find({
+      $or: [
+        { fname: { $eq: input.items[0] } },
+        { lname: { $eq: input.items[1] } },
+        { username: { $eq: input.items[2] } },
+        { classes: { $all: [input.items[3]] } },
+      ],
+    });
     //findings = col.find(query)
-    findings.toArray((err,result) => {
-        console.log("error: " + err)
-        console.log("db search output: " + result)
-        res.json(result);
-    })
-  
-  })
-})
+    findings.toArray((err, result) => {
+      console.log("error: " + err);
+      console.log("db search output: " + result);
+      res.json(result);
+    });
+  });
+});
 
 //adds specific friend to friends list using user
-app.post("/addFriend", (req,res) => {
-  db.then(function(dbc) {
+app.post("/addFriend", (req, res) => {
+  db.then(function (dbc) {
     let cur_user = getCurUser(req);
-    const query = { username: { $eq: cur_user} };
+    const query = { username: { $eq: cur_user } };
     dbc
       .db("Boonez")
       .collection("UserDashboard")
-      .findOne({ username: {$eq: req.body.username}})
-      .then(doc => {
+      .findOne({ username: { $eq: req.body.username } })
+      .then((doc) => {
         let friend = {
           username: doc.username,
-          fullname: doc.fname + ' ' + doc.lname,
-          profilePic: doc.profilePic
-        }
+          fullname: doc.fname + " " + doc.lname,
+          profilePic: doc.profilePic,
+        };
         dbc
           .db("Boonez")
           .collection("UserDashboard")
-          .updateOne(query, 
-            {$push: {"friends": friend}})
+          .updateOne(query, { $push: { friends: friend } });
       });
+  });
+});
+app.get("/createAd", (req, res) => {
+  res.sendFile(__dirname + "/pages/main-app/createAd.html");
+});
 
-  })
-})
+app.post("/createAd", async (req, res) => {
+  await db.then(function (dbc) {
+    const ad = req.body;
+    ad.username = getCurUser(req);
+    dbc.db("Boonez").collection("Advertisements").insertOne(ad);
+  });
+  res.redirect("../viewAdvertisements");
+  res.end();
+});
+app.get("/styles/createAd.css", (req, res) => {
+  res.sendFile(__dirname + "/styles/createAd.css");
+});
 
-app.post("/delFriend", (req,res) => {
-  db.then(function(dbc) {
+app.post("/delFriend", (req, res) => {
+  db.then(function (dbc) {
     let cur_user = getCurUser(req);
-    const query = { username: { $eq: cur_user}}
+    const query = { username: { $eq: cur_user } };
     dbc
       .db("Boonez")
       .collection("UserDashboard")
-      .findOneAndUpdate(query,
-          {$pull: {friends: {username: req.body.username}}})
-  })
-})
+      .findOneAndUpdate(query, {
+        $pull: { friends: { username: req.body.username } },
+      });
+  });
+});
 //get all user friends
-app.get("/getFriends", (req,res) => {
-  db.then(function(dbc) {
+app.get("/getFriends", (req, res) => {
+  db.then(function (dbc) {
     //let cur_user = url.parse(req.url, true).query.user;
     let cur_user = getCurUser(req);
-    if (session.find(ele => ele.id == req.session.id) == undefined) {
-      res.json("nsi") //not signed in flag is returned
+    if (session.find((ele) => ele.id == req.session.id) == undefined) {
+      res.json("nsi"); //not signed in flag is returned
     } else {
-      const query = { username: { $eq: cur_user} };
+      const query = { username: { $eq: cur_user } };
       dbc
         .db("Boonez")
         .collection("UserDashboard")
         .findOne(query)
-        .then(doc => {
-          res.json(doc)
-        })
+        .then((doc) => {
+          res.json(doc);
+        });
     }
-  })
-})
+  });
+});
 
-app.get("/viewDashboard", (req,res) => {
-  db.then(function(dbc) {
+app.get("/viewDashboard", (req, res) => {
+  db.then(function (dbc) {
     let cur_user = getCurUser(req);
     if (cur_user == undefined) {
       res.redirect("/login");
-    }
-    else {
+    } else {
       let dashView = url.parse(req.url, true).query.user;
-      const query = { username: { $eq: dashView} };
+      const query = { username: { $eq: dashView } };
 
       dbc
         .db("Boonez")
         .collection("UserDashboard")
         .findOne(query)
-        .then(doc => {
-          let dashobj = { cur_user: cur_user, doc:doc}
-          res.json(dashobj)
-        })
+        .then((doc) => {
+          let dashobj = { cur_user: cur_user, doc: doc };
+          res.json(dashobj);
+        });
     }
-
-  })
-
+  });
 });
 
-app.get("/scripts/viewDashboard.js", (req,res) => {
+app.get("/scripts/viewDashboard.js", (req, res) => {
   res.sendFile(__dirname + "scripts/viewDashboard.js");
 });
 
-app.get("/scripts/viewCalendar.js", (req,res) => {
+app.get("/scripts/viewCalendar.js", (req, res) => {
   res.sendFile(__dirname + "/scripts/viewCalendar.js");
-})
+});
 
-app.get("/styles/viewDashboard.css", (req,res) => {
+app.get("/styles/viewDashboard.css", (req, res) => {
   res.sendFile(__dirname + "/styles/viewDashboard.css");
 });
 
-app.get("/styles/viewCalendar.css", (req,res) => {
+app.get("/styles/viewCalendar.css", (req, res) => {
   res.sendFile(__dirname + "/styles/viewCalendar.css");
-})
+});
 
-app.get("/styles/busDashboard.css", (req,res) => {
+app.get("/styles/busDashboard.css", (req, res) => {
   res.sendFile(__dirname + "/styles/busDashboard.css");
 });
 
-app.get("/scripts/busDashboard.js", (req,res) => {
-  res.sendFile(__dirname + "/scripts/busDashboard.js")
-})
-
-app.get("/viewDash", function(req,res) {
-  res.sendFile(__dirname + "/pages/main-app/viewDashboard.html");
+app.get("/scripts/busDashboard.js", (req, res) => {
+  res.sendFile(__dirname + "/scripts/busDashboard.js");
 });
 
+app.get("/viewAdvertisements", async (req, res) => {
+  res.sendFile(__dirname + "/pages/main-app/advertisementsPage.html");
+});
+app.get("/viewAdvertisements/fetchAds", async (req, res) => {
+  db.then((dbc) => {
+    dbc
+      .db("Boonez")
+      .collection("Advertisements")
+      .find()
+      .toArray((err, result) => {
+        if (result) {
+          //send client array of advertisement objects
+          res.json(result);
+        } else {
+          res.send(500, "something went wrong");
+        }
+      });
+  });
+});
+app.get("/styles/advertisementsPage.css", async (req, res) => {
+  res.send("/styles/advertisementsPage.css");
+});
+app.get("/scripts/advertisementsPage.js", async (req, res) => {
+  res.send("/scripts/advertisementsPage.js");
+});
+app.get("/viewDash", function (req, res) {
+  res.sendFile(__dirname + "/pages/main-app/viewDashboard.html");
+});
+app.get("/removeAd", (req, res) => {
+  res.redirect("/removeAdvertisement?user=" + getCurUser(req));
+});
+app.get("/removeAdvertisement", (req, res) => {
+  res.sendFile(__dirname + "/pages/main-app/removeAdvertisement.html");
+});
+app.get("/scripts/removeAd.js", (req, res) => {
+  res.sendFile(__dirname + "/scripts/removeAd.js");
+});
+app.get("/styles/removeAd.css", (req, res) => {
+  res.sendFile(__dirname + "/scripts/removeAd.css");
+});
+app.get("/styles/login.css", (req, res) => {
+  res.sendFile(__dirname + "/styles/login.css");
+});
+app.get("/getUsersAds", async (req, res) => {
+  let cur_user = url.parse(req.url, true).query.user;
+  console.log(req.url);
+  console.log(cur_user);
+  db.then((dbc) => {
+    dbc
+      .db("Boonez")
+      .collection("Advertisements")
+      .find({ username: cur_user })
+      .toArray((err, result) => {
+        if (result) {
+          //send client array of advertisement objects
+          // console.log(result);
+          res.json(result);
+        } else {
+          res.send(500, "something went wrong");
+        }
+      });
+  });
+});
+app.post("/removeCurUsersAd", (req, res) => {
+  // console.log(req.body);
+  let objIdArr = [];
+  for (const prop in req.body) {
+    // objIdArr.push(`{_id:ObjectId("${req.body[prop]}")}`);
+    objIdArr.push(`${req.body[prop]}`);
+  }
+  for (const id of objIdArr) {
+    db.then((dbc) => {
+      dbc
+        .db("Boonez")
+        .collection("Advertisements")
+        .deleteOne({ _id: mongodb.ObjectId(id) });
+    });
+  }
+  res.redirect("/removeAdvertisement" + "?user=" + getCurUser(req));
+});
 server.listen(3000, () => {
   console.log("listening on http://localhost:3000");
 });
