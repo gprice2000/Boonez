@@ -9,22 +9,27 @@
     <title>Boonez | Business Signup</title>
   </head>
   <body>
-    <h1>Business signup</h1>
+    <h1>Business Signup</h1>
     <form class="signup-form" action="/businessSignup" method="POST">
-      <label for="businessName">Business Name:</label>
-      <input type="text" id="businessName" name="businessName" />
-      <br />
+      <div class="form-line">
+        <label for="businessName">Business Name:</label>
+        <input type="text" id="businessName" name="businessName" />
+      </div>
+      <div class="form-line">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" />
+      </div>
 
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" />
-      <br />
-      <label for="password">Password:</label>
-      <input type="text" id="password" name="password" />
-      <br />
-      <label for="email">Email:</label>
-      <input type="text" id="email" name="email" />
-      <input type="submit" value="Submit" />
-      <br />
+      <div class="form-line">
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="password" />
+      </div>
+
+      <div class="form-line">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" />
+      </div>
+      <input class="submit-btn" type="submit" value="Submit" />
     </form>
   </body>
 </html>

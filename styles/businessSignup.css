@@ -1,14 +1,73 @@
 @import url("https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap");
 * {
-  margin: 0;
-  padding: 0;
   font-family: "Open Sans", sans-serif;
+}
+html {
+  /* height: 100%; */
+  /* width: 100%; */
+  margin: 0px;
+  padding: 0px;
 }
 body {
   background-color: #343a40;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* width: 100%; */
 }
-.signup-form {
-  border: 2px solid white;
-  padding: 15px;
+h1 {
   color: white;
+  font-size: 3rem;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(255, 255, 255, 0.865);
+  /* width: 40rem; */
+  width: max-content;
+  /* height: 20rem; */
+  height: max-content;
+  margin-top: 7rem;
+  border-radius: 15px;
+  margin-bottom: center;
+  align-items: center;
+}
+.form-line {
+  display: flex;
+  margin: 2rem;
+  font-size: 2rem;
+}
+.form-line input {
+  /* margin: 3rem; */
+  font-size: 1.5rem;
+  margin-left: 0.5rem;
+  height: 2rem;
+  overflow: auto;
+  border-radius: 10px;
+  /* align-self: ; */
+  border: 2px solid rgb(84, 84, 84);
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.909);
+}
+.form-line input:focus {
+  outline: none;
+  border: 2px solid #ffcc00;
+  background-color: white;
+}
+/* background-color: rgba(255, 255, 255, 0.865); */
+.submit-btn {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  color: #ffcc00;
+  background-color: #25292e;
+  border-radius: 10px;
+  border: none;
+  font-size: 1.5rem;
+  padding: 15px;
+  width: fit-content;
+  height: fit-content;
 }
