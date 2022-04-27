@@ -20,12 +20,20 @@
 * {
   margin: 0;
   padding: 0;
+  height: 100%;
+  /* width: 100%; */
   font-family: "Open Sans", sans-serif;
 }
 body {
   background-color: #343a40;
+
+  height: 100%;
+  width: 100%;
   display: grid;
   grid-gap: 10px;
+  background-image: url("../images/friends_cartoon.png");
+  background-position: right bottom;
+  background-repeat: no-repeat;
 }
 .landing-nav {
   grid-row-start: 1;
@@ -64,21 +72,35 @@ body {
   text-align: justify;
   color: white;
 }
-.mountains-img {
+/* .mountains-img {
   grid-row-start: 12;
   grid-column-start: 2;
   grid-column-start: 4;
-}
+} */
 .login-signup-btns:hover {
   cursor: pointer;
 }
 .login-signup-btn-container {
   display: flex;
-  width: 650px;
+  /* width: 650px; */
+  /* width: max-content; */
+  /* height: 1000px; */
+  /* height: 100%; */
+  height: 25rem;
+  width: 1000px;
+  /* height: max-content; */
+  background-image: url("../images/mountains.png");
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  /* height:; */
   /* border: 2px solid white; */
+  /* margin-bottom: 5rem; */
+  /* background-color: white; */
+  margin-left: auto;
+  margin-right: auto;
   align-items: center;
   grid-column-start: 5;
-  grid-row-start: 50;
+  grid-row-start: 30;
 }
 .login-signup-btn {
   color: #ffcc00;
@@ -87,10 +109,21 @@ body {
   border: none;
   font-size: 1.5rem;
   padding: 15px;
-  width: 150px;
+  /* align-self: center; */
+  /* width: 150px; */
+  width: max-content;
+  height: fit-content;
+  /* margin: 5rem; */
   margin-left: auto;
   margin-right: auto;
+
+  margin-bottom: 5rem;
 }
 .login-signup-btn:hover {
   cursor: pointer;
+}
+.logo-container {
+  width: 500px;
+  background-image: url("../images/word_logo.png");
+  background-repeat: no-repeat;
 }
