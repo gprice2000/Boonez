@@ -6,6 +6,9 @@
   background-color: white;
   z-index: 1;
 }
+.fc-view-harness.fc-view-harness-active {
+  z-index: 0;
+}
 #myModal {
    display: none; /* Hidden by default */
    position: fixed; /* Stay in place */

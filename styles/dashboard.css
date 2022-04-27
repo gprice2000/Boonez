@@ -105,7 +105,15 @@
 
 }
 
+.modal {
 
+}
+
+.modal-header{
+	position: relative;
+	height: fit-content;
+	text-align: center;
+}
 #picModal {
 	display: none; /* Hidden by default */
 	position: fixed; /* Stay in place */

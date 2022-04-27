@@ -130,8 +130,12 @@ function setAboutMe(){
 		}
 	}
 	*/
-
-	document.getElementById("closeabout").onclick = function() {
+	window.onclick = function(event) {
+		if (event.target == modal) {
+			modal.style.display = "none";
+		}
+	}
+	document.getElementById("close").onclick = function() {
 		modal.style.display = "none";
 	}
 	savebtn.onclick = function(event) {
