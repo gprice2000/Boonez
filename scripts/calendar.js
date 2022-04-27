@@ -8,11 +8,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.getElementById("CalBtn")
 			.addEventListener("click", function() {
 				var btn_val = document.getElementById("CalBtn").innerHTML; 
+				let caltitle = document.getElementById("caltitle");
 				if (btn_val == "Public") {
+					caltitle.innerHTML = "Public Calendar";
 					document.querySelector("#CalBtn").innerHTML = "Private";
 					publicCal(calendarEl);
 				}
 				else {
+					caltitle.innerHTML = "Private Calendar";
 					document.querySelector("#CalBtn").innerHTML = "Public";
 					privateCal(calendarEl);
 				}
@@ -41,7 +44,7 @@ function privateCal(calendarEl) {
 
 		var calendar = new FullCalendar.Calendar(calendarEl, {
 			selectable: true,
-			aspectRatio: 2,
+			aspectRatio: 1,
 			eventClick: function(calEvent) {
 				console.log(calEvent.start)
 				let event = { title: calEvent.event.title,
@@ -89,7 +92,7 @@ function publicCal(calendarEl) {
 
 	var calendar = new FullCalendar.Calendar(calendarEl, {
 		selectable: true,
-		aspectRatio: 2,
+		aspectRatio: 1,
 		eventChange: function(changeInfo) {
 			cur_cal.render()
 		},

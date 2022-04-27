@@ -2,7 +2,10 @@
 	--light-gray: #DADCE0;
 	--light-blue: #189CE2;
 }
-
+#calendar{
+  background-color: white;
+  z-index: 1;
+}
 #myModal {
    display: none; /* Hidden by default */
    position: fixed; /* Stay in place */
