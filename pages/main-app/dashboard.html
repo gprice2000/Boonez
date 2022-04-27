@@ -34,147 +34,153 @@
       </div>
     </nav>
 
-    <div class="profile-pic">
-      <img
-        src="../../images/blank-profile-pic.png"
-        id="profile-pic"
-        alt="profile pic"
-        width="200"
-        height="80px"
-        onclick="setProf()"
-      />
-    </div>
-    <div id="picModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>Event</h2>
-          <span id="closePic">&times;</span>
-        </div>
-        <div class="modal-body">
-          <form id="picForm" action="/profilePicture" method="POST">
-            <label for="PicLink">Image Link:</label>
-            <input type="text" id="PicLink" name="PicLink" />
-            <br />
-            <div class="modal-footer">
+    <div class="left-container">
+      <div class="profile-pic">
+        <img
+          src="../../images/blank-profile-pic.png"
+          id="profile-pic"
+          alt="profile pic"
+          width="200"
+          height="80px"
+          onclick="setProf()"
+        />
+      </div>
+      <div id="picModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Event</h2>
+            <span id="closePic">&times;</span>
+          </div>
+          <div class="modal-body">
+            <form id="picForm" action="/profilePicture" method="POST">
+              <label for="PicLink">Image Link:</label>
+              <input type="text" id="PicLink" name="PicLink" />
               <br />
-              <input id="PicSub" type="submit" value="Submit Image" />
-            </div>
-          </form>
+              <div class="modal-footer">
+                <br />
+                <input id="PicSub" type="submit" value="Submit Image" />
+              </div>
+            </form>
+          </div>
         </div>
       </div>
+        <div class="container">
+          <div class="header">
+            <h2>About Me</h2>
+            <img class="click-icon" src= "../../images/icons8-edit-24 (1).png" onclick="setAboutMe()">
+          </div>
+          <div class="content">
+            <p id="am-content">
+            </p>
+          </div>
+        </div>
+        <div id="aboutModal" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <span id="closeabout">&times;</span>
+              <h2> Edit About Me</h2>
+            </div>
+            <div class="modal-body">
+              <form action="/aboutMe" method="POST">
+                <label for="aboutme">You can write about your major, 
+                                    interests or desired career</label><br />
+                <textarea id="aboutmeText" name="aboutme" >
+                </textarea>
+                  <br />
+                </div>
+                <div class="modal-footer">
+                  <input id="amSub" type="submit" value="Save" />
+                </div>
+              </form>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="header">
+            <h2>Friends</h2>
+            <button id="allFriends">All Friends</button>
+          </div>
+          <div class="content">
+            <ul id="friendsList"> 
+            </ul>
+          </div>
+        </div>
     </div>
-      <div class="about-me-cont">
+
+    <div class="mid-container">
+      <div class="container">
+        <div id="calendar">
+          <button id="CalBtn">Private</button>
+        </div>
+      </div>
+
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <span id="calclose">&times;</span>
+            <h2>Event</h2>
+          </div>
+            <div class="modal-body">
+              <form id="eventData">
+                <label for="Title">Title:</label>
+                <input type="text" id="Title" value="" />
+                <br />
+                <label for="eventStart">Event Start:</label>
+                <input type="date" id="EventStart" value="" />
+                <br />
+                <label for="eventEnd">Event End:</label>
+                <input type="date" id="EventEnd" value="" />
+                <br />
+                <div class="modal-footer">
+                  <h3>Modal Footer</h3>
+                  <br />
+                  <button id="calSub">Save Event</button>
+                  <button id="calDel">Delete Event</button>
+                </div>
+              </form>
+            </div>
+        </div>
+      </div>
+
+      <div class="container">
         <div class="header">
-          <h2>About Me</h2>
-          <img class="click-icon" src= "../../images/icons8-edit-24 (1).png" onclick="setAboutMe()">
+          <h2>Courses</h2>
+          <img class="click-icon" src= "../../images/icons8-edit-24 (1).png" onclick="getCourseList()">
         </div>
         <div class="content">
-          <p id="am-content">
-          </p>
-        </div>
-      </div>
-    <div id="aboutModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <span id="closeabout">&times;</span>
-          <h2> Edit About Me</h2>
-        </div>
-        <div class="modal-body">
-          <form action="/aboutMe" method="POST">
-            <label for="aboutme">You can write about your major, 
-                                interests or desired career</label><br />
-            <textarea id="aboutmeText" name="aboutme" >
-            </textarea>
-              <br />
-            </div>
-            <div class="modal-footer">
-              <input id="amSub" type="submit" value="Save" />
-            </div>
-          </form>
+          <ul id="courseList">
+          </ul>
         </div>
       </div>
 
-    <div class="courses">
-      <div class="header">
-        <h2>Courses</h2>
-        <img class="click-icon" src= "../../images/icons8-edit-24 (1).png" onclick="getCourseList()">
-      </div>
-      <div class="content">
-        <ul id="courseList">
-        </ul>
-      </div>
-    </div>
-
-    <div id="classModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <span id="closecourse">&times;</span>
-          <h2>Courses</h2>
-        </div>
-        <div class="modal-body">
-          <form id="courseform" name="courseform">
-            <label for="course0">CRN:</label>
-            <input type="text" id="course0" name="course0"/> 
-            <input type="text" id="course1" name="course1" /> 
-            <input type="text" id="course2" name="course2" /> 
-            <input type="text" id="course3" name="course3" /> 
-            <input type="text" id="course4" name="course4" /> 
-            <input type="text" id="course5" name="course5" /> 
-            <input type="text" id="course6" name="course6" /> 
-            <input type="text" id="course7" name="course7" /> 
-            <div class="modal-footer">
-              <input id="courseSub" type="submit" value="Save" />
-            </div>
-          </form>
+      <div id="classModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <span id="closecourse">&times;</span>
+            <h2>Courses</h2>
+          </div>
+          <div class="modal-body">
+            <form id="courseform" name="courseform">
+              <label for="course0">CRN:</label>
+              <input type="text" id="course0" name="course0"/> 
+              <input type="text" id="course1" name="course1" /> 
+              <input type="text" id="course2" name="course2" /> 
+              <input type="text" id="course3" name="course3" /> 
+              <input type="text" id="course4" name="course4" /> 
+              <input type="text" id="course5" name="course5" /> 
+              <input type="text" id="course6" name="course6" /> 
+              <input type="text" id="course7" name="course7" /> 
+              <div class="modal-footer">
+                <input id="courseSub" type="submit" value="Save" />
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
 
 
 
-    <div class="friends">
-      <div class="header">
-        <h2>Friends</h2>
-        <button id="allFriends">All Friends</button>
-      </div>
-      <div class="content">
-        <ul id="friendsList"> 
-        </ul>
-      </div>
-    </div>
-
-
-    <div id="calendar">
-        <button id="CalBtn">Private</button>
-    </div>
-
-    <div id="myModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <span id="calclose">&times;</span>
-          <h2>Event</h2>
-        </div>
-        <div class="modal-body">
-          <form id="eventData">
-            <label for="Title">Title:</label>
-            <input type="text" id="Title" value="" />
-            <br />
-            <label for="eventStart">Event Start:</label>
-            <input type="date" id="EventStart" value="" />
-            <br />
-            <label for="eventEnd">Event End:</label>
-            <input type="date" id="EventEnd" value="" />
-            <br />
-            <div class="modal-footer">
-              <h3>Modal Footer</h3>
-              <br />
-              <button id="calSub">Save Event</button>
-              <button id="calDel">Delete Event</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
     <a href="../messagesOverviewPage">messages overview</a>
   </body>
 </html>

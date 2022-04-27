@@ -5,6 +5,53 @@
   text-align: center;
   padding: 5px;
 }
+.profile-pic {
+	vertical-align: middle;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+}
+
+.left-container{
+}
+
+.mid-container{
+	position: absolute;
+	left: 50%;
+	right: 50%;
+}
+
+.container {
+	margin: 50px;
+	width:400px;
+    height:220px; 
+    border-radius:10px;
+	border:2px solid rgb(119, 116, 116);
+
+    position:relative;
+}
+
+.header {
+	margin-top: -26px;
+	display:inherit;
+	position: inherit;
+	border-radius: 10px 10px 0 0;
+    width:100%;
+    height:25%;
+	background: #363a39;
+	color: rgb(240, 236, 39);
+	font-size: 20px;
+	 
+}
+
+.content{
+	display:inherit;
+	position: inherit;
+    width:100%;
+
+}
+
+
 #picModal {
 	display: none; /* Hidden by default */
 	position: fixed; /* Stay in place */
@@ -18,17 +65,19 @@
 	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
   }
 
-.header {
-	display: inline;
-	float: left;
-	background: #1abc9c;
-	color: yellow;
-	font-size: 20px;
+.click-icon {
+	position: absolute;
+	right: 0;
+	top: 0;
+
+
+}
+.click-icon:hover{
+	background: #DDD;
 }
 
-.click-icon {
-	display: inline;
-	float: right;
+.end {
+    position:absolute; right:0; bottom:0; width:2em;
 }
 #aboutModal {
 	display: none;
@@ -45,18 +94,41 @@ body {
 	margin: 0;
   }
   
+  #allFriends{
+	  border-radius: 20%;
+	  position: relative;
+	  top: 30px;
+  }
   #friendsList { 
 	display: block;
 	margin: 0;
 	padding: 0;
-	width: 300px;
+	width: inherit;
 	height: 100%;
 	background: #EEE;
 	list-style-type: none;
   }
-  
+
+  #courseList {
+	display: block;
+	margin: 0;
+	padding: 0;
+	width: inherit;
+	height: 100%;
+	background: rgb(56, 52, 52);
+	list-style-type: none;
+  }
+  .course {
+	width: inherit;
+	height: 60px;
+	background: rgb(105, 99, 99);
+	border-bottom: 1px solid #DDD;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+  }
   .friend {
-	width: 300px;
+	width: inherit;
 	height: 60px;
 	background: #EEE;
 	border-bottom: 1px solid #DDD;
