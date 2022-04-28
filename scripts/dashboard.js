@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				console.log("data.aboutme: " + data.aboutme)
 				getAboutMe(data.aboutme);
 			}
+			getName(data);
 			friendList(data.friends)
 		})
 		.catch((error) => {
@@ -33,6 +34,13 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
+	function getName(data) {
+		let first = data.fname;
+		let last = data.lname;
+		first = first.charAt(0).toUpperCase() + first.slice(1);
+		last = last.charAt(0).toUpperCase() + last.slice(1);
+		document.getElementById("student").innerHTML = first + " " + last;
+	}
 
 	function getAboutMe(text){
 		let aboutme_body = document.getElementById("am-content");
