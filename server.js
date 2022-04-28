@@ -822,7 +822,7 @@ app.get("/scripts/messagesOverview.js", (req, res) => {
 app.get("/messagesOverview", (req, res) => {
   db.then((dbc) => {
     let cur_user = getCurUser(req);
-
+    console.log(cur_user);
     dbc
       .db("Boonez")
       .collection("UserDashboard")
