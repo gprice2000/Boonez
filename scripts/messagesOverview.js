@@ -20,6 +20,7 @@ async function getFriends() {
       for (friend of friends) {
         let item = document.createElement("div");
         item.className = "friendCnt";
+        item.id = friend.username;
         let profPic = document.createElement("img");
         profPic.className = "friendPic";
         profPic.alt = `${friend.fullname}'s pic`;
@@ -38,7 +39,7 @@ async function getFriends() {
         // item.innerText = friend;
         console.log(friend.username);
         item.onclick = () =>
-          (window.location.href = `/messages?userTo=${friend.username}&userFrom=${data.username}`);
+          (window.location.href = `/messages?userTo=${item.id}&userFrom=${data.username}`);
         friendsContainer.appendChild(item);
         // window.scrollTo(0, document.body.scrollHeight);
       }
