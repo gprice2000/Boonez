@@ -37,14 +37,14 @@ body {
   width: 5rem;
   height: 5rem;
   border-radius: 50%;
-  margin-left: 1.5rem;
+  margin-left: 1rem;
   align-self: center;
-  border: 3px solid black;
+  border: 2px solid black;
 }
 .friendCnt {
   display: flex;
   width: 60%;
-  margin-top: 2rem;
+  margin-top: 1.2rem;
   margin-left: auto;
   margin-right: auto;
   border-radius: 10px;
