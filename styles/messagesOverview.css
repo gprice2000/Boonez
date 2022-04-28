@@ -31,3 +31,22 @@ body {
   flex-wrap: wrap;
   overflow: auto;
 }
+.friendPic {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  align-self: center;
+}
+.friendCnt {
+  display: flex;
+  width: 60%;
+  margin: 2rem;
+  border-radius: 10px;
+}
+.friend-name {
+  align-self: center;
+  margin-left: 1rem;
+  font-size: 1.3rem;
+
+  color: black;
+}

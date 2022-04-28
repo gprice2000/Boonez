@@ -23,14 +23,24 @@ async function getFriends() {
         let profPic = document.createElement("img");
         profPic.className = "friendPic";
         profPic.alt = `${friend.fullname}'s pic`;
-        profPic.src = friend.profilePic;
+        profPic.src =
+          friend.profilePic != null
+            ? friend.profilePic
+            : "../../images/blank-profile-pic.png";
+        item.appendChild(profPic);
+        let friendName = document.createElement("h2");
+        friendName.className = "friend-name";
+        friendName.innerText = friend.fullname;
+        item.appendChild(friendName);
+
         // let item = document.createElement("a");
         // item.href = `/messages?userTo=${friend}&userFrom=${data.username}`;
         // item.innerText = friend;
+        console.log(friend.username);
         item.onclick = () =>
-          (window.location.href = `/messages?userTo=${friend}&userFrom=${data.username}`);
+          (window.location.href = `/messages?userTo=${friend.username}&userFrom=${data.username}`);
         friendsContainer.appendChild(item);
-        window.scrollTo(0, document.body.scrollHeight);
+        // window.scrollTo(0, document.body.scrollHeight);
       }
     })
     .catch((error) => console.log(error));

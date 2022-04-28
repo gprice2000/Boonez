@@ -825,7 +825,7 @@ app.get("/messagesOverview", (req, res) => {
 
     dbc
       .db("Boonez")
-      .collection("profiles")
+      .collection("UserDashboard")
       .findOne({ username: cur_user }, (err, result) => {
         if (result) {
           res.json(result);
@@ -843,11 +843,10 @@ app.get("/messages/getFriends", async (req, res) => {
   db.then((dbc) => {
     dbc
       .db("Boonez")
-      .collection("profiles")
-      .find({ friends: { $in: [curUser] } })
-      .toArray((err, result) => {
+      .collection("UserDashboard")
+      .findOne({ username: curUser }, (err, result) => {
         if (result) {
-          res.json(result);
+          res.json(result.friends);
         } else {
           res.status(500).send("something went wrong");
         }
