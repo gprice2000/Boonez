@@ -1,9 +1,47 @@
 body {
-    display:grid;
-    font-family: sans-serif;
-    width: 100%;
-    height: 100%;
-    margin: 0;
+	font-family: sans-serif;
+	height: 100%;
+	margin: auto;
+	background-color: #343a40;
+	border: 1px solid white;
+}
+
+.landing-nav {
+	grid-row-start: 1;
+	grid-row-end: 3;
+	grid-column-start: 1;
+	grid-column-end: 12;
+	padding: 25px;
+	display: flex;
+	flex-direction: row;
+}
+.nav-links-container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin-top: 30px;
+	margin-left: 30%;
+}
+.nav-links-container a {
+	color: white;
+	font-size: 1.2rem;
+	text-decoration: none;
+	margin-right: 30px;
+	margin-left: 30px;
+}
+.nav-links-container a:hover {
+	animation-name: link-hov;
+	animation-duration: 100ms;
+	animation-timing-function: ease-in-out;
+	font-size: 1.4rem;
+}
+
+.find-friend{
+	position: relative;
+	right: 50%;
+	left: 50%;
+
+	top: 5%;
 }
 
 .addfriend {
@@ -33,13 +71,22 @@ body {
 }
 
 #friendsList { 
-	display: block;
+	display: relative;
 	margin: 0;
 	padding: 0;
 	width: 300px;
-	height: 100%;
+	height: fit-content;
 	background: #EEE;
 	list-style-type: none;
+  }
+
+  #searchOutput{
+	  
+  }
+
+  .friends{
+	position: relative;
+	right: 90%;
   }
   
   .friend {

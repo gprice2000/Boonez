@@ -5,18 +5,18 @@ document.addEventListener('DOMContentLoaded', function() {
 	var calendarEl = document.getElementById('calendar');
 	publicCal(calendarEl);
 	// When the user clicks on the button, open the modal
-	document.getElementById("CalBtn")
+	document.getElementById("calendar-button")
 			.addEventListener("click", function() {
-				var btn_val = document.getElementById("CalBtn").innerHTML; 
+				var btn_val = document.getElementById("calendar-button").innerHTML; 
 				let caltitle = document.getElementById("caltitle");
 				if (btn_val == "Public") {
 					caltitle.innerHTML = "Public Calendar";
-					document.querySelector("#CalBtn").innerHTML = "Private";
+					document.querySelector("#calendar-button").innerHTML = "Private";
 					publicCal(calendarEl);
 				}
 				else {
 					caltitle.innerHTML = "Private Calendar";
-					document.querySelector("#CalBtn").innerHTML = "Public";
+					document.querySelector("#calendar-button").innerHTML = "Public";
 					privateCal(calendarEl);
 				}
 			});
