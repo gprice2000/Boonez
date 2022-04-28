@@ -163,6 +163,7 @@ app.post("/signup", function (req, res) {
                         throw hashError;
                       }
                       input.password = hash;
+                      input.accountType = "personal";
                       dbc
                         .db("Boonez")
                         .collection("UserDashboard")
@@ -426,7 +427,7 @@ app.post("/profilePicture", function (req, res) {
     //let cur_user = url.parse(req.url, true).query.user;//session.userid;
     let cur_user = getCurUser(req);
 
-    console.log("curuser : " + cur_user);
+    // console.log("curuser : " + cur_user);
     const query = { username: { $eq: cur_user } };
     let acttyp = "";
     let col = "";
@@ -435,25 +436,33 @@ app.post("/profilePicture", function (req, res) {
       .collection("profiles")
       .findOne(query)
       .then((doc) => {
-        console.log("doc.acctype: " + doc.accountType);
+        // console.log("doc.acctype: " + doc.accountType);
         acttyp = doc.accountType;
+        col = acttyp == "personal" ? "UserDashboard" : "BusinessDashboard";
+        let redType =
+          col == "UserDashboard" ? "dashboard" : "BusinessDashboard";
+        let profdb = dbc.db("Boonez").collection(col);
+        profdb
+          .updateOne(
+            query,
+            {
+              $set: { profilePic: req.body.PicLink },
+            },
+            { upsert: true }
+          )
+          .then(res.redirect(`/${redType}?user=${cur_user}`));
       });
-    console.log("actype; " + acttyp);
-    acttyp == "personal"
-      ? (col = "UserDashboard")
-      : (col = "BusinessDashboard");
-    console.log("piclink: " + req.body.PicLink);
-    console.log("col: " + col);
-    let profdb = dbc.db("Boonez").collection(col);
-    profdb
-      .updateOne(
-        query,
-        {
-          $set: { profilePic: req.body.PicLink },
-        },
-        { upsert: true }
-      )
-      .then(res.redirect("/BusinessDashboard?user=" + cur_user));
+
+    // let profdb = dbc.db("Boonez").collection(col);
+    // profdb
+    //   .updateOne(
+    //     query,
+    //     {
+    //       $set: { profilePic: req.body.PicLink },
+    //     },
+    //     { upsert: true }
+    //   )
+    //   .then(res.redirect(`/${redType}?user=${cur_user}`));
   });
 });
 
@@ -617,6 +626,7 @@ app.post("/businessSignup", function (req, res) {
                         throw hashError;
                       }
                       businessProfile.password = hash;
+                      businessProfile.accountType = "business";
                       dbc
                         .db("Boonez")
                         .collection("profiles")

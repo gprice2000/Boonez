@@ -1,11 +1,33 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap");
 * {
-  padding: 0;
-  margin: 0;
+  margin: 0px;
+  padding: 0px;
+  font-family: "Open Sans", sans-serif;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background-color: #343a40;
+  display: flex;
+  flex-direction: column;
+}
+#page-head {
+  align-self: center;
+  color: white;
 }
 #friends-list {
-  width: 1000px;
-  height: 500px;
-}
-#friends-list a {
-  margin: 1.2rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1rem;
+  /* padding: 15px; */
+  width: 50%;
+  height: 100%;
+  background-color: #25292e;
+  border: 4px solid #ffcc01;
+  border-radius: 15px;
+  display: flex;
+  /* flex-wrap: wrap-reverse; */
+  flex-wrap: wrap;
+  overflow: auto;
 }
