@@ -18,9 +18,17 @@ async function getFriends() {
       const friends = data.friends;
       const friendsContainer = document.getElementById("friends-list");
       for (friend of friends) {
-        let item = document.createElement("a");
-        item.href = `/messages?userTo=${friend}&userFrom=${data.username}`;
-        item.innerText = friend;
+        let item = document.createElement("div");
+        item.className = "friendCnt";
+        let profPic = document.createElement("img");
+        profPic.className = "friendPic";
+        profPic.alt = `${friend.fullname}'s pic`;
+        profPic.src = friend.profilePic;
+        // let item = document.createElement("a");
+        // item.href = `/messages?userTo=${friend}&userFrom=${data.username}`;
+        // item.innerText = friend;
+        item.onclick = () =>
+          (window.location.href = `/messages?userTo=${friend}&userFrom=${data.username}`);
         friendsContainer.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       }

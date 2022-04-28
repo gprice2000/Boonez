@@ -22,6 +22,7 @@ const { redirect } = require("express/lib/response");
 const { query } = require("express");
 //mongoose connect to mongodb atlas database
 const mongoose = require("mongoose");
+const { Schema } = require("mongoose");
 mongoose.connect(
   "mongodb+srv://mazzaresejv:B00nze2022@cluster0.awpng.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 );
