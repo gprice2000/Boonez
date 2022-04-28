@@ -43,6 +43,7 @@
           onclick="setProf()"
           class="profileimage"
         />
+        <h2 id="student"></h2>
       </div>
       <div id="picModal" class="modal">
         <div class="modal-content">
@@ -105,10 +106,46 @@
             </ul>
           </div>
         </div>
+
+        <div class="container">
+          <div class="header">
+            <h2>Courses</h2>
+            <img class="click-icon" src= "../../images/icons8-edit-24 (1).png" onclick="getCourseList()">
+          </div>
+          <div class="content">
+            <ul id="courseList">
+            </ul>
+          </div>
+        </div>
+  
+        <div id="classModal" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <span id="closecourse">&times;</span>
+              <h2>Courses</h2>
+            </div>
+            <div class="modal-body">
+              <form id="courseform" name="courseform">
+                <label for="course0">CRN:</label>
+                <input type="text" id="course0" name="course0"/> 
+                <input type="text" id="course1" name="course1" /> 
+                <input type="text" id="course2" name="course2" /> 
+                <input type="text" id="course3" name="course3" /> 
+                <input type="text" id="course4" name="course4" /> 
+                <input type="text" id="course5" name="course5" /> 
+                <input type="text" id="course6" name="course6" /> 
+                <input type="text" id="course7" name="course7" /> 
+                <div class="modal-footer">
+                  <input id="courseSub" type="submit" value="Save" />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
     </div>
 
     <div class="mid-container">
-      <div class="container">
+      <div class="calcont">
         <div class="header">
           <h2 id="caltitle">Public Calendar</h2>
         </div>
@@ -143,42 +180,6 @@
                 </div>
               </form>
             </div>
-        </div>
-      </div>
-
-      <div class="container">
-        <div class="header">
-          <h2>Courses</h2>
-          <img class="click-icon" src= "../../images/icons8-edit-24 (1).png" onclick="getCourseList()">
-        </div>
-        <div class="content">
-          <ul id="courseList">
-          </ul>
-        </div>
-      </div>
-
-      <div id="classModal" class="modal">
-        <div class="modal-content">
-          <div class="modal-header">
-            <span id="closecourse">&times;</span>
-            <h2>Courses</h2>
-          </div>
-          <div class="modal-body">
-            <form id="courseform" name="courseform">
-              <label for="course0">CRN:</label>
-              <input type="text" id="course0" name="course0"/> 
-              <input type="text" id="course1" name="course1" /> 
-              <input type="text" id="course2" name="course2" /> 
-              <input type="text" id="course3" name="course3" /> 
-              <input type="text" id="course4" name="course4" /> 
-              <input type="text" id="course5" name="course5" /> 
-              <input type="text" id="course6" name="course6" /> 
-              <input type="text" id="course7" name="course7" /> 
-              <div class="modal-footer">
-                <input id="courseSub" type="submit" value="Save" />
-              </div>
-            </form>
-          </div>
         </div>
       </div>
     </div>

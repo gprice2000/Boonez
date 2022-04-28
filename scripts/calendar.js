@@ -44,7 +44,7 @@ function privateCal(calendarEl) {
 
 		var calendar = new FullCalendar.Calendar(calendarEl, {
 			selectable: true,
-			aspectRatio: 1,
+			aspectRatio: .95,
 			eventClick: function(calEvent) {
 				console.log(calEvent.start)
 				let event = { title: calEvent.event.title,
@@ -92,7 +92,7 @@ function publicCal(calendarEl) {
 
 	var calendar = new FullCalendar.Calendar(calendarEl, {
 		selectable: true,
-		aspectRatio: 1,
+		aspectRatio: .95,
 		eventChange: function(changeInfo) {
 			cur_cal.render()
 		},
