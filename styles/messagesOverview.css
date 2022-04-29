@@ -1,11 +1,97 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap");
 * {
-  padding: 0;
-  margin: 0;
+  margin: 0px;
+  padding: 0px;
+  font-family: "Open Sans", sans-serif;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background-color: #343a40;
+  display: flex;
+  flex-direction: column;
+}
+.landing-nav {
+  grid-row-start: 1;
+  grid-row-end: 3;
+  grid-column-start: 1;
+  grid-column-end: 12;
+  padding: 25px;
+  display: flex;
+  flex-direction: row;
+}
+.nav-links-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 30px;
+  margin-left: 30%;
+}
+.nav-links-container a {
+  color: white;
+  font-size: 1.2rem;
+  text-decoration: none;
+  margin-right: 30px;
+  margin-left: 30px;
+}
+.nav-links-container a:hover {
+  animation-name: link-hov;
+  animation-duration: 100ms;
+  animation-timing-function: ease-in-out;
+  font-size: 1.4rem;
+}
+#page-head {
+  align-self: center;
+  color: white;
 }
 #friends-list {
-  width: 1000px;
-  height: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  /* padding: 15px; */
+  width: 35%;
+  height: 100%;
+  background-color: #25292e;
+  /* border: 4px solid #ffcc01; */
+  border-radius: 15px;
+  /* flex-wrap: wrap-reverse; */
+  /* align-items: center; */
+  flex-wrap: wrap;
+  overflow: auto;
 }
-#friends-list a {
-  margin: 1.2rem;
+.friendPic {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  margin-left: 1rem;
+  align-self: center;
+  border: 2px solid black;
+}
+.friendCnt {
+  display: flex;
+  width: 60%;
+  margin-top: 1.2rem;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 10px;
+  /* height: 10%; */
+  height: max-content;
+  border: 4px solid #ffcc00;
+  padding: 0.5rem;
+  /* align-self: center; */
+  background-color: rgba(255, 255, 255, 0.905);
+}
+.friendCnt:hover {
+  cursor: pointer;
+}
+.friend-name {
+  align-self: center;
+  text-align: center;
+  margin-left: 1rem;
+  font-size: 2rem;
+
+  color: black;
 }

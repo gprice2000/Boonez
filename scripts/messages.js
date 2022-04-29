@@ -97,11 +97,15 @@ function renderFriends(friendsList) {
   let friendsCont = document.getElementById("friends");
   for (friend of friendsList) {
     let item = document.createElement("div");
+    let profPic =
+      friend.profilePic != null
+        ? friend.profilePic
+        : "../../images/blank-profile-pic.png";
     item.innerHTML =
-      `<img class=${"profile-pic"} src=${"../../images/blank-profile-pic.png"} alt=${
+      `<img class=${"profile-pic"} src=${profPic} alt=${
         friend.username
       }'s profile picture></img>` +
-      `<p class='friend-name'>${friend.fname} ${friend.lname}</p>`;
+      `<p class='friend-name'>${friend.fullname}</p>`;
 
     item.className = "friend-item";
     item.id = `${friend.username}`;
