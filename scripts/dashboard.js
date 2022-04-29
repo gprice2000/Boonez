@@ -69,9 +69,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			let img = document.createElement('img');
 			let div = document.createElement('div');
 			//user hidden data
-			let hid = document.createElement('INPUT');
-			hid.setAttribute("type","hidden");
-			hid.value = data[i].username;
+			//let hid = document.createElement('INPUT');
+			//hid.setAttribute("type","hidden");
+			//hid.value = data[i].username;
 			//user id is stored in node id , this way we can keep track upon 
 			//element click.'
 			node.id = data[i].username;
@@ -167,14 +167,14 @@ function getCourseList() {
 	let classes = [];
 
 
-	classForm.addEventListener('submit', (event) => {
+	classForm.addEventListener('submit', async (event) => {
 		event.preventDefault();
 		const formData = new FormData(event.target)
 		for(let pair of formData.entries()) {
 			if (pair[1] != "") {classes.push(pair[1].replace(/\s+/g, ''))}
 		}
 		console.log("classes: " + classes)
-		fetch("http://localhost:3000/courses",
+		await fetch("http://localhost:3000/courses",
 			{
 				method: 'POST', 
 				credentials: 'same-origin',

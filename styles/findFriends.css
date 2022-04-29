@@ -1,7 +1,7 @@
-body {
+html, body {
 	font-family: sans-serif;
-	height: 100%;
 	margin: auto;
+	height: 100%;
 	background-color: #343a40;
 	border: 1px solid white;
 }
@@ -20,14 +20,13 @@ body {
 	flex-direction: row;
 	flex-wrap: wrap;
 	margin-top: 30px;
-	margin-left: 30%;
+	margin-left: 20%;
 }
 .nav-links-container a {
 	color: white;
 	font-size: 1.2rem;
 	text-decoration: none;
 	margin-right: 30px;
-	margin-left: 30px;
 }
 .nav-links-container a:hover {
 	animation-name: link-hov;
@@ -36,12 +35,23 @@ body {
 	font-size: 1.4rem;
 }
 
+#friendSearch {
+	width: 950px;
+	height: fit-content;
+}
 .find-friend{
 	position: relative;
-	right: 50%;
-	left: 50%;
-
+	color: #EEE;
+	border: 1px solid #EEE;
+	border-radius: 10px;
+	margin: 10px;
+	padding: 50px;
+	width: 25%;
+	height: auto;
 	top: 5%;
+	right: 50%;
+	left: 25%;
+	font-size: medium;
 }
 
 .addfriend {
@@ -71,32 +81,53 @@ body {
 }
 
 #friendsList { 
-	display: relative;
+	position: relative;
 	margin: 0;
 	padding: 0;
+	border: 1px solid #EEE;
 	width: 300px;
 	height: fit-content;
-	background: #EEE;
+	/*background: #EEE;*/
 	list-style-type: none;
   }
 
-  #searchOutput{
-	  
+#searchOutput{
+	margin: 10px;
+	position: relative;
+	right: 50%;
+	left: 25%;
+	bottom: 95%;
+	width: fit-content;
+	border-radius: 10px;
+	border: 1px solid #EEE;
   }
+
+
 
   .friends{
 	position: relative;
-	right: 90%;
+	bottom:27%;
+	width: fit-content;
+	height: 100%;
+	border: 1px solid #EEE;
+	border-radius: 10px;
   }
   
-  .friend {
+  .friend-search {
+	  margin: 5px;
+  }
+  .friend{
 	width: 300px;
 	height: 60px;
 	background: #EEE;
-	border-bottom: 1px solid #DDD;
+	/*border-bottom: 1px solid #DDD;*/
+	border-radius: 10px;
 	cursor: pointer;
-	display: flex;
+	display: inline-flex;
+	/*margin: 5px;*/
 	align-items: center;
+	pointer-events: all;  
+
   }
   
   .friend img {
@@ -107,7 +138,7 @@ body {
 	object-fit: cover;
 	margin-left: 5px;
 	margin-right: 10px;
-  }
+}
   
   .friend .name {
 	font-size: 18px;
