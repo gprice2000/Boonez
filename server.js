@@ -68,7 +68,6 @@ app.use(express.static(__dirname));
 app.use(cookieParser());
 
 //used for keeping track of messages
-let date_ob = new Date();
 
 let chatters = [];
 function socketIOConnection(from, to) {
@@ -92,6 +91,7 @@ function socketIOConnection(from, to) {
       io.to(recipientSocket).emit("private message", msgData);
       io.to(msgData.usersocket).emit("private message", msgData);
 
+      let date_ob = new Date();
       let encryptedMsg = CryptoJS.AES.encrypt(
         msgData.msg,
         "secret key 123"
