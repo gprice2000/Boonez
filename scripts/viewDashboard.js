@@ -1,7 +1,10 @@
 //fetch dashboard info, no data can be edited
 document.addEventListener('DOMContentLoaded', function() {
 	const search = window.location.search;
-    console.log("search: " + search)
+	document.getElementById("dash").href = `/dashboard/${search}`;
+	document.getElementById("friends").href = `/findFriends/${search}`;
+	document.getElementById("messages").href = `/messagesOverviewPage/${search}`;
+	document.getElementById("picForm").action = `/profilePicture/${search}`;
     fetchDash();
 
 	async function fetchDash() {

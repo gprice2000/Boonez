@@ -39,7 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		let last = data.lname;
 		first = first.charAt(0).toUpperCase() + first.slice(1);
 		last = last.charAt(0).toUpperCase() + last.slice(1);
-		document.getElementById("student").innerHTML = first + " " + last;
+
+		document.getElementById("student-name").innerHTML = first + " " + last;
 	}
 
 	function getAboutMe(text){
@@ -55,20 +56,22 @@ document.addEventListener('DOMContentLoaded', function() {
 			node.id = courses[i];
 			node.className = "course";
 			node.appendChild(document.createTextNode(courses[i]));
-			document.querySelector("#courseList").appendChild(node);
+			document.querySelector("#course-list").appendChild(node);
 		}
 	}
 
 	function friendList(data) {
+		
 		for (var i = 0; i < 10 ; i++) {
+
 			if (i >= data.length) {break;}
 			let node = document.createElement('li');
 			let img = document.createElement('img');
 			let div = document.createElement('div');
 			//user hidden data
-			let hid = document.createElement('INPUT');
-			hid.setAttribute("type","hidden");
-			hid.value = data[i].username;
+			//let hid = document.createElement('INPUT');
+			//hid.setAttribute("type","hidden");
+			//hid.value = data[i].username;
 			//user id is stored in node id , this way we can keep track upon 
 			//element click.'
 			node.id = data[i].username;
@@ -81,20 +84,19 @@ document.addEventListener('DOMContentLoaded', function() {
 			
 			node.addEventListener("click", (event) => {
 				//redirect user to dashboard view page
-				console.log("friend: " + event.target.id)
 				window.location.href = `/viewDash/?user=${event.target.id}`;
-
 			});
+
 			node.className = "friend";
 			div.className = "name";
 			node.appendChild(img);
 			node.appendChild(document.createTextNode(data[i].fullname));
-			document.querySelector('#friendsList').appendChild(node);
+			document.querySelector('#friends-list').appendChild(node);
 		}
 	}
 
 
-	document.getElementById("allFriends").addEventListener("click", function() {
+	document.getElementById("all-friends").addEventListener("click", function() {
 		window.location.href = "/findFriends/" + search;
 	})
 });
@@ -121,8 +123,8 @@ async function serverCon(method, data,url) {
 }
 
 function setAboutMe(){
-	let modal = document.getElementById("aboutModal");
-	let text = document.getElementById("aboutmeText");
+	let modal = document.getElementById("about-modal");
+	let text = document.getElementById("about-me-text");
 	let savebtn = document.getElementById("amSub")
 	text.value = cur_user.aboutme
 	modal.style.display = "initial";
@@ -159,20 +161,20 @@ function setAboutMe(){
 }
 
 function getCourseList() {
-	let classModal = document.getElementById("classModal");
+	let classModal = document.getElementById("class-modal");
 	classModal.style.display = "initial";
 	let classForm = document.querySelector("#courseform");
 	let classes = [];
 
 
-	classForm.addEventListener('submit', (event) => {
+	classForm.addEventListener('submit', async (event) => {
 		event.preventDefault();
 		const formData = new FormData(event.target)
 		for(let pair of formData.entries()) {
 			if (pair[1] != "") {classes.push(pair[1].replace(/\s+/g, ''))}
 		}
 		console.log("classes: " + classes)
-		fetch("http://localhost:3000/courses",
+		await fetch("http://localhost:3000/courses",
 			{
 				method: 'POST', 
 				credentials: 'same-origin',
@@ -214,7 +216,7 @@ function setProf() {
 	picSub.onclick = function() {
 		proPic.src = picLink.value;
 	}
-	let modal = document.getElementById("picModal");
+	let modal = document.getElementById("profile-pic-modal");
 	modal.style.display = "block";
 	var span = document.getElementById("closePic")
 	//when user clicks x modal closes

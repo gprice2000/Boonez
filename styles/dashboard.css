@@ -1,3 +1,26 @@
+body {
+	font-family: sans-serif;
+	width: 100%;
+	height: 100%;
+	margin: auto;
+	background-color: #343a40;
+}
+.left-container{
+	position: relative;
+	height: fit-content;
+	width: fit-content;
+	top: 5%;
+}
+
+.mid-container{
+	position: absolute;
+	height: fit-content;
+	width: fit-content;
+	left: 50%;
+	right: 40%;
+	top: 13%;
+}
+
 .landing-nav {
 	grid-row-start: 1;
 	grid-row-end: 3;
@@ -6,35 +29,41 @@
 	padding: 25px;
 	display: flex;
 	flex-direction: row;
-  }
-  .nav-links-container {
+}
+.nav-links-container {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
 	margin-top: 30px;
 	margin-left: 30%;
-  }
-  .nav-links-container a {
+}
+.nav-links-container a {
 	color: white;
 	font-size: 1.2rem;
 	text-decoration: none;
 	margin-right: 30px;
 	margin-left: 30px;
-  }
-  .nav-links-container a:hover {
+}
+.nav-links-container a:hover {
 	animation-name: link-hov;
 	animation-duration: 100ms;
 	animation-timing-function: ease-in-out;
 	font-size: 1.4rem;
-  }
-
-#message-container {
-  background-color: aqua;
-  width: 500px;
-  height: 500px;
-  text-align: center;
-  padding: 5px;
 }
+
+.profile-pic-container{
+	position: relative;
+	border:1px solid rgba(236, 233, 233, 0.644);
+	border-radius: 10px;
+	background-color: white;
+	width: 330px;
+	height: 375px;
+	left: 50px;
+	background-image: url("../images/mtnsil.png");
+	background-position: -65px 120px;
+	background-repeat: no-repeat;
+}
+
 #profile-pic {
 	width: 50%;
 	margin-right: auto;
@@ -49,51 +78,16 @@
 	cursor: pointer;
 }
    
-#aboutmeText {
+#about-me-text {
 	position: relative;
 	height: 200px;
 	width: 300px;
 }
 
-#student {
+#student-name {
 	font-weight: 900;
 	text-align: center;
 	text-decoration: underline;
-}
-
-.left-container{
-	position: relative;
-	top: 5%;
-}
-
-.profile-pic{
-	border:1px solid rgba(236, 233, 233, 0.644);
-	border-radius: 10px;
-	background-color: white;
-	position: relative;
-	width: 60%;
-	height: 40%;
-	left: 50px;
-	background-image: url("../images/mtnsil.png");
-	background-position: -65px 120px;
-	background-repeat: no-repeat;
-
-}
-
-.mid-container{
-	position: relative;
-}
-
-
-.calcont{
-	margin: 50px;
-	width:600px;
-    height:fit-content; 
-    border-radius:10px 10px 0 0;
-	border:1px solid rgba(236, 233, 233, 0.644);
-	overflow: hidden;
-	text-overflow: ellipsis;
-    position:relative;
 }
 .container {
 	margin: 50px;
@@ -105,7 +99,6 @@
 	text-overflow: ellipsis;
     position:relative;
 }
-
 .header {
 	margin-top: -26px;
 	display:inherit;
@@ -119,12 +112,27 @@
 	 
 }
 
+.click-icon {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+
+
+}
+
+.click-icon:hover{
+	background: #EEE;
+	border-radius: 50%;
+	cursor: pointer;
+	padding: 5px;
+}
+
 .header h2 {
 	position: relative;
 	left: 10px;
 	top: 10px;
 }
-.content{
+.content {
 	display:inherit;
 	position: inherit;
     width:100%;
@@ -132,12 +140,7 @@
 
 }
 
-.modal-header{
-	position: relative;
-	height: fit-content;
-	text-align: center;
-}
-#picModal {
+.modal{
 	display: none; /* Hidden by default */
 	position: fixed; /* Stay in place */
 	z-index: 1; /* Sit on top */
@@ -148,57 +151,34 @@
 	overflow: auto; /* Enable scroll if needed */
 	background-color: rgb(0,0,0); /* Fallback color */
 	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  }
-
-.click-icon {
-	position: absolute;
-	right: 10px;
-	top: 10px;
-
-
 }
-.click-icon:hover{
-	background: #EEE;
-	border-radius: 50%;
-	cursor: pointer;
+
+.modal-header{
+	position: relative;
+	height: fit-content;
+	text-align: center;
+}
+
+.calendar-container{
+	margin: 50px;
+	width:600px;
+    height:fit-content; 
+    border-radius:10px 10px 0 0;
+	border:1px solid rgba(236, 233, 233, 0.644);
+	overflow: hidden;
+	text-overflow: ellipsis;
+    position:relative;
+}
+
+#message-container {
+	background-color: aqua;
+	width: 500px;
+	height: 500px;
+	text-align: center;
 	padding: 5px;
 }
 
-#aboutModal {
-	display: none;
-	position: fixed; /* Stay in place */
-	z-index: 1; /* Sit on top */
-	left: 0;
-	top: 0;
-	width: 100%; /* Full width */
-	height: 100%; /* Full height */
-	overflow: auto; /* Enable scroll if needed */
-	background-color: rgb(0,0,0); /* Fallback color */
-	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-#classModal{
-	display: none;
-	position: fixed; /* Stay in place */
-	z-index: 1; /* Sit on top */
-	left: 0;
-	top: 0;
-	width: 100%; /* Full width */
-	height: 100%; /* Full height */
-	overflow: auto; /* Enable scroll if needed */
-	background-color: rgb(0,0,0); /* Fallback color */
-	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-body {
-	display:grid;
-	font-family: sans-serif;
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	background-color: #343a40;
-  }
-
-  #courseList {
+#course-list {
 	display: block;
 	margin: 0;
 	padding: 0;
@@ -206,8 +186,8 @@ body {
 	height: 100%;
 	background: rgb(255, 255, 255);
 	list-style-type: none;
-  }
-  .course {
+}
+.course {
 	width: inherit;
 	height: 60px;
 	background: #EEE;
@@ -215,31 +195,31 @@ body {
 	cursor: pointer;
 	display: flex;
 	align-items: center;
-  }
+}
 
-  #allFriends{
+#all-friends{
 	position: absolute;
 	right: 0;
 	top: 10px;
 	border-radius: 10px;
 }
 
-#allFriends:hover {
+#all-friends:hover {
 	cursor: pointer;
 }
 
-#CalBtn {
+#calendar-button {
 	border-radius: 10px;
 	bottom: 0;
 	right: 0;
 	position: absolute;
 }
 
-#CalBtn:hover {
+#calendar-button:hover {
 	cursor: pointer;
 }
 
-  #friendsList { 
+#friends-list { 
 	display: block;
 	margin: 0;
 	padding: 0;
@@ -249,7 +229,7 @@ body {
 	list-style-type: none;
   }
 
-  .friend {
+.friend {
 	width: inherit;
 	height: 60px;
 	background: #EEE;
@@ -257,9 +237,9 @@ body {
 	cursor: pointer;
 	display: flex;
 	align-items: center;
-  }
+}
   
-  .friend img {
+.friend img {
 	width: 45px;
 	height: 45px;
 	border-radius: 30px;
@@ -267,23 +247,23 @@ body {
 	object-fit: cover;
 	margin-left: 5px;
 	margin-right: 10px;
-  }
+}
   
-  .friend .name {
+.friend .name {
 	font-size: 18px;
-  }
+}
   
-  .friend.selected {
+.friend.selected {
 	background: #43A047;
 	color: white;
-  }
+}
   
-  .friend.selected img {
+.friend.selected img {
 	border-color: white;
-  }
+}
   
-  .friend:not(.selected):hover {
+.friend:not(.selected):hover {
 	background: #DDD;
 	cursor: pointer;
 
-  }
+}

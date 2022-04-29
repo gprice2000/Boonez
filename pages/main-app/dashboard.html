@@ -35,7 +35,7 @@
     </nav>
 
     <div class="left-container">
-      <div class="profile-pic">
+      <div class="profile-pic-container">
         <img
           src="../../images/blank-profile-pic.png"
           id="profile-pic"
@@ -43,9 +43,9 @@
           onclick="setProf()"
           class="profileimage"
         />
-        <h2 id="student"></h2>
+        <h2 id="student-name"></h2>
       </div>
-      <div id="picModal" class="modal">
+      <div id="profile-pic-modal" class="modal">
         <div class="modal-content">
           <div class="modal-header">
             <h2>Event</h2>
@@ -74,7 +74,7 @@
             </span>
           </div>
         </div>
-        <div id="aboutModal" class="modal">
+        <div id="about-modal" class="modal">
           <div class="modal-content">
             <div class="modal-header">
               <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
@@ -86,7 +86,7 @@
               <form action="/aboutMe" method="POST">
                 <label for="aboutme">You can write about your major, 
                                     interests or desired career</label><br />
-                <textarea id="aboutmeText" name="aboutme" ></textarea>
+                <textarea id="about-me-text" name="aboutme" ></textarea>
                   <br />
                 </div>
                 <div class="modal-footer">
@@ -99,10 +99,10 @@
         <div class="container">
           <div class="header">
             <h2>Friends</h2>
-            <button id="allFriends">All Friends</button>
+            <button id="all-friends">All Friends</button>
           </div>
           <div class="content">
-            <ul id="friendsList"> 
+            <ul id="friends-list"> 
             </ul>
           </div>
         </div>
@@ -113,12 +113,12 @@
             <img class="click-icon" src= "../../images/icons8-edit-24 (1).png" onclick="getCourseList()">
           </div>
           <div class="content">
-            <ul id="courseList">
+            <ul id="course-list">
             </ul>
           </div>
         </div>
   
-        <div id="classModal" class="modal">
+        <div id="class-modal" class="modal">
           <div class="modal-content">
             <div class="modal-header">
               <span id="closecourse">&times;</span>
@@ -145,13 +145,13 @@
     </div>
 
     <div class="mid-container">
-      <div class="calcont">
+      <div class="calendar-container">
         <div class="header">
           <h2 id="caltitle">Public Calendar</h2>
         </div>
         <div id="calendar">
           <br/>
-          <button id="CalBtn">Private</button>
+          <button id="calendar-button">Private</button>
         </div>
       </div>
 

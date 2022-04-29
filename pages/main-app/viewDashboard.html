@@ -15,43 +15,68 @@
     <title>Boonez Dashboard</title>
   </head>
   <body>
-    <div class="logo-container">
-      <img
-        src="../../images/word_logo.png"
-        alt="boonze logo"
-        width="195"
-        height="75px"
-      />
+    <nav class="landing-nav">
+      <div class="logo-container">
+        <img
+          src="../../images/word_logo.png"
+          alt="boonze logo"
+          width="195"
+          height="75px"
+        />
+      </div>
+    </nav>
+
+    <div class="left-container">
+      <div class="profile-pic-container">
+        <img
+          src="../../images/blank-profile-pic.png"
+          id="profile-pic"
+          alt="profile pic"
+          width="200"
+          height="80px"
+        />
+        <h2 id="student-name"></h2>
+      </div>
+
+      <div class="container">
+        <div class="header">
+          <h2>About Me</h2>
+        </div>
+        <div class="content">
+          <span id="am-content">
+          </span>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="header">
+          <h2>Friends</h2>
+        </div>
+        <div class="content">
+          <ul id="friends-list"> 
+          </ul>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="header">
+          <h2>Courses</h2>
+        </div>
+        <div class="content">
+          <ul id="course-list">
+          </ul>
+        </div>
+      </div>
     </div>
-    <div class="profile-pic">
-      <img
-        src="../../images/blank-profile-pic.png"
-        id="profile-pic"
-        alt="profile pic"
-        width="200"
-        height="80px"
-      />
+
+    <div class="mid-container">
+      <div class="calendar-container">
+        <div class="header">
+          <h2 id="caltitle">Public Calendar</h2>
+        </div>
+        <div id="calendar">
+        </div>
+      </div>
     </div>
-
-
-    <div class="about-me">
-      <label for="aboutme">About me:</label><br />
-      <input type="text" id="aboutme" name="aboutme" value="" readonly="readonly"/><br />
-    </div>
-
-    <div id="courses">
-      <ul id="courseList"> 
-      </ul>
-
-    </div>
-
-    <div id="calendar"></div>
-    <div class="friends">
-        <h2>Friends:</h2>
-        <ul id="friendsList"> 
-        </ul>
-    </div>
-
-
   </body>
 </html>
