@@ -12,6 +12,35 @@ body {
   display: flex;
   flex-direction: column;
 }
+.landing-nav {
+  grid-row-start: 1;
+  grid-row-end: 3;
+  grid-column-start: 1;
+  grid-column-end: 12;
+  padding: 25px;
+  display: flex;
+  flex-direction: row;
+}
+.nav-links-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 30px;
+  margin-left: 30%;
+}
+.nav-links-container a {
+  color: white;
+  font-size: 1.2rem;
+  text-decoration: none;
+  margin-right: 30px;
+  margin-left: 30px;
+}
+.nav-links-container a:hover {
+  animation-name: link-hov;
+  animation-duration: 100ms;
+  animation-timing-function: ease-in-out;
+  font-size: 1.4rem;
+}
 #page-head {
   align-self: center;
   color: white;

@@ -22,6 +22,25 @@ body {
   /* grid-auto-columns: auto; */
   /* display: flex; */
 }
+
+#dashLink {
+  margin-left: auto;
+  margin-right: auto;
+  color: #ffcc00;
+  background-color: #25292e;
+  border-radius: 10px;
+  border: none;
+  font-size: 0.8rem;
+  padding: 15px;
+  width: fit-content;
+  height: fit-content;
+  margin-bottom: 1rem;
+  text-decoration: none;
+}
+#dashLink:hover {
+  cursor: pointer;
+}
+
 #message-cont {
   display: flex;
   /* width: 75%; */
