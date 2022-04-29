@@ -20,11 +20,6 @@ const res = require("express/lib/response");
 const CryptoJS = require("crypto-js");
 const { redirect } = require("express/lib/response");
 const { query } = require("express");
-//mongoose connect to mongodb atlas database
-const mongoose = require("mongoose");
-mongoose.connect(
-  "mongodb+srv://mazzaresejv:B00nze2022@cluster0.awpng.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-);
 
 // create an array of strings of user id , parse
 // urls to get current user, if theyre logging off
@@ -859,69 +854,33 @@ app.get("/scripts/findFriends.js", function (req, res) {
 app.get("/styles/findFriends.css", function (req, res) {
   res.sendFile(__dirname + "/styles/findFriends.css");
 });
-//search for specific user in database
-//TODO: add class search functionality
+
 app.post("/findFriend", (req, res) => {
   db.then(function (dbc) {
-    const searchSch = new Schema({
-      fname: String,
-      lname: String,
-      username: String,
-      classes: [Number],
-    });
-    const search = mongoose.model("searchSch", searchSch);
-    /*
-    let array = [{fname: {$eq: req.body.items[0]}}];
-    console.log("req.body.items: " + req.body.items)
-
-    for(let i = 0; i < req.body.items.length; i++) {
-      if (req.body.items[i] != '') {
-        array.push({fname: {$eq: req.body.items[i]}})
-      }
-    }
-    */
     let input = req.body;
-    let col = dbc.db("Boonez").collection("UserDashboard");
-    let findings;
     let query = {};
-
-    //console.log(input.fname + input.lname + input.username)
-    /*
-    if (input.fname != '' &&
-        input.lname != '' &&
-        input.username != '' &&
-        input.crn != ''){
-          findings = col.find({$and: [{ fname: {$eq: input.fname}},
-            { lname: {$eq: input.lname}},
-            { username: {$eq: input.username}},
-            { classes: {$all: input.crn}}
-            ]})
+    query['$and'] = [];
+    if (input.fname != '') {
+      query['$and'].push({fname: {$eq:input.fname}})
     }
-    else {
-    */
-    //search for fname + lname and username if provided
-    //fname requires lname to search and vice-versa
-    /*
-      findings = col.find( {$or: [
-          {$and: [{ fname: {$eq: req.body.fname}},
-          { lname: {$eq: req.body.lname}}]},
-          { username: {$eq: req.body.username}} ]})
-    }*/
-    console.log("fname : " + input.items[0]);
-    findings = col.find({
-      $or: [
-        { fname: { $eq: input.items[0] } },
-        { lname: { $eq: input.items[1] } },
-        { username: { $eq: input.items[2] } },
-        { classes: { $all: [input.items[3]] } },
-      ],
-    });
-    //findings = col.find(query)
-    findings.toArray((err, result) => {
-      console.log("error: " + err);
-      console.log("db search output: " + result);
-      res.json(result);
-    });
+    if (input.lname != '') {
+      query['$and'].push({lname: {$eq:input.lname}})
+    }
+    if (input.username != '') {
+      query['$and'].push({username: {$eq:input.username}})
+    }
+    if (input.crn != '') {
+      query['$and'].push({classes: {$in:[input.crn]}})
+    }
+    console.log("query: " + query)
+
+    let col = dbc.db("Boonez").collection("UserDashboard");
+  
+    col.find(query)    
+          .toArray((err, result) => {
+            console.log("error: " + err);
+            res.json(result);
+          });
   });
 });
 
