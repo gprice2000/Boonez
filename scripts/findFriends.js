@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
             node.appendChild(document.createTextNode(friends[i].fullname));
             document.querySelector('#friendsList').appendChild(node);
             del.addEventListener("click",(event) => {
+                event.stopPropagation();
                 let obj = {username: node.id}
                 cur_friends = cur_friends.filter(function(value, index, arr) {
                     console.log("value : " + value.username + " node.id: " + node.id)
@@ -77,6 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 let selected_friend = document.getElementById(node.id);
                 selected_friend.parentNode.removeChild(selected_friend);
                 serverCon("POST", obj, "/delFriend");
+
             })
             node.addEventListener("click", (event) => {
 				//redirect user to dashboard view page
@@ -103,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let div = document.createElement('div');
             let addedFriend;
             let addf = document.createElement('img');
-
+            addf.setAttribute("id","delete");
             addedFriend = cur_friends.find(ele =>
                 ele.username == user);
             if(addedFriend == undefined && user != cur_user) {
@@ -129,25 +131,9 @@ document.addEventListener('DOMContentLoaded', function() {
             let fullname = getName(data[i]);
             node.appendChild(document.createTextNode(fullname));
             document.querySelector('#friendSearch').appendChild(node);
-			node.addEventListener("click", (event) => {
-				//redirect user to dashboard view page
-                if (event.target.id == cur_user) {
-                    window.location.href = `/dashboard/${search}`;
-                } else {
-				    window.location.href = `/viewDash/?user=${event.target.id}`;
-                }
-			});
-            del.addEventListener("click",(event) => {
-                let obj = {username: node.id}
-                cur_friends = cur_friends.filter(function(value, index, arr) {
-                    return value == node.id
-                })
-                let selected_friend = document.getElementById(node.id);
-                selected_friend.parentNode.removeChild(selected_friend);
-                serverCon("POST", obj, "/delFriend");
-            })
-
             addf.addEventListener("click", (event) => {
+                event.stopPropagation();
+                console.log("event.target.id" + event.currentTarget.id)
                 console.log("add : " + node.id)
                 let obj = {username: node.id,
                            fullname: fullname,
@@ -161,6 +147,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
             })
+
+            del.addEventListener("click",(event) => {
+                event.stopPropagation();
+                let obj = {username: node.id}
+                cur_friends = cur_friends.filter(function(value, index, arr) {
+                    return value == node.id
+                })
+                let selected_friend = document.getElementById(node.id);
+                selected_friend.parentNode.removeChild(selected_friend);
+                serverCon("POST", obj, "/delFriend");
+            })
+
+			node.addEventListener("click", (event) => {
+                console.log("event.target.id" + event.currentTarget.id)
+				//redirect user to dashboard view page
+                if (event.target.id == cur_user) {
+                    window.location.href = `/dashboard/${search}`;
+                } else {
+				    window.location.href = `/viewDash/?user=${event.target.id}`;
+                }
+                
+			});
         }
 
 
