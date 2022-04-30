@@ -3,7 +3,6 @@ html, body {
 	margin: auto;
 	height: 100%;
 	background-color: #343a40;
-	border: 1px solid white;
 }
 
 .landing-nav {
@@ -35,23 +34,79 @@ html, body {
 	font-size: 1.4rem;
 }
 
+.all-friends-container{
+	position: relative;
+	max-width: fit-content;
+	width: fit-content;
+	vertical-align: top;
+
+	height: auto;
+	margin: 0;
+	padding: 0;
+	overflow:hidden;
+	top: 5%;
+	border: 1px solid #EEE;
+	border-radius: 10px;
+}
+
+.mid-container{
+	position: relative;
+	right: 500px;
+	bottom: 50px;
+	margin: 10px;
+}
+
+.header {
+	margin-top: -25px;
+	display:inherit;
+	position: inherit;
+	border-radius: 10px 10px 0 0;
+    width: 100%;
+    height:50px;
+	background: #363a39;
+	color: #ffcc00;
+	font-size: 20px;
+}
+
+.header h2 {
+	position: relative;
+	left: 10px;
+	top: 10px;
+}
+
 #friendSearch {
 	width: 950px;
 	height: fit-content;
+
 }
+
+.ffheader{
+	position: relative;
+	/*
+	right: 15%;
+	top: 15%;*/
+}
+
 .find-friend{
 	position: relative;
-	color: #EEE;
 	border: 1px solid #EEE;
 	border-radius: 10px;
 	margin: 10px;
+	/*
 	padding: 50px;
+	margin-top: 50px;
+	*/
 	width: 25%;
 	height: auto;
+	
 	top: 5%;
 	right: 50%;
 	left: 25%;
+	
 	font-size: medium;
+	color: #EEE;
+	background-color:#363a39;
+	
 }
 
 .addfriend {
@@ -84,38 +139,28 @@ html, body {
 	position: relative;
 	margin: 0;
 	padding: 0;
-	border: 1px solid #EEE;
 	width: 300px;
 	height: fit-content;
-	/*background: #EEE;*/
+	background: #EEE;
 	list-style-type: none;
+	border-radius: 10px;
   }
 
 #searchOutput{
-	margin: 10px;
 	position: relative;
+	/*left: 25%;*/
+	width: fit-content;
+	height: fit-content;
+	border-radius: 10px;
+	margin: 10px;
+	top: 5%;
 	right: 50%;
 	left: 25%;
-	bottom: 95%;
-	width: fit-content;
-	border-radius: 10px;
 	border: 1px solid #EEE;
-  }
-
-
-
-  .friends{
-	position: relative;
-	bottom:27%;
-	width: fit-content;
-	height: 100%;
-	border: 1px solid #EEE;
-	border-radius: 10px;
+	background-color: #363a39;
   }
   
-  .friend-search {
-	  margin: 5px;
-  }
+
   .friend{
 	width: 300px;
 	height: 60px;
@@ -124,7 +169,6 @@ html, body {
 	border-radius: 10px;
 	cursor: pointer;
 	display: inline-flex;
-	/*margin: 5px;*/
 	align-items: center;
 	pointer-events: all;  
 
