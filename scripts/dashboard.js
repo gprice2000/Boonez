@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.getElementById("friends").href = `/findFriends/${search}`;
 	document.getElementById("messages").href = `/messagesOverviewPage/${search}`;
 	document.getElementById("picForm").action = `/profilePicture/${search}`;
-	document.getElementById("advertisements").href = `/viewAdvertisements/${search}`
 	fetchDash();
 
 	async function fetchDash() {
