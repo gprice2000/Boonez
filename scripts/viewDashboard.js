@@ -1,17 +1,26 @@
 //fetch dashboard info, no data can be edited
+let cur_user;
+let cur_session;
 document.addEventListener('DOMContentLoaded', function() {
 	const search = window.location.search;
+	console.log("search at start: " + search)
 	document.getElementById("dash").href = `/dashboard/${search}`;
 	document.getElementById("friends").href = `/findFriends/${search}`;
 	document.getElementById("messages").href = `/messagesOverviewPage/${search}`;
-	document.getElementById("picForm").action = `/profilePicture/${search}`;
     fetchDash();
 
 	async function fetchDash() {
-		await fetch("http://localhost:3000/viewDashboard/" + search)///?user=${}`)
+		await fetch("http://localhost:3000/viewDashboard" + search)
 		.then(response =>  response.json())
 		.then(data => {
+			console.log("data: " + data)
 			let doc = data.doc;
+			let cur_session = data.cur_session;
+			console.log("cur_session: " + cur_session)
+			cur_user = data.cur_user;
+			if (data == "nsi") {
+				window.location.href = "/login";
+			}
 			if (doc.profilePic != null) {
 				let proPic = document.getElementById("profile-pic")
 				proPic.src = doc.profilePic;
@@ -22,76 +31,71 @@ document.addEventListener('DOMContentLoaded', function() {
 			if (doc.aboutme != null) {
 				getAboutMe(doc.aboutme);
 			}
-			if (doc.friends.length != 0) {
-				friendList(data)
-			}
+			getName(doc);
+			friendList(doc.friends);
 		})
 		.catch((error) => {
 			console.log("Error: " + error)
 		});
 	}
-	
-	function getAboutMe(aboutme){
-		console.log(aboutme)
-		let txtbox = document.getElementById("aboutme");
-		txtbox.value = aboutme;
 
+	function getName(data) {
+		let first = data.fname;
+		let last = data.lname;
+		first = first.charAt(0).toUpperCase() + first.slice(1);
+		last = last.charAt(0).toUpperCase() + last.slice(1);
+
+		document.getElementById("student-name").innerHTML = first + " " + last;
+	}
+	function getAboutMe(text){
+		let aboutme_body = document.getElementById("am-content");
+		aboutme_body.innerHTML = text;
 	}
 
-
-
 	function courseList(courses) {
-		console.log("courses: " + courses)
 		for (var i = 0; i < courses.length; i++) {
 			let node = document.createElement('li');
 			let div = document.createElement('div');
+
+			node.id = courses[i];
 			node.className = "course";
 			node.appendChild(document.createTextNode(courses[i]));
-			document.querySelector("#courseList").appendChild(node);
+			document.querySelector("#course-list").appendChild(node);
 		}
 	}
 
 	function friendList(data) {
-		let doc = data.doc;
-		let friends = doc.friends;
-		let numoffriends = friends.length;
 		for (var i = 0; i < 10 ; i++) {
-			console.log("data.cur_user: " + data.cur_user)
-			console.log("value of numoffr: " + numoffriends)
-			console.log("i : " + i)
-			//console.log("friend: " + friends[i].username)
-
-			if (i > numoffriends ) {break;}
-			if (data.cur_user == friends[i].username) {
-				numoffriends -= 1;
-				continue;}
-			console.log("friend: " + friends[i].username)
-
+			if (i >= data.length) {break;}
 			let node = document.createElement('li');
 			let img = document.createElement('img');
 			let div = document.createElement('div');
-			//user id is stored in node id , this way we can keep track upon 
-			//element click.'
-			node.id = friends[i].username;
-			if (friends[i].profilePic == undefined) {
+
+			node.id = data[i].username;
+			if (data[i].profilePic == undefined) {
 				img.src = "/images/blank-profile-pic.png"
 			} else {
-				img.src = friends[i].profilePic;
+				img.src = data[i].profilePic;
 			}
 			
 			
 			node.addEventListener("click", (event) => {
 				//redirect user to dashboard view page
-				console.log("friend: " + event.target.id)
-				window.location.href = `/viewDash/?user=${event.target.id}`;
-
+				console.log("cur_user: " + cur_user)
+				console.log("event.target.id: " + event.target.id)
+				if (event.target.id == cur_user) {
+					window.location.href = `/dashboard?user=${cur_user}`;
+				}
+				else {
+					window.location.href = `/viewDash/?user=${event.target.id}`;
+				}
 			});
-			
+
 			node.className = "friend";
 			div.className = "name";
 			node.appendChild(img);
-			node.appendChild(document.createTextNode(friends[i].fullname));
-			document.querySelector('#friendsList').appendChild(node);
+			node.appendChild(document.createTextNode(data[i].fullname));
+			document.querySelector('#friends-list').appendChild(node);
 		}
 	}
 });
