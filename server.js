@@ -20,6 +20,12 @@ const res = require("express/lib/response");
 const CryptoJS = require("crypto-js");
 const { redirect } = require("express/lib/response");
 const { query } = require("express");
+//mongoose connect to mongodb atlas database
+const mongoose = require("mongoose");
+const { Schema } = require("mongoose");
+mongoose.connect(
+  "mongodb+srv://mazzaresejv:B00nze2022@cluster0.awpng.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+);
 
 // create an array of strings of user id , parse
 // urls to get current user, if theyre logging off
@@ -62,7 +68,6 @@ app.use(express.static(__dirname));
 app.use(cookieParser());
 
 //used for keeping track of messages
-let date_ob = new Date();
 
 let chatters = [];
 function socketIOConnection(from, to) {
@@ -86,6 +91,7 @@ function socketIOConnection(from, to) {
       io.to(recipientSocket).emit("private message", msgData);
       io.to(msgData.usersocket).emit("private message", msgData);
 
+      let date_ob = new Date();
       let encryptedMsg = CryptoJS.AES.encrypt(
         msgData.msg,
         "secret key 123"
@@ -158,6 +164,7 @@ app.post("/signup", function (req, res) {
                         throw hashError;
                       }
                       input.password = hash;
+                      input.accountType = "personal";
                       dbc
                         .db("Boonez")
                         .collection("UserDashboard")
@@ -421,7 +428,7 @@ app.post("/profilePicture", function (req, res) {
     //let cur_user = url.parse(req.url, true).query.user;//session.userid;
     let cur_user = getCurUser(req);
 
-    console.log("curuser : " + cur_user);
+    // console.log("curuser : " + cur_user);
     const query = { username: { $eq: cur_user } };
     let acttyp = "";
     let col = "";
@@ -430,25 +437,33 @@ app.post("/profilePicture", function (req, res) {
       .collection("profiles")
       .findOne(query)
       .then((doc) => {
-        console.log("doc.acctype: " + doc.accountType);
+        // console.log("doc.acctype: " + doc.accountType);
         acttyp = doc.accountType;
+        col = acttyp == "personal" ? "UserDashboard" : "BusinessDashboard";
+        let redType =
+          col == "UserDashboard" ? "dashboard" : "BusinessDashboard";
+        let profdb = dbc.db("Boonez").collection(col);
+        profdb
+          .updateOne(
+            query,
+            {
+              $set: { profilePic: req.body.PicLink },
+            },
+            { upsert: true }
+          )
+          .then(res.redirect(`/${redType}?user=${cur_user}`));
       });
-    console.log("actype; " + acttyp);
-    acttyp == "personal"
-      ? (col = "UserDashboard")
-      : (col = "BusinessDashboard");
-    console.log("piclink: " + req.body.PicLink);
-    console.log("col: " + col);
-    let profdb = dbc.db("Boonez").collection(col);
-    profdb
-      .updateOne(
-        query,
-        {
-          $set: { profilePic: req.body.PicLink },
-        },
-        { upsert: true }
-      )
-      .then(res.redirect("/BusinessDashboard?user=" + cur_user));
+
+    // let profdb = dbc.db("Boonez").collection(col);
+    // profdb
+    //   .updateOne(
+    //     query,
+    //     {
+    //       $set: { profilePic: req.body.PicLink },
+    //     },
+    //     { upsert: true }
+    //   )
+    //   .then(res.redirect(`/${redType}?user=${cur_user}`));
   });
 });
 
@@ -612,6 +627,7 @@ app.post("/businessSignup", function (req, res) {
                         throw hashError;
                       }
                       businessProfile.password = hash;
+                      businessProfile.accountType = "business";
                       dbc
                         .db("Boonez")
                         .collection("profiles")
@@ -806,10 +822,10 @@ app.get("/scripts/messagesOverview.js", (req, res) => {
 app.get("/messagesOverview", (req, res) => {
   db.then((dbc) => {
     let cur_user = getCurUser(req);
-
+    console.log(cur_user);
     dbc
       .db("Boonez")
-      .collection("profiles")
+      .collection("UserDashboard")
       .findOne({ username: cur_user }, (err, result) => {
         if (result) {
           res.json(result);
@@ -827,11 +843,10 @@ app.get("/messages/getFriends", async (req, res) => {
   db.then((dbc) => {
     dbc
       .db("Boonez")
-      .collection("profiles")
-      .find({ friends: { $in: [curUser] } })
-      .toArray((err, result) => {
+      .collection("UserDashboard")
+      .findOne({ username: curUser }, (err, result) => {
         if (result) {
-          res.json(result);
+          res.json(result.friends);
         } else {
           res.status(500).send("something went wrong");
         }
@@ -859,28 +874,27 @@ app.post("/findFriend", (req, res) => {
   db.then(function (dbc) {
     let input = req.body;
     let query = {};
-    query['$and'] = [];
-    if (input.fname != '') {
-      query['$and'].push({fname: {$eq:input.fname}})
+    query["$and"] = [];
+    if (input.fname != "") {
+      query["$and"].push({ fname: { $eq: input.fname } });
     }
-    if (input.lname != '') {
-      query['$and'].push({lname: {$eq:input.lname}})
+    if (input.lname != "") {
+      query["$and"].push({ lname: { $eq: input.lname } });
     }
-    if (input.username != '') {
-      query['$and'].push({username: {$eq:input.username}})
+    if (input.username != "") {
+      query["$and"].push({ username: { $eq: input.username } });
     }
-    if (input.crn != '') {
-      query['$and'].push({classes: {$in:[input.crn]}})
+    if (input.crn != "") {
+      query["$and"].push({ classes: { $in: [input.crn] } });
     }
-    console.log("query: " + query)
+    console.log("query: " + query);
 
     let col = dbc.db("Boonez").collection("UserDashboard");
-  
-    col.find(query)    
-          .toArray((err, result) => {
-            console.log("error: " + err);
-            res.json(result);
-          });
+
+    col.find(query).toArray((err, result) => {
+      console.log("error: " + err);
+      res.json(result);
+    });
   });
 });
 

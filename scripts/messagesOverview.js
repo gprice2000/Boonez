@@ -18,11 +18,30 @@ async function getFriends() {
       const friends = data.friends;
       const friendsContainer = document.getElementById("friends-list");
       for (friend of friends) {
-        let item = document.createElement("a");
-        item.href = `/messages?userTo=${friend}&userFrom=${data.username}`;
-        item.innerText = friend;
+        let item = document.createElement("div");
+        item.className = "friendCnt";
+        item.id = friend.username;
+        let profPic = document.createElement("img");
+        profPic.className = "friendPic";
+        profPic.alt = `${friend.fullname}'s pic`;
+        profPic.src =
+          friend.profilePic != null
+            ? friend.profilePic
+            : "../../images/blank-profile-pic.png";
+        item.appendChild(profPic);
+        let friendName = document.createElement("h2");
+        friendName.className = "friend-name";
+        friendName.innerText = friend.fullname;
+        item.appendChild(friendName);
+
+        // let item = document.createElement("a");
+        // item.href = `/messages?userTo=${friend}&userFrom=${data.username}`;
+        // item.innerText = friend;
+        console.log(friend.username);
+        item.onclick = () =>
+          (window.location.href = `/messages?userTo=${item.id}&userFrom=${data.username}`);
         friendsContainer.appendChild(item);
-        window.scrollTo(0, document.body.scrollHeight);
+        // window.scrollTo(0, document.body.scrollHeight);
       }
     })
     .catch((error) => console.log(error));
