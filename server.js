@@ -466,6 +466,15 @@ app.post("/profilePicture", function (req, res) {
     //   .then(res.redirect(`/${redType}?user=${cur_user}`));
   });
 });
+app.post("/busAboutMe", function (req, res) {
+  db.then(function (dbc) {
+    let cur_user = getCurUser(req);
+    console.log("about me : " + req.body.aboutme);
+    const query = { username: { $eq: cur_user } };
+    let col = dbc.db("Boonez").collection("BusinessDashboard");
+    col.updateOne(query, { $set: { aboutme: req.body.aboutme } });
+  });
+});
 
 app.post("/aboutMe", function (req, res) {
   db.then(function (dbc) {
@@ -492,6 +501,7 @@ app.post("/courses", function (req, res) {
 });
 
 app.get("/userDashboard", function (req, res) {
+  console.log(req);
   db.then(function (dbc) {
     //let cur_user = url.parse(req.url, true).query.user;//session.userid;
     let cur_user = getCurUser(req);
@@ -525,20 +535,23 @@ app.get("/BusinessDashboard", function (req, res) {
     root: __dirname,
   });
 });
-app.get("/businessDashboard", function (req, res) {
+app.get("/fetchBusinessDashboard", function (req, res) {
   db.then(function (dbc) {
-    //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+    // let cur_user = url.parse(req.url, true).query.user; //session.userid;
     let cur_user = getCurUser(req);
+    // console.log("yo" + cur_user);
 
-    const query = { username: { $eq: cur_user } };
+    // const query = { username: { $eq: cur_user } };
     dbc
       .db("Boonez")
       .collection("BusinessDashboard")
-      .findOne(query)
+      .findOne({ username: cur_user })
       .then((doc) => {
-        if (doc != null) {
+        if (doc) {
+          console.log(doc);
           res.json(doc);
         } else {
+          // console.log(err);
           res.json(null);
         }
       });
@@ -599,6 +612,7 @@ app.post("/businessSignup", function (req, res) {
     const businessDash = {
       name: input.businessName,
       username: businessProfile.username,
+      aboutme: "",
       email: businessProfile.email,
       followers: [],
       profilePic: undefined,

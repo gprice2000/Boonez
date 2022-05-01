@@ -20,6 +20,9 @@ body {
   padding: 25px;
   display: flex;
   flex-direction: row;
+
+  background-color: #25292e;
+  margin-bottom: 1rem;
 }
 .nav-links-container {
   display: flex;
