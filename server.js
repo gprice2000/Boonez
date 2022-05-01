@@ -825,18 +825,28 @@ app.get("/scripts/messagesOverview.js", (req, res) => {
 app.get("/messagesOverview", (req, res) => {
   db.then((dbc) => {
     let cur_user = getCurUser(req);
-    console.log(cur_user);
-    dbc
-      .db("Boonez")
-      .collection("UserDashboard")
-      .findOne({ username: cur_user }, (err, result) => {
-        if (result) {
-          res.json(result);
-        } else {
-          // console.log(session);
-          res.status(500).send("something went wrong");
-        }
-      });
+
+    if (
+      session.find((ele) => {
+        cur_user = ele.username;
+        return ele.id == req.session.id;
+      }) == undefined
+    ) {
+      res.json("nsi"); //not signed in flag is returned
+    } 
+    else {
+      dbc
+        .db("Boonez")
+        .collection("UserDashboard")
+        .findOne({ username: cur_user }, (err, result) => {
+          if (result) {
+            res.json(result);
+          } else {
+            // console.log(session);
+            res.status(500).send("something went wrong");
+          }
+        });
+    }
   });
 });
 app.get("/messages/getFriends", async (req, res) => {
@@ -1019,21 +1029,33 @@ app.get("/scripts/busDashboard.js", (req, res) => {
 
 app.get("/viewAdvertisements", async (req, res) => {
   res.sendFile(__dirname + "/pages/main-app/advertisementsPage.html");
+  
 });
 app.get("/viewAdvertisements/fetchAds", async (req, res) => {
   db.then((dbc) => {
-    dbc
-      .db("Boonez")
-      .collection("Advertisements")
-      .find()
-      .toArray((err, result) => {
-        if (result) {
-          //send client array of advertisement objects
-          res.json(result);
-        } else {
-          res.send(500, "something went wrong");
-        }
-      });
+    let cur_user = getCurUser(req);
+    if (
+      session.find((ele) => {
+        cur_user = ele.username;
+        return ele.id == req.session.id;
+      }) == undefined
+    ) {
+      res.json("nsi"); //not signed in flag is returned
+    } 
+    else {
+      dbc
+        .db("Boonez")
+        .collection("Advertisements")
+        .find()
+        .toArray((err, result) => {
+          if (result) {
+            //send client array of advertisement objects
+            res.json(result);
+          } else {
+            res.send(500, "something went wrong");
+          }
+        });
+    }
   });
 });
 app.get("/styles/advertisementsPage.css", async (req, res) => {

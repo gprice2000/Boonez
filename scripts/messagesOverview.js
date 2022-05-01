@@ -15,6 +15,9 @@ async function getFriends() {
       else console.log("Not successful");
     })
     .then((data) => {
+			if (data == "nsi") {
+				window.location.href = "/login";
+			}      
       const friends = data.friends;
       const friendsContainer = document.getElementById("friends-list");
       for (friend of friends) {
