@@ -194,6 +194,7 @@ app.post("/login", function (req, res) {
         .collection("profiles")
         .findOne({ username: input.username }, function (err, result) {
           if (!result) {
+            console.log("input.username: " + input.username)
             console.log("Unable to locate account");
             res.json("CFU"); //cannot find username flag sent
           } else {
@@ -210,11 +211,13 @@ app.post("/login", function (req, res) {
                   let sn = req.session;
                   sn.username = input.username;
                   session.push(sn);
+                  res.json("match")
+                  /*
                   if (result.accountType == "business") {
                     res.redirect(`/BusinessDashboard?user=${input.username}`);
                   } else {
                     res.redirect(`/dashboard?user=${input.username}`);
-                  }
+                  }*/
                 }
               }
             );

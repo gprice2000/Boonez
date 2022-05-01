@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let obj = {username, password}
 
 
-        await fetch("http://localhost:3000/login", {
+        await fetch(window.location.origin+"/login", {
             method: 'POST', 
             credentials: 'same-origin',
             mode: 'same-origin',
@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 getUserError();
             } else if (data == 'PI'){
                 getPassError();
+            } else if (data == 'match'){
+                window.location.href = `/dashboard?user=${username}`;
             }
         })
         .catch((error) => {
@@ -34,11 +36,15 @@ document.addEventListener('DOMContentLoaded', function() {
     function getUserError() {
         let usertext = document.getElementById("username");
         document.getElementById("wronguser").style.display = "initial";
+        usertext.style.borderColor = "red";
+
         
     }
 
     function getPassError() {
         let passtext = document.getElementById("password");
         document.getElementById("wrongpass").style.display = "initial";
+        passtext.style.borderColor = "red";
+
     }
 })
