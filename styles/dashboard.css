@@ -12,7 +12,9 @@ body {
   width: fit-content;
   top: 5%;
 }
-
+#am-content {
+  font-size: 1.5rem;
+}
 .mid-container {
   position: absolute;
   height: fit-content;

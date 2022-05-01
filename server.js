@@ -27,6 +27,8 @@ mongoose.connect(
   "mongodb+srv://mazzaresejv:B00nze2022@cluster0.awpng.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 );
 
+let PORT = 3000; //change when on student 2 (3029's probably available)
+
 // create an array of strings of user id , parse
 // urls to get current user, if theyre logging off
 // pop their name from array and redirect them to
@@ -1108,6 +1110,6 @@ app.post("/removeCurUsersAd", (req, res) => {
   }
   res.redirect("/removeAdvertisement" + "?user=" + getCurUser(req));
 });
-server.listen(3000, () => {
-  console.log("listening on http://localhost:3000");
+server.listen(PORT, () => {
+  console.log(`listening on http://localhost:${PORT}`);
 });
