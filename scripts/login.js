@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (data == 'PI'){
                 getPassError();
             } else if (data == 'match'){
+                console.log("test redirect")
                 window.location.href = `/dashboard?user=${username}`;
             }
         })
@@ -35,6 +36,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function getUserError() {
         let usertext = document.getElementById("username");
+        document.getElementById("wrongpass").style.display = "none";
+        document.getElementById("password").style.borderColor = "rgb(84, 84, 84)";
         document.getElementById("wronguser").style.display = "initial";
         usertext.style.borderColor = "red";
 
@@ -43,6 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function getPassError() {
         let passtext = document.getElementById("password");
+        document.getElementById("wronguser").style.display = "none";
+        document.getElementById("username").style.borderColor = "rgb(84, 84, 84)";
         document.getElementById("wrongpass").style.display = "initial";
         passtext.style.borderColor = "red";
 
