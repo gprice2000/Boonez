@@ -184,9 +184,9 @@ app.post("/signup", function (req, res) {
 app.post("/login", function (req, res) {
   db.then(function (dbc) {
     let input = req.body;
+    console.log("/login")
     //search current session array to determine if user is logged in already
     if (session.find((ele) => ele.id == req.session.id) != undefined) {
-      //res.redirect(`/dashboard/?user=${ele.username}`);
       res.redirect("/dashboard");
     } else {
       dbc
@@ -195,7 +195,7 @@ app.post("/login", function (req, res) {
         .findOne({ username: input.username }, function (err, result) {
           if (!result) {
             console.log("Unable to locate account");
-            res.send("Cannot find username");
+            res.json("CFU"); //cannot find username flag sent
           } else {
             bcrypt.compare(
               input.password,
@@ -204,7 +204,7 @@ app.post("/login", function (req, res) {
                 if (error) {
                   throw error;
                 } else if (!isMatch) {
-                  res.send("Password incorrect");
+                  res.json("PI");//incorrect password flag sent
                 } else {
                   //get current session with username and push to session array
                   let sn = req.session;
@@ -1057,6 +1057,9 @@ app.get("/styles/removeAd.css", (req, res) => {
 app.get("/styles/login.css", (req, res) => {
   res.sendFile(__dirname + "/styles/login.css");
 });
+app.get("/scripts/login.js", (req,res) => {
+  res.sendFile(__dirname + "/scripts/login.js")
+})
 app.get("/getUsersAds", async (req, res) => {
   let cur_user = url.parse(req.url, true).query.user;
   console.log(req.url);
