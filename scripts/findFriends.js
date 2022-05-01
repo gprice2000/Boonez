@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function serverCon(method, data,url) {
-        await fetch('http://localhost:3000'+url+'/'+search, {
+        await fetch(window.location.origin+ url+'/'+search, {
             method: method, 
             credentials: 'same-origin',
             mode: 'same-origin',
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if(allfr.innerHTML.trim() != "") {
             document.getElementById("friendsList").innerHTML = '';
         }
-        await fetch('http://localhost:3000/getFriends/' + search)
+        await fetch(window.location.origin+ '/getFriends/' + search)
         .then(response => response.json())
         .then(data => {
             if (data == "nsi") {

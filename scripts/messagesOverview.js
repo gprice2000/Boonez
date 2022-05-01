@@ -1,4 +1,4 @@
-const root = "http://localhost:3000/messagesOverviewPage"; // Or whatever your backend URL is
+const root = window.location.origin+ "/messagesOverviewPage"; // Or whatever your backend URL is
 const url = new URL("/messagesOverview", root).href;
 const search = window.location.search;
 document.getElementById("dash").href = `/dashboard/${search}`;

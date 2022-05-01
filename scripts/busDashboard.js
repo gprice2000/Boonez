@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function fetchDash() {
     console.log(search);
-    await fetch("http://localhost:3000/businessDashboard/" + search) ///?user=${}`)
+    await fetch(window.location.origin+ "/businessDashboard/" + search) ///?user=${}`)
       .then((response) => response.json())
       .then((data) => {
         if (data == "nsi") {
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 async function serverCon(method, data, url) {
-  await fetch("http://localhost:3000" + url, {
+  await fetch(window.location.origin + url, {
     method: method,
     credentials: "same-origin",
     mode: "same-origin",
@@ -104,7 +104,7 @@ function getCourseList() {
       }
     }
     console.log("classes: " + classes);
-    fetch("http://localhost:3000/courses", {
+    fetch(window.location.origin + "/courses", {
       method: "POST",
       credentials: "same-origin",
       mode: "same-origin",
