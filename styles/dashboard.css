@@ -62,6 +62,8 @@ body {
 	background-image: url("../images/mtnsil.png");
 	background-position: -65px 120px;
 	background-repeat: no-repeat;
+	background-color: #ffcc00;
+
 }
 
 #profile-pic {
@@ -74,8 +76,11 @@ body {
 	display: block;
 }
 
+
 #profile-pic:hover {
 	cursor: pointer;
+	border: 10px solid black;
+
 }
    
 #about-me-text {
@@ -84,6 +89,10 @@ body {
 	width: 300px;
 }
 
+#about-modal {
+	width: fit-content;
+	height: fit-content;
+}
 #student-name {
 	font-weight: 900;
 	text-align: center;
@@ -145,19 +154,62 @@ body {
 	position: fixed; /* Stay in place */
 	z-index: 1; /* Sit on top */
 	left: 0;
+	right: 0;
 	top: 0;
-	width: 100%; /* Full width */
-	height: 100%; /* Full height */
+	height: fit-content;
+	width: 250px;
+	margin-top: auto;
+	margin-bottom: auto;
+    margin-right: auto;
+    margin-left: auto;
 	overflow: auto; /* Enable scroll if needed */
-	background-color: rgb(0,0,0); /* Fallback color */
-	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
-.modal-header{
+.modal-header {
 	position: relative;
-	height: fit-content;
-	text-align: center;
+	  height: fit-content;
+	  text-align: left;
+	 padding: 2px 16px;
+	 background-color: #363a39;
+	 color: white;
+   }
+   
+   .modal-body {
+	 padding: 2px 16px;
+	 text-align: center;
+	}
+   
+   .modal-footer {
+	   width: 100%;
+	 background-color: #363a39;
+	 color: white;
+   }
+   
+   .modal-content {
+	 position: relative;
+	 background-color: #fefefe;
+	 margin: auto;
+	 padding: 0;
+	 border: 1px solid #888;
+	 width: 80%;
+	 box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+	 animation-name: animatetop;
+	 animation-duration: 0.4s
+   }
+
+
+
+.close-button {
+	position: relative;
+	border-radius: 10px;
+	float: right;
+
+	
 }
+.close-button:hover {
+	background-color:#b6b6b69a;
+}
+
 
 .calendar-container{
 	margin: 50px;
@@ -217,6 +269,11 @@ body {
 
 #calendar-button:hover {
 	cursor: pointer;
+}
+
+#eventData {
+	height: fit-content;
+	width: fit-content;
 }
 
 #friends-list { 
