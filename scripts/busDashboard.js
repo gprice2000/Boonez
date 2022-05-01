@@ -1,7 +1,7 @@
 let cur_user;
 document.addEventListener("DOMContentLoaded", function () {
   const search = window.location.search;
-  document.getElementById("dash").href = `/dashboard/${search}`;
+  document.getElementById("dash").href = `/BusinessDashboard${search}`;
   document.getElementById("advertisements").href = `/viewAdvertisements`;
   document.getElementById("removeAdvertisements").href = `/removeAd${search}`;
   document.getElementById("createAdvertisements").href = `/createAd${search}`;
