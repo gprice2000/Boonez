@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	fetchDash();
 
 	async function fetchDash() {
-		await fetch("http://localhost:3000/userDashboard/" + search)///?user=${}`)
+		await fetch(window.location.origin + "/userDashboard/" + search)///?user=${}`)
 		.then(response =>  response.json())
 		.then(data => {
 			cur_user = data;
@@ -68,12 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			let node = document.createElement('li');
 			let img = document.createElement('img');
 			let div = document.createElement('div');
-			//user hidden data
-			//let hid = document.createElement('INPUT');
-			//hid.setAttribute("type","hidden");
-			//hid.value = data[i].username;
-			//user id is stored in node id , this way we can keep track upon 
-			//element click.'
+
 			node.id = data[i].username;
 			if (data[i].profilePic == undefined) {
 				img.src = "/images/blank-profile-pic.png"
@@ -103,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function serverCon(method, data,url) {
 	
-	await fetch('http://localhost:3000'+url, {
+	await fetch(window.location.origin+url, {
 		method: method, 
 		credentials: 'same-origin',
 		mode: 'same-origin',
@@ -129,17 +124,6 @@ function setAboutMe(){
 	text.value = cur_user.aboutme
 	modal.style.display = "initial";
 
-	/*
-	window.onclick = function(event) {
-		console.log("about me modal outside window click: " + event)
-		console.log("event target: " + event.target)
-		console.log("modal : " + modal)
-		if (event.target == modal) {
-			console.log("x click")
-			modal.style.display = "none";
-		}
-	}
-	*/
 	window.onclick = function(event) {
 		if (event.target == modal) {
 			modal.style.display = "none";
@@ -163,18 +147,18 @@ function setAboutMe(){
 function getCourseList() {
 	let classModal = document.getElementById("class-modal");
 	classModal.style.display = "initial";
-	let classForm = document.querySelector("#courseform");
+	let classForm = document.getElementById("courseSub");
 	let classes = [];
 
-
-	classForm.addEventListener('submit', async (event) => {
+	classForm.onclick = async function(event) {
+		classModal.style.display = "none";
 		event.preventDefault();
-		const formData = new FormData(event.target)
+		console.log("test clas form")
+		const formData = new FormData(document.getElementById("courseform"))
 		for(let pair of formData.entries()) {
 			if (pair[1] != "") {classes.push(pair[1].replace(/\s+/g, ''))}
 		}
-		console.log("classes: " + classes)
-		await fetch("http://localhost:3000/courses",
+		await fetch(window.location.origin+"/courses",
 			{
 				method: 'POST', 
 				credentials: 'same-origin',
@@ -190,24 +174,14 @@ function getCourseList() {
 		})
 		.catch((error) => {
 			console.log("Error: " + error)
-		});			classModal.style.display = "none";
-
-
-	})
+		});			
+	}
 
 	var span = document.getElementById("closecourse");
 	//when user clicks x modal closes
 	span.onclick = function() {
 		classModal.style.display = "none";
 	}
-
-		/*
-		for(let i = 0; i < 8; i++) {
-
-			console.log(classForm.get("course0"));
-		}*/
-	
-
 }
 function setProf() {
 	let picLink = document.getElementById("PicLink");

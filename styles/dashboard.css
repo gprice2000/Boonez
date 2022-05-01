@@ -179,11 +179,20 @@ body {
 	 text-align: center;
 	}
    
-   .modal-footer {
-	   width: 100%;
-	 background-color: #363a39;
-	 color: white;
-   }
+.modal-footer {
+	width: 100%;
+ 	background-color: #363a39;
+ 	color: white;
+}
+
+.subbtn {
+	cursor: pointer;
+	border-radius: 10px;
+}
+
+.subbtn:hover {
+	border-color: #ffcc00;
+}
    
    .modal-content {
 	 position: relative;
@@ -201,9 +210,8 @@ body {
 
 .close-button {
 	position: relative;
-	border-radius: 10px;
 	float: right;
-
+	border: none;
 	
 }
 .close-button:hover {
