@@ -24,9 +24,9 @@ document.addEventListener("DOMContentLoaded", function () {
           let proPic = document.getElementById("profile-pic");
           proPic.src = data.profilePic;
         }
-        if (data.classes.length != 0) {
-          courseList(data.classes);
-        }
+        // if (data.classes.length != 0) {
+        //   courseList(data.classes);
+        // }
         if (data.aboutme != null) {
           console.log("data.aboutme: " + data.aboutme);
           getAboutMe(data.aboutme);
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function getAboutMe(text) {
     let aboutme_body = document.getElementById("am-content");
-    aboutme_body.innerHTML = text;
+    aboutme_body.innerText = text;
   }
 });
 

@@ -40,7 +40,8 @@ body {
   padding: 25px;
   display: flex;
   flex-direction: row;
-  background-color: #363a39;
+  /* background-color: #363a39; */
+  background-color: #25292e;
 }
 .nav-links-container {
   display: flex;
@@ -86,7 +87,9 @@ body {
   border-radius: 50%;
   display: block;
 }
-
+#am-content {
+  font-size: 1.5rem;
+}
 #profile-pic:hover {
   cursor: pointer;
 }
