@@ -3,7 +3,6 @@ html, body {
 	margin: auto;
 	height: 100%;
 	background-color: #343a40;
-	border: 1px solid white;
 }
 
 .landing-nav {
@@ -35,23 +34,126 @@ html, body {
 	font-size: 1.4rem;
 }
 
+.all-friends-container{
+	position: relative;
+	width: fit-content;
+	vertical-align: top;
+
+	margin: 0;
+	padding: 0;
+	overflow:hidden;
+	top: 100px;
+	border: 1px solid #EEE;
+	border-radius: 10px;
+}
+
+.mid-container{
+	position: relative;
+	right: 500px;
+	bottom: 50px;
+	margin: 10px;
+}
+
+.header {
+	margin-top: -25px;
+	display:inherit;
+	position: relative;
+	border-radius: 10px 10px 0 0;
+    width: 100%;
+    height:50px;
+	background: #363a39;
+	color: #ffcc00;
+	font-size: 20px;
+}
+
+.header h2 {
+	position: relative;
+	left: 10px;
+	top: 10px;
+}
+
 #friendSearch {
 	width: 950px;
 	height: fit-content;
 }
-.find-friend{
+
+.search-form{
 	position: relative;
-	color: #EEE;
+	left: 5%;
+}
+
+input[type=text], .search-input:focus {
+
+	outline: none;
+	padding: 3px 0px 3px 3px;
+	margin: 5px 1px 3px 0px;
+	border: 1px solid #363a39;
+  }
+   
+  input[type=text]:focus, textarea:focus {
+	padding: 3px 0px 3px 3px;
+	margin: 5px 1px 3px 0px;
+	border: 1px solid #ffcc00;
+  }
+
+#friendSub{
+	border-radius: 10px;
+	cursor: pointer;
+	
+}
+
+#friendSub:hover {
+	border-color: #ffcc00;
+
+}
+
+
+
+.ffheader{
+	position: relative;
+	/*
+	right: 15%;
+	top: 15%;*/
+}
+
+.find-friend{
+	position: absolute;
 	border: 1px solid #EEE;
 	border-radius: 10px;
 	margin: 10px;
+	/*
 	padding: 50px;
-	width: 25%;
+	margin-top: 50px;
+	*/
+	width: 300px;
 	height: auto;
-	top: 5%;
-	right: 50%;
-	left: 25%;
+	
+	top: 220px;
+	left: 400px;
+	right:400px;
+
 	font-size: medium;
+	color: #EEE;
+	background-color:#363a39;
+	text-align: left;
+
+	
+}
+
+#searchOutput{
+	position: absolute;
+	/*left: 25%;*/
+	width: fit-content;
+	height: fit-content;
+	border-radius: 10px;
+	margin: 10px;
+	top: 500px;
+	left: 400px;
+	right:400px;
+
+	border: 1px solid #EEE;
+	vertical-align: top;
+
 }
 
 .addfriend {
@@ -84,38 +186,13 @@ html, body {
 	position: relative;
 	margin: 0;
 	padding: 0;
-	border: 1px solid #EEE;
 	width: 300px;
 	height: fit-content;
-	/*background: #EEE;*/
+	background: #EEE;
 	list-style-type: none;
-  }
-
-#searchOutput{
-	margin: 10px;
-	position: relative;
-	right: 50%;
-	left: 25%;
-	bottom: 95%;
-	width: fit-content;
 	border-radius: 10px;
-	border: 1px solid #EEE;
-  }
-
-
-
-  .friends{
-	position: relative;
-	bottom:27%;
-	width: fit-content;
-	height: 100%;
-	border: 1px solid #EEE;
-	border-radius: 10px;
-  }
+}
   
-  .friend-search {
-	  margin: 5px;
-  }
   .friend{
 	width: 300px;
 	height: 60px;
@@ -124,8 +201,8 @@ html, body {
 	border-radius: 10px;
 	cursor: pointer;
 	display: inline-flex;
-	/*margin: 5px;*/
 	align-items: center;
+	vertical-align: top;
 	pointer-events: all;  
 
   }

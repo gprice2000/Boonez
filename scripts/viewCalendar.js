@@ -10,13 +10,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function publicCal(calendarEl) {
   var calendar = new FullCalendar.Calendar(calendarEl, {
-    headers: {
-      left: "prev,next today",
-      center: "title",
-      right: "month,agendaWeek,agendaDay",
-    },
     selectable: true,
-    timeFormat: "YYYY, MM, DD",
+    aspectRatio: 0.95,
     eventClick: function (calEvent) {},
     eventSources: [
       {
