@@ -5,21 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../../styles/login.css" />
+    <script src="../../scripts/login.js"></script>
     <title>Boonze | Login</title>
   </head>
   <body>
     <h1>Login</h1>
-    <form class="login-form" action="/login" method="POST">
+    <form class="login-form">
       <div class="form-line">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" />
+        <input type="hidden" id="wronguser" value="You have entered an invalid username">
       </div>
 
       <div class="form-line">
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" />
+        <p id="wrongpass">You have entered an invalid password</p>
+
       </div>
-      <input type="submit" value="Login" class="submit-btn" />
+      <input type="submit" value="Login" class="submit-btn" id="submitlogin" />
     </form>
   </body>
 </html>
