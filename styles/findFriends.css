@@ -39,10 +39,11 @@ html, body {
 	width: fit-content;
 	vertical-align: top;
 
-	margin: 0;
+	margin: 10px;
 	padding: 0;
 	overflow:hidden;
-	top: 100px;
+	top: 50px;
+
 	border: 1px solid #EEE;
 	border-radius: 10px;
 }
@@ -73,7 +74,7 @@ html, body {
 }
 
 #friendSearch {
-	width: 950px;
+	width: 1000px;
 	height: fit-content;
 }
 
@@ -128,7 +129,7 @@ input[type=text], .search-input:focus {
 	width: 300px;
 	height: auto;
 	
-	top: 220px;
+	top: 175px;
 	left: 400px;
 	right:400px;
 
@@ -147,9 +148,10 @@ input[type=text], .search-input:focus {
 	height: fit-content;
 	border-radius: 10px;
 	margin: 10px;
-	top: 500px;
+	top: 455px;
 	left: 400px;
 	right:400px;
+	background-color:#363a39;
 
 	border: 1px solid #EEE;
 	vertical-align: top;
@@ -196,6 +198,9 @@ input[type=text], .search-input:focus {
   .friend{
 	width: 300px;
 	height: 60px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-bottom: 10px;
 	background: #EEE;
 	/*border-bottom: 1px solid #DDD;*/
 	border-radius: 10px;

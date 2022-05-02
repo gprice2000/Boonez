@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let username = document.getElementById("username").value.replace(/\s+/g, '');
         let crn = document.getElementById("crn").value.replace(/\s+/g, '');
         let obj = {fname,lname,username,crn};
-        await fetch('http://localhost:3000/findFriend', {
+        await fetch(window.location.origin+'/findFriend', {
             method: 'POST', 
             credentials: 'same-origin',
             mode: 'same-origin',
@@ -28,7 +28,12 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            searchFriend(data)
+            if (data.length != 0) {
+                document.getElementById("results").innerHTML = "Results"
+                searchFriend(data)
+            }else {
+                document.getElementById("results").innerHTML = "No Results Found"
+            }
         })
         .catch((err) => {
             console.log("Error: " + err)
@@ -105,9 +110,12 @@ document.addEventListener('DOMContentLoaded', function() {
             let div = document.createElement('div');
             let addedFriend;
             let addf = document.createElement('img');
-            addf.setAttribute("id","delete");
+            addf.setAttribute("id","add");
             addedFriend = cur_friends.find(ele =>
                 ele.username == user);
+            node.appendChild(img);
+            let fullname = getName(data[i]);
+            node.appendChild(document.createTextNode(fullname));
             if(addedFriend == undefined && user != cur_user) {
                 addf.src = "/images/add-user.png";
                 addf.className = "addfriend";
@@ -127,22 +135,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 img.src = data[i].profilePic;
             }
         
-            node.appendChild(img);
-            let fullname = getName(data[i]);
-            node.appendChild(document.createTextNode(fullname));
+
             document.querySelector('#friendSearch').appendChild(node);
+
             addf.addEventListener("click", (event) => {
                 event.stopPropagation();
-                console.log("event.target.id" + event.currentTarget.id)
-                console.log("add : " + node.id)
+                node.removeChild(addf)
+                del.src = "/images/del-friend.png";
+                del.className = "delfriend"
+                node.appendChild(del)
                 let obj = {username: node.id,
                            fullname: fullname,
                            profilePic: img.src}
                 serverCon("POST", obj,"/addFriend");
-                console.log("cur_friends: " + obj.username + " " + obj.fullname + " " + obj.profilePic)
                 cur_friends.push(obj);
-                let selected_friend = document.getElementById(node.id);
-                selected_friend.parentNode.removeChild(selected_friend);
+                //let selected_friend = document.getElementById(node.id);
+                //selected_friend.parentNode.removeChild(selected_friend);
                 allFriends(cur_friends);
 
     
