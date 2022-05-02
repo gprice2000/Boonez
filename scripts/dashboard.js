@@ -84,9 +84,9 @@ document.addEventListener("DOMContentLoaded", function () {
       if (i >= data.length) {
         break;
       }
-      let node = document.createElement("li");
-      let img = document.createElement("img");
-      let div = document.createElement("div");
+      // let node = document.createElement("li");
+      // let img = document.createElement("img");
+      // let div = document.createElement("div");
 
       node.id = data[i].username;
       if (data[i].profilePic == undefined) {

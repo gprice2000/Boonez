@@ -198,6 +198,9 @@ app.post("/login", function (req, res) {
   db.then(function (dbc) {
     let input = req.body;
     console.log("/login");
+    const toLogin = {
+      info: "",
+    };
     //search current session array to determine if user is logged in already
     if (session.find((ele) => ele.id == req.session.id) != undefined) {
       res.redirect("/dashboard");
@@ -207,9 +210,10 @@ app.post("/login", function (req, res) {
         .collection("profiles")
         .findOne({ username: input.username }, function (err, result) {
           if (!result) {
-            console.log("input.username: " + input.username)
+            console.log("input.username: " + input.username);
             console.log("Unable to locate account");
-            res.json("CFU"); //cannot find username flag sent
+            toLogin.info = "CFU";
+            res.json(toLogin); //cannot find username flag sent
           } else {
             bcrypt.compare(
               input.password,
@@ -218,13 +222,16 @@ app.post("/login", function (req, res) {
                 if (error) {
                   throw error;
                 } else if (!isMatch) {
-                  res.json("PI"); //incorrect password flag sent
+                  toLogin.info = "PI";
+                  res.json(toLogin); //incorrect password flag sent
                 } else {
                   //get current session with username and push to session array
                   let sn = req.session;
                   sn.username = input.username;
                   session.push(sn);
-                  res.json("match")
+                  toLogin.info = "match";
+                  toLogin.accountType = result.accountType;
+                  res.json(toLogin);
                   /*
                   if (result.accountType == "business") {
                     res.redirect(`/BusinessDashboard?user=${input.username}`);
@@ -860,8 +867,7 @@ app.get("/messagesOverview", (req, res) => {
       }) == undefined
     ) {
       res.json("nsi"); //not signed in flag is returned
-    } 
-    else {
+    } else {
       dbc
         .db("Boonez")
         .collection("UserDashboard")
@@ -1056,7 +1062,6 @@ app.get("/scripts/busDashboard.js", (req, res) => {
 
 app.get("/viewAdvertisements", async (req, res) => {
   res.sendFile(__dirname + "/pages/main-app/advertisementsPage.html");
-  
 });
 app.get("/viewAdvertisements/fetchAds", async (req, res) => {
   db.then((dbc) => {
@@ -1068,8 +1073,7 @@ app.get("/viewAdvertisements/fetchAds", async (req, res) => {
       }) == undefined
     ) {
       res.json("nsi"); //not signed in flag is returned
-    } 
-    else {
+    } else {
       dbc
         .db("Boonez")
         .collection("Advertisements")
