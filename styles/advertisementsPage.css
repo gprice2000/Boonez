@@ -3,6 +3,10 @@
   margin: 0px;
   padding: 0px;
   font-family: "Open Sans", sans-serif;
+  /* display: initial; */
+  /* visibility: visible; */
+  /* display: block !important; */
+  /* visibility: hidden; */
 }
 html,
 body {
@@ -76,7 +80,7 @@ body {
   text-align: center;
   font-size: 1.3rem;
 }
-.ad-body {
+.adbody {
   width: 80%;
   height: 60%;
   border-radius: 10px;

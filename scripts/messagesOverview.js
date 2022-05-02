@@ -1,4 +1,4 @@
-const root = window.location.origin+ "/messagesOverviewPage"; // Or whatever your backend URL is
+const root = window.location.origin + "/messagesOverviewPage"; // Or whatever your backend URL is
 const url = new URL("/messagesOverview", root).href;
 const search = window.location.search;
 document.getElementById("dash").href = `/dashboard/${search}`;
@@ -15,9 +15,9 @@ async function getFriends() {
       else console.log("Not successful");
     })
     .then((data) => {
-			if (data == "nsi") {
-				window.location.href = "/login";
-			}      
+      if (data == "nsi") {
+        window.location.href = "/login";
+      }
       const friends = data.friends;
       const friendsContainer = document.getElementById("friends-list");
       for (friend of friends) {

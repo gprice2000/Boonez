@@ -35,14 +35,14 @@ function renderAdForm(adsArr) {
     adComp.innerText = ad.compname;
     adItem.appendChild(adComp);
     let adTitle = document.createElement("h1");
-    adTitle.className = "ad-head";
+    adTitle.className = "head";
     adTitle.innerText = ad.adhead;
 
     // adItem.onclick = () => (checkBox.checked = !checkBox.checked);
     adItem.appendChild(adTitle);
 
     let adBody = document.createElement("p");
-    adBody.className = "ad-body";
+    adBody.className = "adbody";
     adBody.innerText = ad.adbody;
     adItem.appendChild(adBody);
 

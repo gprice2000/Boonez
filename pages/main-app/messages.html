@@ -10,45 +10,18 @@
   <body>
     <div id="friends">
       <h1>Friends</h1>
-      <hr />
       <a id="dashLink" href="/dashboard">Back To Dashboard</a>
     </div>
     <div id="message-cont">
       <div id="message-recip">Recipient Name</div>
-      <div id="messages">
-        <!-- <div>hey</div>
-        <div>hello</div>
-        <div>hey</div> -->
-      </div>
+      <div id="messages"></div>
       <form id="form" action="">
         <input id="input" name="messageBox" autocomplete="off" />
         <button>Send</button>
       </form>
     </div>
     <script src="/socket.io/socket.io.js"></script>
-    <!-- <script>
-      var socket = io();
 
-      var messages = document.getElementById("messages");
-      var form = document.getElementById("form");
-      var input = document.getElementById("input");
-
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        if (input.value) {
-          socket.emit("private message", input.value);
-          input.value = "";
-        }
-      });
-
-      socket.on("private message", function (msg) {
-        console.log(msg);
-        var item = document.createElement("li");
-        item.textContent = msg;
-        messages.appendChild(item);
-        window.scrollTo(0, document.body.scrollHeight);
-      });
-    </script> -->
     <script src="../../scripts/messages.js"></script>
   </body>
 </html>

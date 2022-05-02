@@ -27,6 +27,8 @@ mongoose.connect(
   "mongodb+srv://mazzaresejv:B00nze2022@cluster0.awpng.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 );
 
+let PORT = 3000; //change when on student 2 (3029's probably available)
+
 // create an array of strings of user id , parse
 // urls to get current user, if theyre logging off
 // pop their name from array and redirect them to
@@ -120,7 +122,18 @@ function socketIOConnection(from, to) {
     });
   });
 }
-
+app.get("/about", (req, res) => {
+  res.sendFile(__dirname + "/pages/landing/about.html");
+});
+app.get("/styles/about.css", (req, res) => {
+  res.sendFile(__dirname + "/styles/about.css");
+});
+app.get("/features", (req, res) => {
+  res.sendFile(__dirname + "/pages/landing/features.html");
+});
+app.get("/styles/features.css", (req, res) => {
+  res.sendFile(__dirname + "/styles/features.css");
+});
 app.post("/signup", function (req, res) {
   db.then(function (dbc) {
     let input = req.body;
@@ -184,7 +197,10 @@ app.post("/signup", function (req, res) {
 app.post("/login", function (req, res) {
   db.then(function (dbc) {
     let input = req.body;
-    console.log("/login")
+    console.log("/login");
+    const toLogin = {
+      info: "",
+    };
     //search current session array to determine if user is logged in already
     if (session.find((ele) => ele.id == req.session.id) != undefined) {
       res.redirect("/dashboard");
@@ -194,9 +210,10 @@ app.post("/login", function (req, res) {
         .collection("profiles")
         .findOne({ username: input.username }, function (err, result) {
           if (!result) {
-            console.log("input.username: " + input.username)
+            console.log("input.username: " + input.username);
             console.log("Unable to locate account");
-            res.json("CFU"); //cannot find username flag sent
+            toLogin.info = "CFU";
+            res.json(toLogin); //cannot find username flag sent
           } else {
             bcrypt.compare(
               input.password,
@@ -205,13 +222,16 @@ app.post("/login", function (req, res) {
                 if (error) {
                   throw error;
                 } else if (!isMatch) {
-                  res.json("PI");//incorrect password flag sent
+                  toLogin.info = "PI";
+                  res.json(toLogin); //incorrect password flag sent
                 } else {
                   //get current session with username and push to session array
                   let sn = req.session;
                   sn.username = input.username;
                   session.push(sn);
-                  res.json("match")
+                  toLogin.info = "match";
+                  toLogin.accountType = result.accountType;
+                  res.json(toLogin);
                   /*
                   if (result.accountType == "business") {
                     res.redirect(`/BusinessDashboard?user=${input.username}`);
@@ -469,6 +489,15 @@ app.post("/profilePicture", function (req, res) {
     //   .then(res.redirect(`/${redType}?user=${cur_user}`));
   });
 });
+app.post("/busAboutMe", function (req, res) {
+  db.then(function (dbc) {
+    let cur_user = getCurUser(req);
+    console.log("about me : " + req.body.aboutme);
+    const query = { username: { $eq: cur_user } };
+    let col = dbc.db("Boonez").collection("BusinessDashboard");
+    col.updateOne(query, { $set: { aboutme: req.body.aboutme } });
+  });
+});
 
 app.post("/aboutMe", function (req, res) {
   db.then(function (dbc) {
@@ -495,6 +524,7 @@ app.post("/courses", function (req, res) {
 });
 
 app.get("/userDashboard", function (req, res) {
+  console.log(req);
   db.then(function (dbc) {
     //let cur_user = url.parse(req.url, true).query.user;//session.userid;
     let cur_user = getCurUser(req);
@@ -528,20 +558,23 @@ app.get("/BusinessDashboard", function (req, res) {
     root: __dirname,
   });
 });
-app.get("/businessDashboard", function (req, res) {
+app.get("/fetchBusinessDashboard", function (req, res) {
   db.then(function (dbc) {
-    //let cur_user = url.parse(req.url, true).query.user;//session.userid;
+    // let cur_user = url.parse(req.url, true).query.user; //session.userid;
     let cur_user = getCurUser(req);
+    // console.log("yo" + cur_user);
 
-    const query = { username: { $eq: cur_user } };
+    // const query = { username: { $eq: cur_user } };
     dbc
       .db("Boonez")
       .collection("BusinessDashboard")
-      .findOne(query)
+      .findOne({ username: cur_user })
       .then((doc) => {
-        if (doc != null) {
+        if (doc) {
+          console.log(doc);
           res.json(doc);
         } else {
+          // console.log(err);
           res.json(null);
         }
       });
@@ -602,6 +635,7 @@ app.post("/businessSignup", function (req, res) {
     const businessDash = {
       name: input.businessName,
       username: businessProfile.username,
+      aboutme: "",
       email: businessProfile.email,
       followers: [],
       profilePic: undefined,
@@ -833,8 +867,7 @@ app.get("/messagesOverview", (req, res) => {
       }) == undefined
     ) {
       res.json("nsi"); //not signed in flag is returned
-    } 
-    else {
+    } else {
       dbc
         .db("Boonez")
         .collection("UserDashboard")
@@ -1029,7 +1062,6 @@ app.get("/scripts/busDashboard.js", (req, res) => {
 
 app.get("/viewAdvertisements", async (req, res) => {
   res.sendFile(__dirname + "/pages/main-app/advertisementsPage.html");
-  
 });
 app.get("/viewAdvertisements/fetchAds", async (req, res) => {
   db.then((dbc) => {
@@ -1041,8 +1073,7 @@ app.get("/viewAdvertisements/fetchAds", async (req, res) => {
       }) == undefined
     ) {
       res.json("nsi"); //not signed in flag is returned
-    } 
-    else {
+    } else {
       dbc
         .db("Boonez")
         .collection("Advertisements")
@@ -1082,9 +1113,9 @@ app.get("/styles/removeAd.css", (req, res) => {
 app.get("/styles/login.css", (req, res) => {
   res.sendFile(__dirname + "/styles/login.css");
 });
-app.get("/scripts/login.js", (req,res) => {
-  res.sendFile(__dirname + "/scripts/login.js")
-})
+app.get("/scripts/login.js", (req, res) => {
+  res.sendFile(__dirname + "/scripts/login.js");
+});
 app.get("/getUsersAds", async (req, res) => {
   let cur_user = url.parse(req.url, true).query.user;
   console.log(req.url);
@@ -1122,6 +1153,6 @@ app.post("/removeCurUsersAd", (req, res) => {
   }
   res.redirect("/removeAdvertisement" + "?user=" + getCurUser(req));
 });
-server.listen(3000, () => {
-  console.log("listening on http://localhost:3000");
+server.listen(PORT, () => {
+  console.log(`listening on http://localhost:${PORT}`);
 });

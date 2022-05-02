@@ -20,6 +20,7 @@ function renderAds(adsArr) {
     console.dir(ad);
     let adItem = document.createElement("div");
     adItem.className = "advertisement";
+    adItem.id = ad.weblink;
     adItem.style.backgroundImage = `linear-gradient(
       rgba(255, 255, 255, 0.60), 
       rgba(255, 255, 255, 0.60)
@@ -29,14 +30,14 @@ function renderAds(adsArr) {
     adComp.innerText = ad.compname;
     adItem.appendChild(adComp);
     let adTitle = document.createElement("h1");
-    adTitle.className = "ad-head";
+    adTitle.className = "head";
     adTitle.innerText = ad.adhead;
 
-    adItem.onclick = () => window.open(ad.weblink, "__blank");
+    adItem.onclick = () => window.open(adItem.id, "__blank");
     adItem.appendChild(adTitle);
 
     let adBody = document.createElement("p");
-    adBody.className = "ad-body";
+    adBody.className = "adbody";
     adBody.innerText = ad.adbody;
     adItem.appendChild(adBody);
 

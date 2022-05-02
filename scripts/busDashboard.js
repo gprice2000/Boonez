@@ -1,16 +1,22 @@
+let cur_user;
 document.addEventListener("DOMContentLoaded", function () {
   const search = window.location.search;
-  // document.getElementById("dash").href = `/dashboard/${search}`;
-  // document.getElementById("friends").href = `/findFriends/${search}`;
-  // document.getElementById("messages").href = `/messagesOverviewPage/${search}`;
-  document.getElementById("picForm").action = `/profilePicture/${search}`;
+  document.getElementById("dash").href = `/BusinessDashboard${search}`;
+  document.getElementById("advertisements").href = `/viewAdvertisements`;
+  document.getElementById("removeAdvertisements").href = `/removeAd${search}`;
+  document.getElementById("createAdvertisements").href = `/createAd${search}`;
   fetchDash();
 
   async function fetchDash() {
     console.log(search);
-    await fetch(window.location.origin+ "/businessDashboard/" + search) ///?user=${}`)
+    // console.log(window.location.origin);
+    // console.log(window.location.origin + "/businessDashboard" + search);
+
+    await fetch(window.location.origin + "/fetchBusinessDashboard") ///?user=${}`)
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
+        cur_user = data;
         if (data == "nsi") {
           window.location.href = "/login";
         }
@@ -18,11 +24,14 @@ document.addEventListener("DOMContentLoaded", function () {
           let proPic = document.getElementById("profile-pic");
           proPic.src = data.profilePic;
         }
-
+        // if (data.classes.length != 0) {
+        //   courseList(data.classes);
+        // }
         if (data.aboutme != null) {
           console.log("data.aboutme: " + data.aboutme);
           getAboutMe(data.aboutme);
         }
+        getName(data);
         friendList(data.friends);
       })
       .catch((error) => {
@@ -30,9 +39,18 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
+  function getName(data) {
+    let first = data.fname;
+    let last = data.lname;
+    first = first.charAt(0).toUpperCase() + first.slice(1);
+    last = last.charAt(0).toUpperCase() + last.slice(1);
+
+    document.getElementById("student-name").innerHTML = first + " " + last;
+  }
+
   function getAboutMe(text) {
     let aboutme_body = document.getElementById("am-content");
-    aboutme_body.innerHTML = text;
+    aboutme_body.innerText = text;
   }
 });
 
@@ -50,18 +68,14 @@ async function serverCon(method, data, url) {
     .then((new_event) => {})
     .catch((error) => {
       console.error("Error: " + error);
-      /*
-		if (method == 'DELETE') {
-			console.log("DELETE")
-			window.location.replace(window.location.pathname + window.location.search);}
-		*/
     });
 }
 
 function setAboutMe() {
-  let modal = document.getElementById("aboutModal");
-  let text = document.getElementById("aboutmeText");
+  let modal = document.getElementById("about-modal");
+  let text = document.getElementById("about-me-text");
   let savebtn = document.getElementById("amSub");
+  text.value = cur_user.aboutme;
   modal.style.display = "initial";
 
   /*
@@ -75,8 +89,12 @@ function setAboutMe() {
 		}
 	}
 	*/
-
-  document.getElementById("closeabout").onclick = function () {
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
+  document.getElementById("close").onclick = function () {
     modal.style.display = "none";
   };
   savebtn.onclick = function (event) {
@@ -84,55 +102,11 @@ function setAboutMe() {
     document.getElementById("am-content").innerHTML = text.value;
     event.preventDefault();
     console.log(text.value);
-    serverCon("POST", { aboutme: text.value }, "/aboutMe");
+    serverCon("POST", { aboutme: text.value }, "/busAboutMe");
     console.log(event.target);
   };
 }
 
-function getCourseList() {
-  let classModal = document.getElementById("classModal");
-  classModal.style.display = "initial";
-  let classForm = document.querySelector("#courseform");
-  let classes = [];
-
-  classForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    for (let pair of formData.entries()) {
-      if (pair[1] != "") {
-        classes.push(pair[1].replace(/\s+/g, ""));
-      }
-    }
-    console.log("classes: " + classes);
-    fetch(window.location.origin + "/courses", {
-      method: "POST",
-      credentials: "same-origin",
-      mode: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(classes),
-    })
-      .then((response) => response.json())
-      .then((data) => {})
-      .catch((error) => {
-        console.log("Error: " + error);
-      });
-    classModal.style.display = "none";
-  });
-
-  var span = document.getElementById("closecourse");
-  //when user clicks x modal closes
-  span.onclick = function () {
-    classModal.style.display = "none";
-  };
-
-  /*
-		for(let i = 0; i < 8; i++) {
-
-			console.log(classForm.get("course0"));
-		}*/
-}
 function setProf() {
   let picLink = document.getElementById("PicLink");
   let picSub = document.getElementById("PicSub");
@@ -140,7 +114,7 @@ function setProf() {
   picSub.onclick = function () {
     proPic.src = picLink.value;
   };
-  let modal = document.getElementById("picModal");
+  let modal = document.getElementById("profile-pic-modal");
   modal.style.display = "block";
   var span = document.getElementById("closePic");
   //when user clicks x modal closes
