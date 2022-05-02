@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
   fetchDash();
 
   async function fetchDash() {
-    await fetch("http://localhost:3000/viewDashboard" + search)
+    await fetch(window.location.origin + "/viewDashboard" + search)
       .then((response) => response.json())
       .then((data) => {
         console.log("data: " + data);
@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 async function serverCon(method, data, url) {
-  await fetch(`${window.location.origin}` + url, {
+  await fetch(window.location.origin + url, {
     method: method,
     credentials: "same-origin",
     mode: "same-origin",

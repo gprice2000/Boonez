@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 async function serverCon(method, data, url) {
-  await fetch(`${window.location.origin}` + url, {
+  await fetch(window.location.origin + url, {
     method: method,
     credentials: "same-origin",
     mode: "same-origin",

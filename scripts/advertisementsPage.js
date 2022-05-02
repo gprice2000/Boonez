@@ -3,8 +3,13 @@ async function getAdvertisements() {
   await fetch(url)
     .then((res) => res.json())
     .then((data) => {
+      //check if user is signed in first
+      if (data == "nsi") {
+				window.location.href = "/login";
+			}
+      
       //send array of message objects
-      // console.log(data);
+      //console.log(data);
       renderAds(data);
     });
 }

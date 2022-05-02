@@ -214,7 +214,7 @@ function editEvent(cal_type, info) {
 }
 
 async function serverCon(method, data, url) {
-  await fetch(window.location.href + url + "/" + search, {
+  await fetch(window.location.origin + url + "/" + search, {
     method: method,
     credentials: "same-origin",
     mode: "same-origin",
