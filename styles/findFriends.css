@@ -6,6 +6,7 @@ html, body {
 }
 
 .landing-nav {
+	background-color: #25292e;
 	grid-row-start: 1;
 	grid-row-end: 3;
 	grid-column-start: 1;
@@ -13,26 +14,27 @@ html, body {
 	padding: 25px;
 	display: flex;
 	flex-direction: row;
-}
-.nav-links-container {
+  }
+  .nav-links-container {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
 	margin-top: 30px;
-	margin-left: 20%;
-}
-.nav-links-container a {
+	margin-left: 30%;
+  }
+  .nav-links-container a {
 	color: white;
 	font-size: 1.2rem;
 	text-decoration: none;
 	margin-right: 30px;
-}
-.nav-links-container a:hover {
+	margin-left: 30px;
+  }
+  .nav-links-container a:hover {
 	animation-name: link-hov;
 	animation-duration: 100ms;
 	animation-timing-function: ease-in-out;
 	font-size: 1.4rem;
-}
+  }
 
 .all-friends-container{
 	position: relative;
@@ -158,32 +160,6 @@ input[type=text], .search-input:focus {
 
 }
 
-.addfriend {
-	position: relative;
-	width: 45px;
-	height: 45px;
-	object-fit: cover;
-	overflow: auto;
-	float: right;
-}
-
-.addfriend:hover {
-	background: rgb(0, 252, 63);
-}
-
-.delfriend {
-	position: relative;
-	width: 45px;
-	height: 45px;
-	object-fit: cover;
-	overflow: auto;
-	float: right;
-}
-
-.delfriend:hover {
-	background: rgb(255, 0, 0);
-}
-
 #friendsList { 
 	position: relative;
 	margin: 0;
@@ -195,12 +171,14 @@ input[type=text], .search-input:focus {
 	border-radius: 10px;
 }
   
+.friend-search {
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
   .friend{
 	width: 300px;
 	height: 60px;
-	margin-left: 10px;
-	margin-right: 10px;
-	margin-bottom: 10px;
+
 	background: #EEE;
 	/*border-bottom: 1px solid #DDD;*/
 	border-radius: 10px;
@@ -211,8 +189,12 @@ input[type=text], .search-input:focus {
 	pointer-events: all;  
 
   }
+
+  .friend:hover {
+	  border: 1px solid #ffcc00;
+  }
   
-  .friend img {
+  .friend-pic {
 	width: 45px;
 	height: 45px;
 	border-radius: 30px;
@@ -220,8 +202,41 @@ input[type=text], .search-input:focus {
 	object-fit: cover;
 	margin-left: 5px;
 	margin-right: 10px;
+  }
+
+.addfriend {
+	position: relative;
+	width: 25px;
+	height: 25px;
+	border-radius: 30px;
+	object-fit: cover;
+	margin-left: auto;
+	margin-right: 5px;
+
 }
-  
+
+.addfriend:hover {
+	background: rgb(0, 252, 63);
+	border: 1px solid black;
+}
+
+.delfriend {
+	position: relative;
+	width: 25px;
+	height: 25px;
+	border-radius: 30px;
+	object-fit: cover;
+	margin-left: auto;
+	margin-right: 5px;
+
+}
+
+.delfriend:hover {
+	background: rgb(255, 0, 0);
+	border: 1px solid black;
+
+}
+
   .friend .name {
 	font-size: 18px;
   }
