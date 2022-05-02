@@ -24,7 +24,8 @@ document.addEventListener("DOMContentLoaded", function () {
       .value.replace(/\s+/g, "");
     let crn = document.getElementById("crn").value.replace(/\s+/g, "");
     let obj = { fname, lname, username, crn };
-    await fetch(`${window.location.href}/findFriend`, {
+
+    await fetch(`${window.location.origin}/findFriend`, {
       method: "POST",
       credentials: "same-origin",
       mode: "same-origin",
@@ -46,66 +47,6 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Error: " + err);
       });
   };
-
-  function allFriends(friends) {
-    document.getElementById("friendsList").innerHTML = "";
-    console.log("all friens: " + friends.length);
-    for (var i = 0; i < friends.length; i++) {
-      console.log(
-        "friend : " +
-          i +
-          " " +
-          friends[i].fullname +
-          " " +
-          friends[i].username +
-          " " +
-          friends[i].profilePic
-      );
-      let node = document.createElement("li");
-      let img = document.createElement("img");
-      let div = document.createElement("div");
-      let del = document.createElement("img");
-
-      node.className = "friend";
-      node.id = friends[i].username;
-      //added delete friend image
-      //del.src = "/images/"
-      del.src = "/images/del-friend.png";
-      del.className = "delfriend";
-      node.appendChild(del);
-
-      node.addEventListener("click", (event) => {
-        //redirect user to dashboard view page
-      });
-      div.className = "name";
-      if (friends[i].profilePic == undefined) {
-        img.src = "/images/blank-profile-pic.png";
-      } else {
-        img.src = friends[i].profilePic;
-      }
-      node.appendChild(img);
-      //name of friend
-      node.appendChild(document.createTextNode(friends[i].fullname));
-      document.querySelector("#friendsList").appendChild(node);
-      del.addEventListener("click", (event) => {
-        event.stopPropagation();
-        let obj = { username: node.id };
-
-        cur_friends = cur_friends.filter(function (value, index, arr) {
-          return value == node.id
-        })
-
-        let selected_friend = document.getElementById(node.id);
-        selected_friend.parentNode.removeChild(selected_friend);
-        serverCon("POST", obj, "/delFriend");
-      })
-      node.addEventListener("click", (event) => {
-        //redirect user to dashboard view page
-        window.location.href = `/viewDash/?user=${event.target.id}`;
-                      
-      });
-    }        
-  }
     
 	function getName(data) {
 		let first = data.fname;
@@ -124,6 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let div = document.createElement('div');
             let addedFriend;
             let addf = document.createElement('img');
+            img.className = "friend-pic";
             addf.setAttribute("id","add");
             addedFriend = cur_friends.find(ele =>
                 ele.username == user);
@@ -163,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
                            profilePic: img.src}
                 serverCon("POST", obj,"/addFriend");
                 cur_friends.push(obj);
-                //let selected_friend = document.getElementById(node.id);
+                let selected_friend = document.getElementById(node.id);
                 //selected_friend.parentNode.removeChild(selected_friend);
                 allFriends(cur_friends);
 
@@ -172,7 +114,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
             del.addEventListener("click",(event) => {
                 event.stopPropagation();
-                let obj = {username: node.id}
+                node.removeChild(del);
+                addf.src = "/images/add-user.png";
+                addf.className = "addfriend";
+                node.appendChild(addf);                let obj = {username: node.id}
                 cur_friends = cur_friends.filter(function(value, index, arr) {
                     return value == node.id
                 })
@@ -187,16 +132,66 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (event.target.id == cur_user) {
                         window.location.href = `/dashboard/${search}`;
                     } else {
-                window.location.href = `/viewDash/?user=${event.target.id}`;
+                        window.location.href = `/viewDash/?user=${event.target.id}`;
                     }
                     
           });
         } 
     }
-  });
+});
 
+  function allFriends(friends) {
+    document.getElementById("friendsList").innerHTML = "";
+    console.log("all friens: " + friends.length);
+    for (var i = 0; i < friends.length; i++) {
+
+      let node = document.createElement("li");
+      let img = document.createElement("img");
+      let div = document.createElement("div");
+      let del = document.createElement("img");
+
+      node.className = "friend";
+      node.id = friends[i].username;
+
+      img.className = "friend-pic";
+
+      del.src = "/images/del-friend.png";
+      del.className = "delfriend";
+
+      div.className = "name";
+      if (friends[i].profilePic == undefined) {
+        img.src = "/images/blank-profile-pic.png";
+      } else {
+        img.src = friends[i].profilePic;
+      }
+      node.appendChild(img);
+      node.appendChild(document.createTextNode(friends[i].fullname));
+      node.appendChild(del);
+      document.querySelector("#friendsList").appendChild(node);
+
+      del.addEventListener("click", (event) => {
+        
+        event.stopPropagation();
+        let obj = { username: node.id };
+
+        cur_friends = cur_friends.filter(function (value, index, arr) {
+          return value == node.id
+        })
+
+        let selected_friend = document.getElementById(node.id);
+        selected_friend.parentNode.removeChild(selected_friend);
+        serverCon("POST", obj, "/delFriend");
+      })
+
+      node.addEventListener("click", (event) => {
+        //redirect user to dashboard view page
+        window.location.href = `/viewDash?user=${event.target.id}`;
+                      
+      });
+    }        
+  }
 async function serverCon(method, data,url) {
-  await fetch(window.location.origin+ url+'/'+search, {
+  await fetch(window.location.origin+ url+search, {
       method: method, 
       credentials: 'same-origin',
       mode: 'same-origin',
@@ -259,24 +254,16 @@ async function serverCon(method, data,url) {
       let fullname = getName(data[i]);
       node.appendChild(document.createTextNode(fullname));
       document.querySelector("#friendSearch").appendChild(node);
+
       addf.addEventListener("click", (event) => {
         event.stopPropagation();
-        console.log("event.target.id" + event.currentTarget.id);
-        console.log("add : " + node.id);
+
         let obj = {
           username: node.id,
           fullname: fullname,
           profilePic: img.src,
         };
         serverCon("POST", obj, "/addFriend");
-        console.log(
-          "cur_friends: " +
-            obj.username +
-            " " +
-            obj.fullname +
-            " " +
-            obj.profilePic
-        );
         cur_friends.push(obj);
         let selected_friend = document.getElementById(node.id);
         selected_friend.parentNode.removeChild(selected_friend);
@@ -290,19 +277,19 @@ async function serverCon(method, data,url) {
           return value == node.id;
         });
         let selected_friend = document.getElementById(node.id);
-        selected_friend.parentNode.removeChild(selected_friend);
+        //selected_friend.parentNode.removeChild(selected_friend);
         serverCon("POST", obj, "/delFriend");
       });
 
-      node.addEventListener("click", (event) => {
+      node.addEventListener("click", async (event) => {
         console.log("event.target.id" + event.currentTarget.id);
         //redirect user to dashboard view page
         if (event.target.id == cur_user) {
-          window.location.href = `/dashboard/${search}`;
+          window.location.href = `/dashboard${search}`;
         } else {
-          window.location.href = `/viewDash/?user=${event.target.id}`;
+          window.location.href = `/viewDash?user=${event.target.id}`;
         }
-        await fetch(window.location.origin+ '/getFriends/' + search)
+        await fetch(window.location.origin+ '/getFriends' + search)
         .then(response => response.json())
         .then(data => {
             if (data == "nsi") {
@@ -323,7 +310,7 @@ async function serverCon(method, data,url) {
   
 
   async function serverCon(method, data, url) {
-    await fetch(window.location.origin + url + "/" + search, {
+    await fetch(window.location.origin + url + search, {
       method: method,
       credentials: "same-origin",
       mode: "same-origin",
@@ -346,7 +333,7 @@ async function serverCon(method, data,url) {
     if (allfr.innerHTML.trim() != "") {
       document.getElementById("friendsList").innerHTML = "";
     }
-    await fetch("/getFriends/" + search)
+    await fetch(window.location.origin+"/getFriends" + search)
       .then((response) => response.json())
       .then((data) => {
         if (data == "nsi") {

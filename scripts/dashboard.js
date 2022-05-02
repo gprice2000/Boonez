@@ -1,14 +1,14 @@
 let cur_user;
 document.addEventListener("DOMContentLoaded", function () {
   const search = window.location.search;
-  document.getElementById("dash").href = `/dashboard/${search}`;
-  document.getElementById("friends").href = `/findFriends/${search}`;
-  document.getElementById("messages").href = `/messagesOverviewPage/${search}`;
-  document.getElementById("picForm").action = `/profilePicture/${search}`;
+  document.getElementById("dash").href = `/dashboard${search}`;
+  document.getElementById("friends").href = `/findFriends${search}`;
+  document.getElementById("messages").href = `/messagesOverviewPage${search}`;
+  document.getElementById("picForm").action = `/profilePicture${search}`;
   fetchDash();
 
   async function fetchDash() {
-    await fetch(window.location.origin + "/userDashboard/" + search) ///?user=${}`)
+    await fetch(window.location.origin + "/userDashboard" + search) ///?user=${}`)
       .then((response) => response.json())
       .then((data) => {
         cur_user = data;
@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       node.addEventListener("click", (event) => {
         //redirect user to dashboard view page
-        window.location.href = `/viewDash/?user=${event.target.id}`;
+        window.location.href = `/viewDash?user=${event.target.id}`;
       });
 
       node.className = "friend";
