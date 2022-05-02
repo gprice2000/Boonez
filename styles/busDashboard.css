@@ -1,23 +1,281 @@
-#picModal {
-	display: none; /* Hidden by default */
-	position: fixed; /* Stay in place */
-	z-index: 1; /* Sit on top */
-	left: 0;
-	top: 0;
-	width: 100%; /* Full width */
-	height: 100%; /* Full height */
-	overflow: auto; /* Enable scroll if needed */
-	background-color: rgb(0,0,0); /* Fallback color */
-	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  }
-
-
-
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap");
 body {
-	display:grid;
-	font-family: sans-serif;
-	width: 100%;
-	height: 100%;
-	margin: 0;
+  font-family: "Open Sans", sans-serif;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  background-color: rgb(240, 240, 240);
+  /* background-color: #343a40; */
 }
-  
+.logo-container {
+  display: flex;
+  /* text-align: center; */
+}
+.logo-container h1 {
+  font-size: 1.4rem;
+  align-self: center;
+  color: white;
+}
+.left-container {
+  margin-top: 1rem;
+  position: relative;
+  height: fit-content;
+  width: fit-content;
+  top: 5%;
+}
+
+.mid-container {
+  position: absolute;
+  height: fit-content;
+  width: fit-content;
+  left: 50%;
+  right: 40%;
+  top: 13%;
+}
+
+.landing-nav {
+  grid-row-start: 1;
+  grid-row-end: 3;
+  grid-column-start: 1;
+  grid-column-end: 12;
+  padding: 25px;
+  display: flex;
+  flex-direction: row;
+  /* background-color: #363a39; */
+  background-color: #25292e;
+}
+.nav-links-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 30px;
+  margin-left: 30%;
+}
+.nav-links-container a {
+  color: white;
+  font-size: 1.2rem;
+  text-decoration: none;
+  margin-right: 30px;
+  margin-left: 30px;
+}
+.nav-links-container a:hover {
+  animation-name: link-hov;
+  animation-duration: 200ms;
+  animation-timing-function: ease-in-out;
+  font-size: 1.3rem;
+}
+
+.profile-pic-container {
+  position: relative;
+  /* border: 1px solid rgba(236, 233, 233, 0.644); */
+  border: 2px solid black;
+  border-radius: 10px;
+  background-color: white;
+  width: 330px;
+  height: 375px;
+  left: 50px;
+  background-image: url("../images/mtnsil.png");
+  background-position: -65px 120px;
+  background-repeat: no-repeat;
+}
+
+#profile-pic {
+  width: 50%;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 20px;
+  height: auto;
+  border-radius: 50%;
+  display: block;
+}
+#am-content {
+  font-size: 1.5rem;
+}
+#profile-pic:hover {
+  cursor: pointer;
+}
+
+#about-me-text {
+  position: relative;
+  height: 200px;
+  width: 300px;
+}
+
+#student-name {
+  font-weight: 900;
+  text-align: center;
+  text-decoration: underline;
+}
+.container {
+  margin: 50px;
+  width: 400px;
+  height: fit-content;
+  border-radius: 10px 10px 0 0;
+  border: 1px solid rgba(236, 233, 233, 0.644);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+}
+.header {
+  margin-top: -26px;
+  display: inherit;
+  position: inherit;
+  border-radius: 10px 10px 0 0;
+  width: 100%;
+  height: 50px;
+  background: #363a39;
+  color: #ffcc00;
+  font-size: 20px;
+}
+
+.click-icon {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.click-icon:hover {
+  background: #eee;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.header h2 {
+  position: relative;
+  left: 10px;
+  top: 10px;
+}
+.content {
+  display: inherit;
+  position: inherit;
+  width: 100%;
+  background-color: #eee;
+}
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.modal-header {
+  position: relative;
+  height: fit-content;
+  text-align: center;
+}
+
+.calendar-container {
+  margin: 50px;
+  width: 600px;
+  height: fit-content;
+  border-radius: 10px 10px 0 0;
+  border: 1px solid rgba(236, 233, 233, 0.644);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+}
+
+#message-container {
+  background-color: aqua;
+  width: 500px;
+  height: 500px;
+  text-align: center;
+  padding: 5px;
+}
+
+#course-list {
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: inherit;
+  height: 100%;
+  background: rgb(255, 255, 255);
+  list-style-type: none;
+}
+.course {
+  width: inherit;
+  height: 60px;
+  background: #eee;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+#all-friends {
+  position: absolute;
+  right: 0;
+  top: 10px;
+  border-radius: 10px;
+}
+
+#all-friends:hover {
+  cursor: pointer;
+}
+
+#calendar-button {
+  border-radius: 10px;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+}
+
+#calendar-button:hover {
+  cursor: pointer;
+}
+
+#friends-list {
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: inherit;
+  height: 100%;
+  background: #eee;
+  list-style-type: none;
+}
+
+.friend {
+  width: inherit;
+  height: 60px;
+  background: #eee;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.friend img {
+  width: 45px;
+  height: 45px;
+  border-radius: 30px;
+  border: 2px solid #aaa;
+  object-fit: cover;
+  margin-left: 5px;
+  margin-right: 10px;
+}
+
+.friend .name {
+  font-size: 18px;
+}
+
+.friend.selected {
+  background: #43a047;
+  color: white;
+}
+
+.friend.selected img {
+  border-color: white;
+}
+
+.friend:not(.selected):hover {
+  background: #ddd;
+  cursor: pointer;
+}
