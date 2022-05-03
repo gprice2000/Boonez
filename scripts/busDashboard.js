@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
           let proPic = document.getElementById("profile-pic");
           proPic.src = data.profilePic;
         }
+
         // if (data.classes.length != 0) {
         //   courseList(data.classes);
         // }
@@ -40,12 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function getName(data) {
-    let first = data.fname;
-    let last = data.lname;
-    first = first.charAt(0).toUpperCase() + first.slice(1);
-    last = last.charAt(0).toUpperCase() + last.slice(1);
-
-    document.getElementById("student-name").innerHTML = first + " " + last;
+    document.getElementById("business-name").innerHTML = data.name;
   }
 
   function getAboutMe(text) {

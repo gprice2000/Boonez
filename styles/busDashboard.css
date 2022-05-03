@@ -67,7 +67,6 @@ body {
 
 .profile-pic-container {
   position: relative;
-  /* border: 1px solid rgba(236, 233, 233, 0.644); */
   border: 2px solid black;
   border-radius: 10px;
   background-color: white;
@@ -87,6 +86,12 @@ body {
   height: auto;
   border-radius: 50%;
   display: block;
+}
+
+#business-name {
+  font-weight: 900;
+  text-align: center;
+  text-decoration: underline;
 }
 #am-content {
   font-size: 1.5rem;
@@ -158,18 +163,26 @@ body {
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
   left: 0;
+  right: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
+  width: fit-content; /* Full width */
+  height: fit-content; /* Full height */
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: auto;
+  margin-left: auto;
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  background-color: rgb(105, 105, 105); /* Black w/ opacity */
 }
 
 .modal-header {
   position: relative;
   height: fit-content;
-  text-align: center;
+  text-align: left;
+  padding: 2px 16px;
+  background-color: #363a39;
+  color: white;
 }
 
 .calendar-container {
