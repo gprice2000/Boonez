@@ -148,7 +148,7 @@ function genID() {
 
 function editEvent(cal_type, info) {
   var modal = document.getElementById("myModal");
-  modal.style.display = "block";
+  modal.style.display = "initial";
   let id = info.id;
   var subBtn = document.getElementById("calSub");
   var delBtn = document.getElementById("calDel");
