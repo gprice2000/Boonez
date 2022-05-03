@@ -326,6 +326,7 @@ app.post("/Priv_calendar", function (req, res) {
     try {
       const query = { username: { $eq: cur_user } };
       cal_col.findOne(query).then((doc) => {
+        console.log("/priv_calendar doc: " + doc)
         if (doc == undefined) {
           cal_col.insertOne({
             username: cur_user,
@@ -382,7 +383,14 @@ app.post("/editEvent", function (req, res) {
       if (cal_type == "pri") {
         calDb.findOne(query).then((doc) => {
           console.log("doc: " + doc);
-
+          if (doc == null) {
+            calDb.insertOne({
+              username: cur_user,
+              PubEventArray: [],
+              PriEventArray: [eventData],
+            });
+          }
+          else {
           let ind = doc.PriEventArray.findIndex(
             (ele) => ele.id == eventData.id
           );
@@ -393,10 +401,19 @@ app.post("/editEvent", function (req, res) {
             doc.PriEventArray[ind] = eventData;
           }
           calDb.replaceOne(query, doc);
+        }
         });
       } else {
         calDb.findOne(query).then((doc) => {
           console.log("doc: " + doc);
+          if (doc == null) {
+            calDb.insertOne({
+              username: cur_user,
+              PubEventArray: [eventData],
+              PriEventArray: [],
+            });
+          }
+          else {
           let ind = doc.PubEventArray.findIndex(
             (ele) => ele.id == eventData.id
           );
@@ -407,6 +424,7 @@ app.post("/editEvent", function (req, res) {
             doc.PubEventArray[ind] = eventData;
           }
           calDb.replaceOne(query, doc);
+        }
         });
       }
     } catch (err) {
