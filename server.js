@@ -1116,6 +1116,9 @@ app.get("/styles/login.css", (req, res) => {
 app.get("/scripts/login.js", (req, res) => {
   res.sendFile(__dirname + "/scripts/login.js");
 });
+app.get("/images/boone.jpg", (req, res) => {
+  res.sendFile(__dirname + "/images/boone.jpg");
+});
 app.get("/getUsersAds", async (req, res) => {
   let cur_user = url.parse(req.url, true).query.user;
   console.log(req.url);
