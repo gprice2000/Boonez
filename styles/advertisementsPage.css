@@ -30,6 +30,7 @@ body {
 	margin-top: 30px;
 	margin-left: 30%;
 }
+
 .nav-links-container a {
 	color: white;
 	font-size: 1.2rem;
@@ -42,6 +43,10 @@ body {
 	animation-duration: 100ms;
 	animation-timing-function: ease-in-out;
 	font-size: 1.4rem;
+}
+
+#business{
+  display: none;
 }
 #ad-cont {
   margin-left: auto;

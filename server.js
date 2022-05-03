@@ -1074,6 +1074,14 @@ app.get("/viewAdvertisements/fetchAds", async (req, res) => {
     ) {
       res.json("nsi"); //not signed in flag is returned
     } else {
+      let account;
+      dbc
+        .db("Boonez")
+        .collection("profiles")
+        .findOne({username: cur_user})
+        .then(ele => {
+          account = ele.accountType;
+        })
       dbc
         .db("Boonez")
         .collection("Advertisements")
@@ -1081,7 +1089,7 @@ app.get("/viewAdvertisements/fetchAds", async (req, res) => {
         .toArray((err, result) => {
           if (result) {
             //send client array of advertisement objects
-            res.json(result);
+            res.json({data: result,type: account});
           } else {
             res.send(500, "something went wrong");
           }

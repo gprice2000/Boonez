@@ -1,4 +1,7 @@
+const search = window.location.search;
+
 async function getAdvertisements() {
+  
   let url = new URL(window.location.href + "/fetchAds");
   await fetch(url)
     .then((res) => res.json())
@@ -7,10 +10,26 @@ async function getAdvertisements() {
       if (data == "nsi") {
         window.location.href = "/login";
       }
+      console.log("data.account type: " + data.type)
+      if (data.type != "personal") {
+          console.log("business")
+          document.getElementById("bus-dash").href = `/BusinessDashboard${search}`;
+          //document.getElementById("bus-advertisements").href = `/viewAdvertisements`;
+          document.getElementById("bus-removeAdvertisements").href = `/removeAd${search}`;
+          document.getElementById("bus-createAdvertisements").href = `/createAd${search}`;
+          document.getElementById("personal").style.display = "none";
+          document.getElementById("business").style.display = "initial";
+      } else {
+        console.log("personal")
+
+          document.getElementById("dash").href = `/dashboard${search}`;
+          document.getElementById("friends").href = `/findFriends${search}`;
+          document.getElementById("messages").href = `/messagesOverviewPage${search}`;
+        }
 
       //send array of message objects
       //console.log(data);
-      renderAds(data);
+      renderAds(data.data);
     });
 }
 
