@@ -154,7 +154,7 @@ body {
   right: 0;
   top: 0;
   height: fit-content;
-  width: 250px;
+  width: fit-content;
   margin-top: auto;
   margin-bottom: auto;
   margin-right: auto;
@@ -254,6 +254,14 @@ body {
   padding: 5px;
 }
 
+#courseform{
+  display:inline;
+  padding: 10px;
+}
+
+.course-input{
+  margin: 10px;
+}
 #course-list {
   display: block;
   margin: 0;
@@ -313,7 +321,7 @@ body {
 .friend {
   width: inherit;
   height: 60px;
-  background: #eee;
+  background: #EEE;
   border-bottom: 1px solid #eee;
   cursor: pointer;
   display: flex;
