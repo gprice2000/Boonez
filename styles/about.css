@@ -1,0 +1,97 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap");
+@keyframes link-hov {
+  0% {
+    font-size: 1.25rem;
+  }
+  25% {
+    font-size: 1.3rem;
+  }
+  50% {
+    font-size: 1.35rem;
+  }
+  75% {
+    font-size: 1.4rem;
+  }
+  100% {
+    font-size: 1.4rem;
+  }
+}
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Open Sans", sans-serif;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background-color: #343a40;
+  display: flex;
+}
+
+#main {
+  width: 45%;
+}
+h1 {
+  font-size: 3rem;
+  text-align: center;
+  color: white;
+  margin: 2rem;
+}
+hr {
+  color: white;
+  /* width: 5px; */
+  /* height: 10px; */
+}
+p {
+  margin: 1rem;
+  text-align: center;
+  color: white;
+  font-size: 2rem;
+}
+#nav-cont {
+  width: 55%;
+  height: 100%;
+  background-color: #25292e;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  /* align-content: center; */
+  /* align-items: flex-end; */
+  /* margin-left: 30%; */
+  /* align-items: flex-end; */
+  /* padding-left: 40%; */
+}
+#nav-cont a {
+  margin-top: 2rem;
+  color: white;
+  font-size: 1.2rem;
+  text-decoration: none;
+  margin-right: auto;
+  margin-left: auto;
+  /* margin: 2rem; */
+}
+#nav-cont a:hover {
+  animation-name: link-hov;
+  animation-duration: 100ms;
+  animation-timing-function: ease-in-out;
+  font-size: 1.4rem;
+}
+#pic-cont {
+  width: 100%;
+  height: 50%;
+  position: fixed;
+  bottom: 0px;
+  background-image: url("../images/boone.jpg");
+  /* background-position: bottom; */
+  background-repeat: no-repeat;
+}
+#links {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: max-content;
+}
