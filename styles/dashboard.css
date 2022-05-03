@@ -321,7 +321,7 @@ body {
 .friend {
   width: inherit;
   height: 60px;
-  background: #eee;
+  background: #EEE;
   border-bottom: 1px solid #eee;
   cursor: pointer;
   display: flex;
