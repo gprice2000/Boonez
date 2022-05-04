@@ -1093,13 +1093,15 @@ app.get("/viewAdvertisements/fetchAds", async (req, res) => {
       res.json("nsi"); //not signed in flag is returned
     } else {
       let account;
+      console.log("cur_user: " + cur_user)
       dbc
         .db("Boonez")
         .collection("profiles")
-        .findOne({username: cur_user})
-        .then(ele => {
-          account = ele.accountType;
+        .findOne({username: cur_user},function (err, result) {
+          console.log("server account type: " + result.accountType)
+          account = result.accountType;
         })
+
       dbc
         .db("Boonez")
         .collection("Advertisements")
