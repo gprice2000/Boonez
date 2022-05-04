@@ -82,24 +82,16 @@ body {
 }
 .login-signup-btn-container {
   display: flex;
-  /* width: 650px; */
-  /* width: max-content; */
-  /* height: 1000px; */
-  /* height: 100%; */
+
   height: 25rem;
   width: 1000px;
-  /* height: max-content; */
   background-image: url("../images/mountains.png");
   background-repeat: no-repeat;
   background-position: bottom center;
-  /* height:; */
-  /* border: 2px solid white; */
-  /* margin-bottom: 5rem; */
-  /* background-color: white; */
+
   margin-left: auto;
   margin-right: auto;
   align-items: center;
-  /* align-items: flex-end; */
   grid-column-start: 5;
   grid-row-start: 30;
 }
@@ -110,15 +102,11 @@ body {
   border: none;
   font-size: 1.5rem;
   padding: 15px;
-  /* align-self: center; */
-  /* width: 150px; */
+
   width: max-content;
   height: fit-content;
-  /* margin: 5rem; */
-  /* margin-left: auto; */
-  /* margin-right: auto; */
+
   margin: 3rem;
-  /* align-self: center; */
   margin-bottom: 5rem;
 }
 .innerCnt {
