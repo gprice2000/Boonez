@@ -72,11 +72,7 @@ body {
   text-align: justify;
   color: white;
 }
-/* .mountains-img {
-  grid-row-start: 12;
-  grid-column-start: 2;
-  grid-column-start: 4;
-} */
+
 .login-signup-btns:hover {
   cursor: pointer;
 }

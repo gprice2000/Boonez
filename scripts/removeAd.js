@@ -1,5 +1,4 @@
 async function getAdvertisements() {
-  // console.log(window.location.origin + "/getUsersAds" + window.location.search);
   let url = new URL(
     window.location.origin + "/getUsersAds" + window.location.search
   );
@@ -7,7 +6,7 @@ async function getAdvertisements() {
     .then((res) => res.json())
     .then((data) => {
       //send array of message objects
-      // console.log(data);
+
       renderAdForm(data);
     });
 }
@@ -38,7 +37,6 @@ function renderAdForm(adsArr) {
     adTitle.className = "head";
     adTitle.innerText = ad.adhead;
 
-    // adItem.onclick = () => (checkBox.checked = !checkBox.checked);
     adItem.appendChild(adTitle);
 
     let adBody = document.createElement("p");

@@ -69,11 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
       let img = document.createElement("img");
       let div = document.createElement("div");
       //user hidden data
-      //let hid = document.createElement('INPUT');
-      //hid.setAttribute("type","hidden");
-      //hid.value = data[i].username;
-      //user id is stored in node id , this way we can keep track upon
-      //element click.'
+    
       node.id = data[i].username;
       if (data[i].profilePic == undefined) {
         img.src = "/images/blank-profile-pic.png";
@@ -84,9 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (i >= data.length) {
         break;
       }
-      // let node = document.createElement("li");
-      // let img = document.createElement("img");
-      // let div = document.createElement("div");
+   
 
       node.id = data[i].username;
       if (data[i].profilePic == undefined) {

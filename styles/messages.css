@@ -5,22 +5,12 @@ body {
   width: 100%;
   margin: 0px;
   padding: 0px;
-  /* display: flex; */
 }
 body {
   margin: 0;
-  /* padding-bottom: 3rem; */
   font-family: "Open Sans", sans-serif;
   display: flex;
   flex-direction: row;
-  /* display: grid;
-  grid:
-    friends mbox mbox mbox
-    friends mbox mbox mbox
-    friends mbox mbox mbox
-    friends input input input; */
-  /* grid-auto-columns: auto; */
-  /* display: flex; */
 }
 
 #dashLink {
@@ -43,11 +33,8 @@ body {
 
 #message-cont {
   display: flex;
-  /* width: 75%; */
   width: 100%;
-  /* width: 75%; */
   height: 100%;
-  /* align-items: flex-end; */
   flex-direction: column;
 }
 #friends {
@@ -81,18 +68,13 @@ body {
   margin-left: 1em;
 }
 #form {
-  /* grid-area: input; */
   background: rgba(0, 0, 0, 0.15);
   padding: 0.25rem;
-  /* position: fixed; */
   bottom: 0;
-  /* margin-left: 20%; */
-  /* grid-row-start: 3; */
   left: 0;
   right: 0;
   display: flex;
   height: 8%;
-  /* align-self: flex-end; */
   width: 100%;
   box-sizing: border-box;
   backdrop-filter: blur(10px);
@@ -119,20 +101,14 @@ body {
   color: #25292e;
 }
 #messages {
-  /* background-color: #ffcc00; */
   overflow: auto;
-  /* height: fit-content; */
-  /* height: 1080px; */
-  /* grid-row-start: 1; */
-  /* grid-row-end: 3; */
-  /* background-color: yellow; */
+
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
 }
 #messages div {
-  /* width: 15%; */
   width: 20%;
   height: fit-content;
   margin-top: 1rem;
@@ -173,20 +149,13 @@ button:hover {
 #message-recip {
   display: flex;
   width: 80vw;
-  /* width: 5rem; */
 
   height: 5%;
   font-size: 1.3em;
-  /* overflow: hidden; */
-  /* text-align: center; */
   padding: 5px;
   padding-left: 15px;
   align-items: center;
-  /* box-shadow: ; */
-  /* background-color: #343a40; */
   color: black;
   font-weight: bold;
-  /* box-shadow: 1px 2px 2px rgb(89, 89, 89); */
   background-color: rgb(230, 230, 230);
-  /* background-color: yellow; */
 }

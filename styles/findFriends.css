@@ -119,9 +119,7 @@ input[type=text], .search-input:focus {
 	position: relative;
 	background-color: #25292e;
 	margin-bottom: 10px;
-	/*
-	right: 15%;
-	top: 15%;*/
+
 }
 
 .find-friend{
@@ -129,10 +127,7 @@ input[type=text], .search-input:focus {
 	border: 1px solid #EEE;
 	border-radius: 10px;
 	margin: 10px;
-	/*
-	padding: 50px;
-	margin-top: 50px;
-	*/
+
 	width: 300px;
 	height: auto;
 	
@@ -150,7 +145,6 @@ input[type=text], .search-input:focus {
 
 #searchOutput{
 	position: absolute;
-	/*left: 25%;*/
 	width: 850px;
 	height: fit-content;
 	border-radius: 10px;
@@ -182,7 +176,6 @@ input[type=text], .search-input:focus {
 	height: 60px;
 
 	background: #EEE;
-	/*border-bottom: 1px solid #DDD;*/
 	border-radius: 10px;
 	cursor: pointer;
 	display: inline-flex;

@@ -5,11 +5,9 @@ body {
   height: 100%;
   margin: auto;
   background-color: rgb(240, 240, 240);
-  /* background-color: #343a40; */
 }
 .logo-container {
   display: flex;
-  /* text-align: center; */
 }
 .logo-container h1 {
   font-size: 1.4rem;
@@ -41,7 +39,6 @@ body {
   padding: 25px;
   display: flex;
   flex-direction: row;
-  /* background-color: #363a39; */
   background-color: #25292e;
 }
 .nav-links-container {

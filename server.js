@@ -326,7 +326,7 @@ app.post("/Priv_calendar", function (req, res) {
     try {
       const query = { username: { $eq: cur_user } };
       cal_col.findOne(query).then((doc) => {
-        console.log("/priv_calendar doc: " + doc)
+        console.log("/priv_calendar doc: " + doc);
         if (doc == undefined) {
           cal_col.insertOne({
             username: cur_user,
@@ -389,19 +389,18 @@ app.post("/editEvent", function (req, res) {
               PubEventArray: [],
               PriEventArray: [eventData],
             });
-          }
-          else {
-          let ind = doc.PriEventArray.findIndex(
-            (ele) => ele.id == eventData.id
-          );
-
-          if (ind == -1) {
-            doc.PriEventArray.push(eventData);
           } else {
-            doc.PriEventArray[ind] = eventData;
+            let ind = doc.PriEventArray.findIndex(
+              (ele) => ele.id == eventData.id
+            );
+
+            if (ind == -1) {
+              doc.PriEventArray.push(eventData);
+            } else {
+              doc.PriEventArray[ind] = eventData;
+            }
+            calDb.replaceOne(query, doc);
           }
-          calDb.replaceOne(query, doc);
-        }
         });
       } else {
         calDb.findOne(query).then((doc) => {
@@ -412,19 +411,18 @@ app.post("/editEvent", function (req, res) {
               PubEventArray: [eventData],
               PriEventArray: [],
             });
-          }
-          else {
-          let ind = doc.PubEventArray.findIndex(
-            (ele) => ele.id == eventData.id
-          );
-          console.log("ind: " + ind);
-          if (ind == -1) {
-            doc.PubEventArray.push(eventData);
           } else {
-            doc.PubEventArray[ind] = eventData;
+            let ind = doc.PubEventArray.findIndex(
+              (ele) => ele.id == eventData.id
+            );
+            console.log("ind: " + ind);
+            if (ind == -1) {
+              doc.PubEventArray.push(eventData);
+            } else {
+              doc.PubEventArray[ind] = eventData;
+            }
+            calDb.replaceOne(query, doc);
           }
-          calDb.replaceOne(query, doc);
-        }
         });
       }
     } catch (err) {
@@ -494,17 +492,6 @@ app.post("/profilePicture", function (req, res) {
           )
           .then(res.redirect(`/${redType}?user=${cur_user}`));
       });
-
-    // let profdb = dbc.db("Boonez").collection(col);
-    // profdb
-    //   .updateOne(
-    //     query,
-    //     {
-    //       $set: { profilePic: req.body.PicLink },
-    //     },
-    //     { upsert: true }
-    //   )
-    //   .then(res.redirect(`/${redType}?user=${cur_user}`));
   });
 });
 app.post("/busAboutMe", function (req, res) {
@@ -578,11 +565,8 @@ app.get("/BusinessDashboard", function (req, res) {
 });
 app.get("/fetchBusinessDashboard", function (req, res) {
   db.then(function (dbc) {
-    // let cur_user = url.parse(req.url, true).query.user; //session.userid;
     let cur_user = getCurUser(req);
-    // console.log("yo" + cur_user);
 
-    // const query = { username: { $eq: cur_user } };
     dbc
       .db("Boonez")
       .collection("BusinessDashboard")
@@ -592,7 +576,6 @@ app.get("/fetchBusinessDashboard", function (req, res) {
           console.log(doc);
           res.json(doc);
         } else {
-          // console.log(err);
           res.json(null);
         }
       });
@@ -808,7 +791,6 @@ app.get("/messages/getMessages", (req, res) => {
           }
           res.json(result);
         } else {
-          // console.log(session);
           res.send(500, "something went wrong");
         }
       });
@@ -1093,14 +1075,14 @@ app.get("/viewAdvertisements/fetchAds", async (req, res) => {
       res.json("nsi"); //not signed in flag is returned
     } else {
       let account;
-      console.log("cur_user: " + cur_user)
+      console.log("cur_user: " + cur_user);
       dbc
         .db("Boonez")
         .collection("profiles")
-        .findOne({username: cur_user},function (err, result) {
-          console.log("server account type: " + result.accountType)
+        .findOne({ username: cur_user }, function (err, result) {
+          console.log("server account type: " + result.accountType);
           account = result.accountType;
-        })
+        });
 
       dbc
         .db("Boonez")
@@ -1109,7 +1091,7 @@ app.get("/viewAdvertisements/fetchAds", async (req, res) => {
         .toArray((err, result) => {
           if (result) {
             //send client array of advertisement objects
-            res.json({data: result,type: account});
+            res.json({ data: result, type: account });
           } else {
             res.send(500, "something went wrong");
           }
@@ -1159,7 +1141,6 @@ app.get("/getUsersAds", async (req, res) => {
       .toArray((err, result) => {
         if (result) {
           //send client array of advertisement objects
-          // console.log(result);
           res.json(result);
         } else {
           res.send(500, "something went wrong");
@@ -1168,10 +1149,8 @@ app.get("/getUsersAds", async (req, res) => {
   });
 });
 app.post("/removeCurUsersAd", (req, res) => {
-  // console.log(req.body);
   let objIdArr = [];
   for (const prop in req.body) {
-    // objIdArr.push(`{_id:ObjectId("${req.body[prop]}")}`);
     objIdArr.push(`${req.body[prop]}`);
   }
   for (const id of objIdArr) {

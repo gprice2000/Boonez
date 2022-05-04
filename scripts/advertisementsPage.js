@@ -30,7 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
           }
 
         //send array of message objects
-        //console.log(data);
         renderAds(data.data);
       });
   }

@@ -114,10 +114,5 @@ async function serverCon(method, data, url) {
     .then((new_event) => {})
     .catch((error) => {
       console.error("Error: " + error);
-      /*
-		if (method == 'DELETE') {
-			console.log("DELETE")
-			window.location.replace(window.location.pathname + window.location.search);}
-		*/
     });
 }

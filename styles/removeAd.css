@@ -18,13 +18,11 @@ body {
 #ad-cont {
   margin-left: auto;
   margin-right: auto;
-  /* padding: 15px; */
   margin-top: 1.5rem;
   width: 80%;
   height: 80%;
   background-color: #25292e;
   display: flex;
-  /* flex-wrap: wrap-reverse; */
   flex-wrap: wrap;
   overflow: auto;
   align-self: center;
@@ -33,17 +31,12 @@ body {
 .advertisement {
   width: 45%;
   height: max-content;
-  /* height: 30%; */
   margin-left: auto;
-  /* margin: 2rem; */
   margin-right: auto;
   margin-top: 2rem;
 
   border-radius: 15px;
-  /* align-self: center; */
-  /* width: 3em; */
   color: black;
-  /* height: 2em; */
   padding: 0.5em;
   background-size: cover;
   background-repeat: no-repeat;
@@ -78,8 +71,6 @@ body {
 }
 
 #removeBtn {
-  /* margin-left: auto; */
-  /* margin-right: auto; */
   color: #25292e;
   background-color: #ffcc00;
   border-radius: 10px;
@@ -88,7 +79,6 @@ body {
   padding: 15px;
   width: fit-content;
   height: fit-content;
-  /* align-self: flex-end; */
   margin-top: 2rem;
   margin-left: auto;
   margin-right: auto;

@@ -9,8 +9,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function fetchDash() {
     console.log(search);
-    // console.log(window.location.origin);
-    // console.log(window.location.origin + "/businessDashboard" + search);
 
     await fetch(window.location.origin + "/fetchBusinessDashboard") ///?user=${}`)
       .then((response) => response.json())
@@ -25,8 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
           proPic.src = data.profilePic;
         }
 
-        // if (data.classes.length != 0) {
-        //   courseList(data.classes);
         // }
         if (data.aboutme != null) {
           console.log("data.aboutme: " + data.aboutme);
@@ -74,17 +70,6 @@ function setAboutMe() {
   text.value = cur_user.aboutme;
   modal.style.display = "initial";
 
-  /*
-	window.onclick = function(event) {
-		console.log("about me modal outside window click: " + event)
-		console.log("event target: " + event.target)
-		console.log("modal : " + modal)
-		if (event.target == modal) {
-			console.log("x click")
-			modal.style.display = "none";
-		}
-	}
-	*/
   window.onclick = function (event) {
     if (event.target == modal) {
       modal.style.display = "none";

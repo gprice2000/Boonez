@@ -37,14 +37,10 @@ async function getFriends() {
         friendName.innerText = friend.fullname;
         item.appendChild(friendName);
 
-        // let item = document.createElement("a");
-        // item.href = `/messages?userTo=${friend}&userFrom=${data.username}`;
-        // item.innerText = friend;
         console.log(friend.username);
         item.onclick = () =>
           (window.location.href = `/messages?userTo=${item.id}&userFrom=${data.username}`);
         friendsContainer.appendChild(item);
-        // window.scrollTo(0, document.body.scrollHeight);
       }
     })
     .catch((error) => console.log(error));
